@@ -20,11 +20,7 @@ with open('qtelements/__init__.py') as fd:
 
 
 install_requires = [
-    # 'paramiko>=2.7.2',
-    # 'flake8',
-    # 'coverage',
-    # 'tox',
-    'shiboken2',
+    
     'sphinx',
     'pyside2'
 ]
@@ -40,7 +36,7 @@ setup(name=name,
       url = '',
       packages = ['qtelements', 'qtelements.threading', 'qtelements.ui'],
       license = 'Apache v2.0',
-      # install_requires=install_requires,
+      install_requires=install_requires,
       classifiers = [
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
