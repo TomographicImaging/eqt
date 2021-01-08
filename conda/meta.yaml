@@ -1,0 +1,21 @@
+package:
+  name: qtelements
+  version: "1.0.1"
+
+build:
+  number: 0
+  
+
+requirements:
+  build:
+    - python
+    - pip
+    - sphinx
+  run:
+    - python
+    - pyside2
+
+about:
+  home: https://github.com/paskino/qt-elements
+  license: Apache 2.0
+  summary: A number of templates and tools to develop Qt GUI's with Python effectively.
