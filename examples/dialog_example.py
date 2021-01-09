@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtWidgets
 import glob, sys, os
-from qtelements.ui import UIFormFactory
+from qte.ui import UIFormFactory
 
 class MainUI(QtWidgets.QMainWindow):
 
@@ -40,18 +40,17 @@ class MainUI(QtWidgets.QMainWindow):
         qwidget = QtWidgets.QLineEdit(fw.groupBox)
         qwidget.setClearButtonEnabled(True)
         # finally add to the form widget
-        fw.addWidget('input1', qlabel, qwidget)
+        fw.addWidget(qwidget, qlabel, 'input1')
 
         # add input 2 as QComboBox
-        qlabel = QtWidgets.QLabel(fw.groupBox)
-        qlabel.setText("Input 2: ")
+        qlabel = "Input 2: "
         qwidget = QtWidgets.QComboBox(fw.groupBox)
         qwidget.addItem("option 1")
         qwidget.addItem("option 2")
         qwidget.setCurrentIndex(0)
         qwidget.setEnabled(True)
         # finally add to the form widget
-        fw.addWidget('input2', qlabel, qwidget)
+        fw.addWidget(qwidget, qlabel, 'input2')
 
         # add the button box to the vertical layout, but outside the
         # form layout

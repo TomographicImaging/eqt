@@ -1,5 +1,5 @@
 from PySide2 import QtCore, QtGui, QtWidgets
-from qtelements.ui import UIFormFactory
+from qte.ui import UIFormFactory
 
 class FormDialog(QtWidgets.QDialog):
     def __init__(self, parent = None, title=None):
@@ -42,7 +42,7 @@ class FormDialog(QtWidgets.QDialog):
         '''adds a widget to the layout
 
         if qlabel and name are passed they will be populating the FormLayout,
-        otherwise they will be added at the bottom of the FormLayout
+        otherwise they will be added in the vertical layout below the FormLayout
         '''
         
         if [ qlabel, name ] == [ None , None ]:
@@ -50,7 +50,7 @@ class FormDialog(QtWidgets.QDialog):
         elif qlabel is None or name is None:
             raise ValueError('Please set both qlabel and name or None.')
         else:
-            self.formWidget.addWidget(name, qlabel, qwidget)
+            self.formWidget.addWidget(qwidget, qlabel, name)
     
     def insertWidget(self, index, qwidget):
         '''inserts a widget to the FormLayout vertical layout at the specific index'''

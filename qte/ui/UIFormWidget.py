@@ -11,10 +11,10 @@ class UIFormWidget(object):
     +----------------------------------------------------------+
     |        QVBoxLayout                                       |
     |   +---------------------------------------------------+  |
-    |   |    QWidget                                        |  |
+    |   |    QGroupBox                                      |  |
     |   |                                                   |  |
     |   |    +------------------------------------------+   |  |
-    |   |    |   QVBoxLayout                            |   |  |
+    |   |    |   QFormLayout                            |   |  |
     |   |    |                                          |   |  |
     |   |    |                                          |   |  |
     |   |    +------------------------------------------+   |  |
@@ -52,7 +52,7 @@ class UIFormWidget(object):
     def groupBox(self):
         return self.uiElements['groupBox']
                 
-    def addWidget(self, name, qlabel, qwidget):
+    def addWidget(self, qwidget, qlabel, name):
 
         formLayout = self.uiElements['groupBoxFormLayout']
                 
@@ -62,6 +62,10 @@ class UIFormWidget(object):
 
         # add the label
         label = '{}_label'.format(name)
+        if isinstance (qlabel, str):
+            txt = qlabel
+            qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
+            qlabel.setText(txt)
         formLayout.setWidget(widgetno, QtWidgets.QFormLayout.LabelRole, qlabel)
 
         # add the field

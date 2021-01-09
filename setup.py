@@ -15,7 +15,7 @@ import re
 with open("README.rst", "r") as fh:
     long_description = fh.read()
 
-with open('qtelements/__init__.py') as fd:
+with open('qte/__init__.py') as fd:
     version = re.search("__version__ = '(.*)'", fd.read()).group(1)
 
 
@@ -25,7 +25,7 @@ install_requires = [
     'pyside2'
 ]
 
-name = "qtelements"
+name = "qte"
 
 setup(name=name,
       version = version,
@@ -34,7 +34,7 @@ setup(name=name,
       author = 'Edoardo Pasca',
       author_email = 'edoardo.pasca@stfc.ac.uk',
       url = '',
-      packages = ['qtelements', 'qtelements.threading', 'qtelements.ui'],
+      packages = ['qte', 'qte.threading', 'qte.ui'],
       license = 'Apache v2.0',
       install_requires=install_requires,
       classifiers = [
