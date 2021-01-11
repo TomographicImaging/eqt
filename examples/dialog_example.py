@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtWidgets
 import glob, sys, os
-from qte.ui import UIFormFactory
+from eqt.ui import UIFormFactory
 
 class MainUI(QtWidgets.QMainWindow):
 

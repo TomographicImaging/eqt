@@ -1,6 +1,6 @@
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 import glob, sys, os
-from qte.ui import UIFormFactory, FormDialog
+from eqt.ui import UIFormFactory, FormDialog
 
 class MainUI(QtWidgets.QMainWindow):
 

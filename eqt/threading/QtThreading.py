@@ -7,10 +7,10 @@ Created on Wed Feb  6 11:10:36 2019
 """
 
 #https://www.geeksforgeeks.org/migrate-pyqt5-app-to-pyside2/
-from PySide2 import QtCore
 import traceback
 import sys
-from PySide2.QtCore import QThreadPool
+from PySide2 import QtCore
+from PySide2 import Slot
 
 class Worker(QtCore.QRunnable):
     """
@@ -41,7 +41,7 @@ class Worker(QtCore.QRunnable):
         self.kwargs['progress_callback'] = self.signals.progress
         self.kwargs['message_callback'] = self.signals.message
 
-    @QtCore.Slot()
+    @Slot()
     def run(self):
         """
         Run the worker. Emits signals based on run state.

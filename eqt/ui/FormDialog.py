@@ -1,5 +1,5 @@
 from PySide2 import QtCore, QtGui, QtWidgets
-from qte.ui import UIFormFactory
+from eqt.ui import UIFormFactory
 
 class FormDialog(QtWidgets.QDialog):
     def __init__(self, parent = None, title=None):

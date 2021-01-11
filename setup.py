@@ -15,7 +15,7 @@ import re
 with open("README.rst", "r") as fh:
     long_description = fh.read()
 
-with open('qte/__init__.py') as fd:
+with open('eqt/__init__.py') as fd:
     version = re.search("__version__ = '(.*)'", fd.read()).group(1)
 
 
@@ -23,9 +23,10 @@ install_requires = [
     
     'sphinx',
     'pyside2'
+
 ]
 
-name = "qte"
+name = "eqt"
 
 setup(name=name,
       version = version,
@@ -34,7 +35,7 @@ setup(name=name,
       author = 'Edoardo Pasca',
       author_email = 'edoardo.pasca@stfc.ac.uk',
       url = '',
-      packages = ['qte', 'qte.threading', 'qte.ui'],
+      packages = ['eqt', 'eqt.threading', 'eqt.ui'],
       license = 'Apache v2.0',
       install_requires=install_requires,
       classifiers = [
