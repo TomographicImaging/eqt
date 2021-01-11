@@ -6,7 +6,8 @@ A number of templates and tools to develop Qt GUI's with Python effectively.
 Developing GUIs I often find myself creating forms to pass some input and also
 running some task asynchronously so that the interface is still responsive.
 
-This little package tries to address both recurring requirements:
+This little package tries to address both recurring requirements.
+
 
 1. ``UIFormWidget``, a class to help creating Qt forms 
   programmatically, useable in ``QDockWidgets`` and ``QWidget`` 
@@ -30,7 +31,5 @@ Example
 
 In the ``example`` directory there is an example on how to launch a 
 ``QDialog`` with a form inside using ``qte``'s 
-` ``QWidget``<https://github.com/paskino/qt-elements/blob/main/examples/dialog_example.py>`_ or 
-` ``FormDialog``<https://github.com/paskino/qt-elements/blob/main/examples/dialog_example_2.py>`_.
-
+ `QWidget <https://github.com/paskino/qt-elements/blob/main/examples/dialog_example.py>`_ or `FormDialog <https://github.com/paskino/qt-elements/blob/main/examples/dialog_example_2.py>`_.
 
