@@ -1,6 +1,6 @@
 package:
-  name: qtelements
-  version: "1.0.1"
+  name: eqt
+  version: "0.0.1"
 
 build:
   number: 0

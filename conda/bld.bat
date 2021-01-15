@@ -1,1 +1,4 @@
-%PYTHON% -m pip install qte --no-deps
+
+cd %RECIPE_DIR%\..
+
+%PYTHON% setup.py install

@@ -10,7 +10,7 @@ Created on Wed Feb  6 11:10:36 2019
 import traceback
 import sys
 from PySide2 import QtCore
-from PySide2 import Slot
+from PySide2.QtCore import Slot
 
 class Worker(QtCore.QRunnable):
     """
@@ -40,6 +40,7 @@ class Worker(QtCore.QRunnable):
         # Add progress callback to kwargs
         self.kwargs['progress_callback'] = self.signals.progress
         self.kwargs['message_callback'] = self.signals.message
+        self.kwargs['status_callback'] = self.signals.status
 
     @Slot()
     def run(self):
@@ -82,8 +83,10 @@ class WorkerSignals(QtCore.QObject):
     finished = QtCore.Signal()
     error = QtCore.Signal(tuple)
     result = QtCore.Signal(object)
+    
     progress = QtCore.Signal(int)
     message = QtCore.Signal(str)
+    status = QtCore.Signal(tuple)
 
 class ErrorObserver:
 
