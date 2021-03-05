@@ -12,8 +12,9 @@ except ImportError as ie:
 
 import re
 
-with open("README.rst", "r") as fh:
-    long_description = fh.read()
+#with open("README.rst", "r") as fh:
+#    long_description = fh.read()
+long_description = 'A number of templates and tools to develop Qt GUI\'s with Python effectively.'
 
 with open('eqt/__init__.py') as fd:
     version = re.search("__version__ = '(.*)'", fd.read()).group(1)
