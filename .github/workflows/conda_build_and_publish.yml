@@ -14,8 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: publish-to-conda
-      uses: paskino/conda-package-publish-action@v1.2.1
+      uses: paskino/conda-package-publish-action@v1.2.2
       with:
         subDir: 'conda'
-        CHANNELS: '{conda-forge}'
+        channels: '{conda-forge}'
         AnacondaToken: ${{ secrets.ANACONDA_TOKEN }}
