@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from setuptools import setup
+import os
 try:
     from sphinx.setup_command import BuildDoc
     sphinx_available = False
@@ -18,13 +19,15 @@ with open("README.rst", "r") as fh:
 with open('eqt/__init__.py') as fd:
     version = re.search("__version__ = '(.*)'", fd.read()).group(1)
 
-
-install_requires = [
+if 'CONDA_BUILD' in os.environ.keys():
+    install_requires = []
+else:
+    install_requires = [
     
-    'sphinx',
-    'pyside2'
+        'sphinx',
+        'pyside2'
 
-]
+    ]
 
 name = "eqt"
 

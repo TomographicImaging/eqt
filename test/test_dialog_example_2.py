@@ -1,6 +1,10 @@
-from PySide2 import QtCore, QtWidgets
+from PySide2 import QtCore, QtWidgets, QtTest
+from PySide2.QtTest import QTest
+from PySide2.QtCore import Qt
 import glob, sys, os
 from eqt.ui import UIFormFactory, FormDialog
+import unittest
+
 
 class MainUI(QtWidgets.QMainWindow):
 
@@ -15,6 +19,7 @@ class MainUI(QtWidgets.QMainWindow):
         layout.addWidget(pb)
         widg = QtWidgets.QWidget()
         widg.setLayout(layout)
+        self.push_button = pb
 
         self.setCentralWidget(widg)
 
@@ -60,6 +65,55 @@ class MainUI(QtWidgets.QMainWindow):
     def rejected(self):
         print ("rejected")
         self.dialog.close()
+
+
+_instance = None
+class DialogTest(unittest.TestCase):
+    '''Test the margarita mixer GUI'''
+    def setUp(self):
+        '''Create the GUI'''
+        super(DialogTest, self).setUp()
+        
+    
+        global _instance
+        if _instance is None:
+            _instance = QtWidgets.QApplication(sys.argv)
+
+        self.app = _instance
+        window = MainUI()
+        self.app = _instance
+        self.window = window
+        # QTest.mouseClick(self.window.push_button, Qt.LeftButton)
+        # self.dialog = window.dialog
+        
+
+    def tearDown(self):
+        del self.app
+        super(DialogTest, self).tearDown()
+
+    def test_close(self):
+        self.window.close()
+        self.assertTrue(True)
+    def test_openclose_dialog(self):
+        QTest.mouseClick(self.window.push_button, Qt.LeftButton)
+        dialog = self.window.dialog
+        print (dialog)
+        dialog.close()
+        
+    def stest_defaults(self):
+        '''Test the GUI in its default state'''
+        
+        self.dialog = self.window.dialog
+        print ("test1")
+        self.assertEqual(self.window.dialog.widgets['input1_field'].text(), '')
+        print("test2")
+        self.assertEqual(self.window.dialog.widgets['input2_field'].currentIndex(), 0)
+        print("click")
+        print (self.window.dialog.Ok, self.window.dialog.Cancel)
+        QTest.mouseClick(self.window.push_button, Qt.LeftButton)
+        
+    
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
