@@ -17,6 +17,5 @@ jobs:
       uses: paskino/conda-package-publish-action@v1.2.2
       with:
         subDir: 'conda'
-        channels: 
-          - 'conda-forge'
+        channels: 'conda-forge'
         AnacondaToken: ${{ secrets.ANACONDA_TOKEN }}
