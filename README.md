@@ -1,4 +1,4 @@
-## Qt Elements qte
+## Qt Elements eqt
 
 A number of templates and tools to develop Qt GUI's with Python effectively.
 
@@ -20,9 +20,9 @@ You may install via `pip` or `conda`
 
 ```bash
   
-  python -m pip install qte 
+  python -m pip install eqt 
   # or 
-  conda install qte -c paskino
+  conda install eqt -c paskino
 ```
 
 ### Example
