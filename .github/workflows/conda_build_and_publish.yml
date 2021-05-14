@@ -3,10 +3,6 @@ name: publish_conda
 on:
   release:
     types: [published]
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
     
 jobs:
   publish:
@@ -19,3 +15,4 @@ jobs:
         subDir: 'conda'
         channels: 'conda-forge'
         AnacondaToken: ${{ secrets.ANACONDA_TOKEN }}
+        publish: True
