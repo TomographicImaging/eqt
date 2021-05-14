@@ -19,4 +19,4 @@ jobs:
         subDir: 'conda'
         channels: 'conda-forge'
         AnacondaToken: ${{ secrets.ANACONDA_TOKEN }}
-        publish: true
+        publish: ${{ github.event_name == 'release'}}
