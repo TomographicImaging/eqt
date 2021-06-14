@@ -38,17 +38,19 @@ class FormDialog(QtWidgets.QDialog):
     def groupBox(self):
         return self.formWidget.groupBox
 
-    def addWidget(self, qwidget, qlabel=None, name=None):
+    def addWidget(self, qwidget, qlabel=None, name=None, layout='form'):
         '''adds a widget to the layout
 
         if qlabel and name are passed they will be populating the FormLayout,
         otherwise they will be added in the vertical layout below the FormLayout
         '''
         
-        if [ qlabel, name ] == [ None , None ]:
+        if layout == 'vertical':
+            if [name, qlabel] != [None, None]:
+                raise ValueError('qlabel {} and name {} have been passed but would be discarded with layout=vertical. If this is unexpected, have a look at your code.') 
             self.formWidget.uiElements['verticalLayout'].addWidget(qwidget)
-        elif qlabel is None or name is None:
-            raise ValueError('Please set both qlabel and name or None.')
+        elif name is None:
+            raise ValueError('To add the widget to the form, please set name.')
         else:
             self.formWidget.addWidget(qwidget, qlabel, name)
     
