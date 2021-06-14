@@ -5,6 +5,8 @@ on:
     types: [published]
   push:
     branches: [ main ]
+    tags:
+      - '**'
   pull_request:
     branches: [ main ]
     
@@ -19,4 +21,4 @@ jobs:
         subDir: 'conda'
         channels: 'conda-forge'
         AnacondaToken: ${{ secrets.ANACONDA_TOKEN }}
-        publish: ${{ github.event_name == 'release'}}
+        publish: ${{ github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') }}
