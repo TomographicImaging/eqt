@@ -1,9 +1,5 @@
-from PySide2 import QtCore, QtWidgets, QtGui
-# from PyQt5.QtWidgets import QProgressDialog, QDialog, QLabel, QComboBox, QDialogButtonBox, QFormLayout, QWidget, QVBoxLayout, \
-#     QGroupBox, QLineEdit, QMessageBox, QPushButton
+from PySide2 import QtWidgets
 
-
-        
 
 class UIFormWidget(object):
     '''
@@ -23,6 +19,7 @@ class UIFormWidget(object):
     |                                                          |
     +----------------------------------------------------------+
     '''
+
     def createForm(self):
         # Add vertical layout to dock contents
         verticalLayout = QtWidgets.QVBoxLayout(self)
@@ -31,7 +28,7 @@ class UIFormWidget(object):
         # Add vertical layout to main widget (self)
         # verticalLayout.addWidget(self)
         self.setLayout(verticalLayout)
-        
+
         # Add group box
         groupBox = QtWidgets.QGroupBox(self)
 
@@ -43,26 +40,26 @@ class UIFormWidget(object):
 
         self.num_widgets = 0
         self.uiElements = {
-                'verticalLayout':verticalLayout, 
-                'groupBox' : groupBox,
-                'groupBoxFormLayout': groupBoxFormLayout}
+            'verticalLayout': verticalLayout,
+            'groupBox': groupBox,
+            'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
 
     @property
     def groupBox(self):
         return self.uiElements['groupBox']
-                
+
     def addWidget(self, qwidget, qlabel, name):
 
         formLayout = self.uiElements['groupBoxFormLayout']
-                
-        #Create the widgets:
+
+        # Create the widgets:
 
         widgetno = self.num_widgets
 
         # add the label
         label = '{}_label'.format(name)
-        if isinstance (qlabel, str):
+        if isinstance(qlabel, str):
             txt = qlabel
             qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
             qlabel.setText(txt)
@@ -70,7 +67,8 @@ class UIFormWidget(object):
 
         # add the field
         field = '{}_field'.format(name)
-        formLayout.setWidget(widgetno, QtWidgets.QFormLayout.FieldRole, qwidget)
+        formLayout.setWidget(
+            widgetno, QtWidgets.QFormLayout.FieldRole, qwidget)
 
         # save a reference to the widgets in the dictionary
         self.widgets[label] = qlabel
@@ -78,25 +76,28 @@ class UIFormWidget(object):
         self.num_widgets += 1
 
 
-
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
     def __init__(self, parent=None):
-    # dockWidgetContents = QtWidgets.QWidget()
-        
+        # dockWidgetContents = QtWidgets.QWidget()
+
         QtWidgets.QWidget.__init__(self, parent)
         self.createForm()
 
-class FormDockWidget(QtWidgets.QDockWidget, UIFormWidget):
+
+class FormDockWidget(QtWidgets.QDockWidget):
     def __init__(self, parent=None, title=None):
-    # dockWidgetContents = QtWidgets.QWidget()
-        
         QtWidgets.QDockWidget.__init__(self, parent)
-        self.createForm()
+        widget = FormWidget(parent)
+        self.setWidget(widget)
         if title is not None:
             self.setObjectName(title)
 
+    def addWidget(self, qwidget, qlabel, name):
+        self.widget().addWidget(qwidget, qlabel, name)
+
+
 class UIFormFactory(QtWidgets.QWidget):
-# def generateUIFormView(QtWidgets.QWidget):
+    # def generateUIFormView(QtWidgets.QWidget):
     '''creates a widget with a form layout group to add things to
 
     basically you can add widget to the returned groupBoxFormLayout and paramsGroupBox
@@ -106,6 +107,7 @@ class UIFormFactory(QtWidgets.QWidget):
     @staticmethod
     def getQDockWidget(parent=None):
         return FormDockWidget(parent)
+
     @staticmethod
     def getQWidget(parent=None):
         return FormWidget(parent)
