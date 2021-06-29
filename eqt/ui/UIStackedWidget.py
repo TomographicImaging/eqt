@@ -41,7 +41,7 @@ class UIStackedWidget(object):
         self.Stack.addWidget(widget)
         self.tabs[title] = widget
         self.num_tabs += 1
-        height_multiplier = self.num_tabs + 1
+        height_multiplier = self.num_tabs + 1.3
         self.stack_list.setMaximumWidth(
             self.stack_list.sizeHintForColumn(0)*1.2 + self.margin_size*2)
         self.stack_list.setMaximumHeight(
