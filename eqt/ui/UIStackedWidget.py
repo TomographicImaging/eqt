@@ -1,11 +1,35 @@
 from eqt.ui.UIFormWidget import UIFormFactory
 from PySide2 import QtWidgets
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QHBoxLayout, QListWidget, QStackedWidget, QWidget
+from PySide2.QtWidgets import QHBoxLayout, QVBoxLayout, QListWidget, QStackedWidget, QWidget
 
 
 class UIStackedWidget(object):
     '''
+    By default:
+
+             QWidget or QDockWidget
+    +----------------------------------------------------------+
+    |        QVBoxLayout                                       |
+    |   +---------------------------------------------------+  |
+    |   |                                                   |  |
+    |   |    +-------------------------------------------+  |  |
+    |   |    |   QList                                   |  |  |
+    |   |    |                                           |  |  |
+    |   |    |                                           |  |  |
+    |   |    +-------------------------------------------+  |  |
+    |   |    +-------------------------------------------+  |  |
+    |   |    |   QStackedWidget                          |  |  |
+    |   |    |                                           |  |  |
+    |   |    |                                           |  |  |
+    |   |    +-------------------------------------------+  |  |
+    |   |                                                   |  |
+    |   +---------------------------------------------------+  |
+    |                                                          |
+    +----------------------------------------------------------+
+
+    or if layout = horizontal:
+
              QWidget or QDockWidget
     +----------------------------------------------------------+
     |        QHBoxLayout                                       |
@@ -20,21 +44,35 @@ class UIStackedWidget(object):
     |   +---------------------------------------------------+  |
     |                                                          |
     +----------------------------------------------------------+
+
+
     '''
 
-    def createStack(self):
+    def createStack(self, layout='vertical'):
         self.stack_list = QListWidget()
-        self.margin_size = 20
-        self.stack_list.setStyleSheet("margin : {}px".format(self.margin_size))
+        self.list_margin_size = 11
 
         self.Stack = QStackedWidget(self)
+        self.layout_type = layout
 
-        hbox = QHBoxLayout(self)
-        hbox.addWidget(self.stack_list)
-        hbox.addWidget(self.Stack)
-        hbox.setAlignment(self.stack_list, Qt.AlignTop)
+        if self.layout_type == 'horizontal':
+            box = QHBoxLayout(self)
+            self.list_margin_size = 18
+            self.stack_list.setStyleSheet(
+                "margin-top: {size}px"
+                .format(size=self.list_margin_size))
+        else:
+            box = QVBoxLayout(self)
+            self.stack_list.setStyleSheet(
+                "margin-left : {size}px; margin-right : {size2}px"
+                .format(size=self.list_margin_size,
+                        size2=self.list_margin_size+1))
 
-        self.setLayout(hbox)
+        box.addWidget(self.stack_list)
+        box.addWidget(self.Stack)
+        box.setAlignment(self.stack_list, Qt.AlignTop)
+
+        self.setLayout(box)
         self.stack_list.currentRowChanged.connect(self.display)
 
         self.tabs = {}
@@ -57,12 +95,17 @@ class UIStackedWidget(object):
         self.Stack.addWidget(widget)
         self.tabs[title] = widget
         self.num_tabs += 1
-        height_multiplier = self.num_tabs + 1.3
-        self.stack_list.setMaximumWidth(
-            self.stack_list.sizeHintForColumn(0)*1.2 + self.margin_size*2)
+        height_multiplier = self.num_tabs + 1
+        if self.layout_type != 'vertical':
+            height_multiplier += 1
+            self.stack_list.setMaximumWidth(
+                self.stack_list.sizeHintForColumn(0)*1.2
+                + self.list_margin_size*2)
+            self.stack_list.setMaximumHeight(
+                self.stack_list.sizeHintForRow(0)*height_multiplier
+                + self.list_margin_size*2)
         self.stack_list.setMaximumHeight(
-            self.stack_list.sizeHintForRow(0)*height_multiplier
-            + self.margin_size*2)
+            self.stack_list.sizeHintForRow(0)*height_multiplier)
 
     def addTabs(self, titles):
         for title in titles:
@@ -70,18 +113,18 @@ class UIStackedWidget(object):
 
 
 class StackedWidget(QWidget, UIStackedWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, layout='vertical'):
         # dockWidgetContents = QtWidgets.QWidget()
 
         QtWidgets.QWidget.__init__(self, parent)
-        self.createStack()
+        self.createStack(layout)
 
 
 class StackedDockWidget(QtWidgets.QDockWidget):
-    def __init__(self, parent=None, title=None):
+    def __init__(self, parent=None, title=None, layout='vertical'):
 
         QtWidgets.QDockWidget.__init__(self, parent)
-        widget = StackedWidget(parent)
+        widget = StackedWidget(parent, layout)
         self.setWidget(widget)
         if title is not None:
             self.setObjectName(title)
@@ -101,8 +144,8 @@ class StackedWidgetFactory(QWidget):
     main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, dockWidget)
     '''
 
-    def getQDockWidget(parent=None, title=None):
-        return StackedDockWidget(parent)
+    def getQDockWidget(parent=None, title=None, layout='vertical'):
+        return StackedDockWidget(parent, title, layout)
 
-    def getQWidget(parent=None):
-        return StackedWidget(parent)
+    def getQWidget(parent=None, layout='vertical'):
+        return StackedWidget(parent, layout)
