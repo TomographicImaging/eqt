@@ -5,6 +5,22 @@ from PySide2.QtWidgets import QHBoxLayout, QListWidget, QStackedWidget, QWidget
 
 
 class UIStackedWidget(object):
+    '''
+             QWidget or QDockWidget
+    +----------------------------------------------------------+
+    |        QHBoxLayout                                       |
+    |   +---------------------------------------------------+  |
+    |   |                                                   |  |
+    |   |    +--------------+   +------------------------+  |  |
+    |   |    |   QList      |   |  QStackedWidget        |  |  |
+    |   |    |              |   |                        |  |  |
+    |   |    |              |   |                        |  |  |
+    |   |    +--------------+   +------------------------+  |  |
+    |   |                                                   |  |
+    |   +---------------------------------------------------+  |
+    |                                                          |
+    +----------------------------------------------------------+
+    '''
 
     def createStack(self):
         self.stack_list = QListWidget()
@@ -79,6 +95,11 @@ class StackedDockWidget(QtWidgets.QDockWidget):
 
 
 class StackedWidgetFactory(QWidget):
+    '''creates a StackedWidget with a list of the widgets' titles
+    to the left hand side.
+    The returned dockWidget must be added with
+    main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, dockWidget)
+    '''
 
     def getQDockWidget(parent=None, title=None):
         return StackedDockWidget(parent)
