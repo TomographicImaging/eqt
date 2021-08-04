@@ -1,6 +1,4 @@
-from PySide2 import QtCore, QtWidgets, QtGui
-# from PyQt5.QtWidgets import QProgressDialog, QDialog, QLabel, QComboBox, QDialogButtonBox, QFormLayout, QWidget, QVBoxLayout, \
-#     QGroupBox, QLineEdit, QMessageBox, QPushButton
+from PySide2 import QtWidgets
 
 
 class UIFormWidget(object):
@@ -85,7 +83,6 @@ class UIFormWidget(object):
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
 
-
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
     def __init__(self, parent=None):
         # dockWidgetContents = QtWidgets.QWidget()
@@ -94,14 +91,16 @@ class FormWidget(QtWidgets.QWidget, UIFormWidget):
         self.createForm()
 
 
-class FormDockWidget(QtWidgets.QDockWidget, UIFormWidget):
+class FormDockWidget(QtWidgets.QDockWidget):
     def __init__(self, parent=None, title=None):
-        # dockWidgetContents = QtWidgets.QWidget()
-
         QtWidgets.QDockWidget.__init__(self, parent)
-        self.createForm()
+        widget = FormWidget(parent)
+        self.setWidget(widget)
         if title is not None:
             self.setObjectName(title)
+
+    def addWidget(self, qwidget, qlabel, name):
+        self.widget().addWidget(qwidget, qlabel, name)
 
 
 class UIFormFactory(QtWidgets.QWidget):
