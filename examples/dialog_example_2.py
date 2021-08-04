@@ -33,6 +33,7 @@ class MainUI(QtWidgets.QMainWindow):
         qwidget = QtWidgets.QLineEdit(dialog.groupBox)
         qwidget.setClearButtonEnabled(True)
         # finally add to the form widget
+        dialog.addSpanningWidget(QtWidgets.QLabel("Input Values: "), 'input_title')
         dialog.addWidget(qwidget, qlabel, 'input1')
 
         # add input 2 as QComboBox
@@ -45,6 +46,7 @@ class MainUI(QtWidgets.QMainWindow):
         qwidget.setEnabled(True)
         # finally add to the form widget
         dialog.addWidget(qwidget, qlabel, 'input2')
+        dialog.addWidget(QtWidgets.QLabel("Example Vertical Layout Text"), layout="vertical")
 
         # store a reference
         self.dialog = dialog

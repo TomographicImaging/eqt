@@ -49,8 +49,13 @@ class UIFormWidget(object):
     def groupBox(self):
         return self.uiElements['groupBox']
 
-    def addWidget(self, name, qwidget, qlabel=None):
+    def addSpanningWidget(self, qwidget, name):
+        self._addWidget(name, qwidget)
 
+    def addWidget(self, qwidget, qlabel, name):
+        self._addWidget(name, qwidget, qlabel)
+
+    def _addWidget(self, name, qwidget, qlabel=None):
         formLayout = self.uiElements['groupBoxFormLayout']
 
         # Create the widgets:
