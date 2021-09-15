@@ -13,23 +13,17 @@ from PySide2 import QtCore
 from PySide2.QtCore import Slot
 
 class Worker(QtCore.QRunnable):
-    """
-    Worker thread
-
-    Inherits from QRunnable to handle worker thread setup, signals and wrapup.
-
-    :param (function) callback:
-        The function callback to run on this worker thread. Supplied
-        args/kwargs will be pass to the runner.
-
-    :param args:
-        Arguments to pass to the callback function
-
-    :param kwargs:
-        Keyword arguments to pass to the callback function
-
-    """
+    """Worker: defines a QRunnable to execute a function asynchronously. It handles worker thread setup, signals and wrapup."""
+    
     def __init__(self, fn, *args, **kwargs):
+        '''Worker creator
+        
+        :param fn: The function to be run by this Worker in a different thread. 
+        :param args: positional arguments to pass to the function
+        :param kwargs: keyword arguments to pass to the function
+        
+        The creator will add progress_callback, message_callback and status_callback to the kwargs.
+        '''
         super(Worker, self).__init__()
 
         self.fn = fn
@@ -78,6 +72,11 @@ class WorkerSignals(QtCore.QObject):
 
     progress
         `int` indicating % progress
+    
+    message
+        `string` with some text
+    status
+        `tuple` 
     """
 
     finished = QtCore.Signal()
