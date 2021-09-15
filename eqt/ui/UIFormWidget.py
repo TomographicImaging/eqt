@@ -49,32 +49,44 @@ class UIFormWidget(object):
     def groupBox(self):
         return self.uiElements['groupBox']
 
-    def addWidget(self, qwidget, qlabel, name):
+    def addSpanningWidget(self, qwidget, name):
+        self._addWidget(name, qwidget)
 
+    def addWidget(self, qwidget, qlabel, name):
+        self._addWidget(name, qwidget, qlabel)
+
+    def _addWidget(self, name, qwidget, qlabel=None):
         formLayout = self.uiElements['groupBoxFormLayout']
 
         # Create the widgets:
 
         widgetno = self.num_widgets
 
-        # add the label
-        label = '{}_label'.format(name)
-        if isinstance(qlabel, str):
-            txt = qlabel
-            qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
-            qlabel.setText(txt)
-        formLayout.setWidget(widgetno, QtWidgets.QFormLayout.LabelRole, qlabel)
-
         # add the field
         field = '{}_field'.format(name)
-        formLayout.setWidget(
-            widgetno, QtWidgets.QFormLayout.FieldRole, qwidget)
-
-        # save a reference to the widgets in the dictionary
-        self.widgets[label] = qlabel
         self.widgets[field] = qwidget
-        self.num_widgets += 1
 
+        if qlabel is not None:
+            # add the label
+            label = '{}_label'.format(name)
+            if isinstance(qlabel, str):
+                txt = qlabel
+                qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
+                qlabel.setText(txt)
+            formLayout.setWidget(
+                widgetno, QtWidgets.QFormLayout.LabelRole, qlabel)
+
+            # save a reference to label widgets in the dictionary
+            self.widgets[label] = qlabel
+
+            field_form_role = QtWidgets.QFormLayout.FieldRole
+
+        else:
+            # In the case we don't have a qlabel, set a spanning widget:
+            field_form_role = QtWidgets.QFormLayout.SpanningRole
+
+        formLayout.setWidget(widgetno, field_form_role, qwidget)
+        self.num_widgets += 1
 
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
     def __init__(self, parent=None):
