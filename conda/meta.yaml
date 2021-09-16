@@ -1,6 +1,9 @@
 package:
   name: eqt
   version: {{ environ.get('GIT_DESCRIBE_TAG','v')[1:] }}
+  
+source:
+  path: ..
 
 build:
   skip: True # [py==38 and np==115]
