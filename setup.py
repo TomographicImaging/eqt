@@ -30,7 +30,7 @@ def version2pep440(version):
     return v_pep440
 
 
-git_version_string = subprocess.check_output('git describe', shell=True).decode("utf-8").rstrip()
+git_version_string = subprocess.check_output('git describe', shell=True).decode("utf-8")[1:]
     
 
 #with open("README.rst", "r") as fh:
