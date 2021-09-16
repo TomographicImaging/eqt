@@ -1,10 +1,9 @@
 package:
   name: eqt
-  version: "0.0.7"
+  version: {{ environ.get('GIT_DESCRIBE_TAG','v')[1:] }}
 
 build:
-  number: 3
-  
+  number: {{ GIT_DESCRIBE_NUMBER }}
 
 requirements:
   build:
