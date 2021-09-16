@@ -25,9 +25,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v1
+      #         with:
+      #           fetch-depth: 0
       - uses: actions/setup-python@v2
       - uses: casperdcl/deploy-pypi@v2
         with:
@@ -35,4 +35,3 @@ jobs:
           pip: wheel -w dist/ --no-deps .
           # only upload if a tag is pushed (otherwise just build & check)
           upload: ${{ github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags') }}
-          #test
