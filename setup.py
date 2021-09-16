@@ -37,11 +37,7 @@ git_version_string = subprocess.check_output('git describe', shell=True).decode(
 #    long_description = fh.read()
 long_description = 'A number of templates and tools to develop Qt GUIs with Python effectively.'
 
-if 'CONDA_BUILD' in os.environ.keys():
-    # if it is a conda build requirements are going to be satisfied by conda
-    install_requires = []
-    version = git_version_string
-else:
+if os.environ.get('CONDA_BUILD', 0) == 0:
     install_requires = [
     
         'sphinx',
@@ -49,6 +45,12 @@ else:
 
     ]
     version = version2pep440(git_version_string)
+    
+else:
+    # if it is a conda build requirements are going to be satisfied by conda
+    install_requires = []
+    version = git_version_string
+
     
 print ('version {}'.format(version))
 
