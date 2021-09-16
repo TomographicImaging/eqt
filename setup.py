@@ -44,12 +44,12 @@ if os.environ.get('CONDA_BUILD', 0) == 0:
         'pyside2'
 
     ]
-    version = version2pep440(git_version_string)
     
 else:
     # if it is a conda build requirements are going to be satisfied by conda
     install_requires = []
-    version = git_version_string
+    
+version = version2pep440(git_version_string)
 
     
 print ('version {}'.format(version))
