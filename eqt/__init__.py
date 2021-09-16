@@ -1,1 +1,3 @@
-__version__ = '0.0.7'
+from eqt import version as dversion
+
+__version__ = dversion.version
