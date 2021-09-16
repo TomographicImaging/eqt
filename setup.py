@@ -2,6 +2,8 @@
 
 from setuptools import setup
 import os
+import subprocess
+
 try:
     from sphinx.setup_command import BuildDoc
     sphinx_available = False
