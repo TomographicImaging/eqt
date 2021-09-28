@@ -33,7 +33,13 @@ class MainUI(QtWidgets.QMainWindow):
         # create a form layout widget
         fw = UIFormFactory.getQWidget(parent=self)
         
-        ### Example on how to add elements to the 
+        ### Example on how to add elements to the form
+
+        # add title
+        qlabel = QtWidgets.QLabel(fw.groupBox)
+        qlabel.setText("Form Widget")
+        fw.addTitle(qlabel, 'title')
+
         # add input 1 as QLineEdit
         qlabel = QtWidgets.QLabel(fw.groupBox)
         qlabel.setText("Input 1: ")
@@ -41,6 +47,9 @@ class MainUI(QtWidgets.QMainWindow):
         qwidget.setClearButtonEnabled(True)
         # finally add to the form widget
         fw.addWidget(qwidget, qlabel, 'input1')
+
+        # add separator
+        fw.addSeparator('separator_1_2')
 
         # add input 2 as QComboBox
         qlabel = "Input 2: "
