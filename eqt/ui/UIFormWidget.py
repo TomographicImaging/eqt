@@ -55,6 +55,21 @@ class UIFormWidget(object):
     def addWidget(self, qwidget, qlabel, name):
         self._addWidget(name, qwidget, qlabel)
 
+    def addTitle(self, qlabel, name):
+        if isinstance(qlabel, str):
+            txt = qlabel
+            qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
+            qlabel.setText(txt)
+        qlabel.setStyleSheet("font-weight: bold")
+        self._addWidget(name, qlabel)
+
+    def addSeparator(self, name):
+        # Adds horizontal separator to the form
+        frame = QtWidgets.QFrame()
+        frame.setFrameShape(QtWidgets.QFrame.HLine)
+        frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self._addWidget(name, frame)
+
     def _addWidget(self, name, qwidget, qlabel=None):
         formLayout = self.uiElements['groupBoxFormLayout']
 
