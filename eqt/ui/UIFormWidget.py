@@ -102,6 +102,76 @@ class UIFormWidget(object):
 
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
+    
+    def hide_widgets(self, names):
+        formLayout = self.uiElements['groupBoxFormLayout']
+        form_widget_names = list(self.widgets.keys())
+        names_to_hide = names
+
+        widget_indices = []
+        for name in names_to_hide:
+            field_name = name + '_field'
+            try:
+                widget_indices.append(form_widget_names.index(field_name))
+            except ValueError:
+                print("Warning: Could not find widget with name: ", name)
+
+        # We must save the widgets in the order they appeared in the form so that when they are
+        # shown they are in the correct order:
+        ordered_names_to_hide = [x for _, x in sorted(zip(widget_indices, names_to_hide))]
+
+        if not hasattr(self, 'hidden_widgets'):
+            self.hidden_widgets = {}
+
+        for name in ordered_names_to_hide:
+            field_name = name + '_field'
+            label_name = name + '_label'
+            # all widgets have a field:
+            try:
+                self.hidden_widgets[field_name] = self.widgets[field_name]
+                formLayout.removeWidget(self.widgets[field_name])
+                self.widgets[field_name].setVisible(False)
+                self.widgets.pop(field_name)
+            except KeyError:
+                print("Warning: Could not find widget with name: ", field_name)
+            # some widgets won't have a label:
+            try:
+                self.hidden_widgets[label_name] = self.widgets[label_name]
+                formLayout.removeWidget(self.widgets[label_name])
+                self.widgets.pop(label_name)
+            except KeyError:
+                pass
+
+
+    def show_widgets(self, names):
+        # We must retrieve the widgets in the order they first appeared in the form so that when they are
+        # shown they are in the correct order:
+        hidden_widget_names = list(self.hidden_widgets.keys())
+        names_to_show = names
+        widget_indices = []
+        for name in names_to_show:
+            field_name = name + '_field'
+            try:
+                widget_indices.append(hidden_widget_names.index(field_name))
+            except ValueError:
+                print("Warning: Could not find hidden widget with name: ", field_name)
+        ordered_names_to_show = [x for _, x in sorted(zip(widget_indices, names_to_show))]
+        for name in ordered_names_to_show:
+            field_name = name + '_field'
+            label_name = name + '_label'
+            if field_name in hidden_widget_names:
+                if label_name in hidden_widget_names:
+                    self.addWidget(self.hidden_widgets[field_name], self.hidden_widgets[label_name], name)
+                    self.hidden_widgets[field_name].setVisible(True)
+                    self.hidden_widgets[field_name].setVisible(True)
+                    self.hidden_widgets.pop(label_name)
+                else:
+                    self.addSpanningWidget(self.hidden_widgets[field_name], name)
+                self.hidden_widgets.pop(field_name)
+            else:
+                print("Warning: Could not find widget with name: ", field_name)
+
+
 
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
     def __init__(self, parent=None):

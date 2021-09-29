@@ -61,6 +61,11 @@ class MainUI(QtWidgets.QMainWindow):
         # finally add to the form widget
         fw.addWidget(qwidget, qlabel, 'input2')
 
+        #test of methods to hide and re-show a widget
+
+        fw.hide_widgets(['input1'])
+        fw.show_widgets(['input1'])
+
         # add the button box to the vertical layout, but outside the
         # form layout
         fw.uiElements['verticalLayout'].addWidget(bb)
