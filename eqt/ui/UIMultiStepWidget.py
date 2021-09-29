@@ -54,10 +54,6 @@ class UIMultiStepWidget(object):
             }
         self.widgets = {}
 
-    @property
-    def groupBox(self):
-        return self.uiElements['groupBox']
-
     def updateStep(self, go_to="next"):
         steps = list(self.widgets.keys())
         step_widgets = list(self.widgets.values())
@@ -137,7 +133,7 @@ class UIMultiStepFactory(QtWidgets.QWidget):
     you can add a widget to the vertical layout, using addStepWidget.
     The first step added will be shown to begin with, and the other steps 
     can be navigated between, using the next and previous buttons.
-    
+
     The returned dockWidget must be added with
     main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, dockWidget)
     '''
