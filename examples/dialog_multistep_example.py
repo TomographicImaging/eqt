@@ -102,9 +102,10 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.exec()
         
     def accepted(self):
-        print ("accepted")
-        print (self.fw1.widgets['input1_field'].text())
-        print (self.fw1.widgets['input2_field'].currentText())
+        print("accepted")
+        print(self.fw1.widgets['input1_field'].text())
+        print(self.fw1.widgets['input2_field'].currentText())
+        print(self.fw2.widgets['input3_field'].text())
         
         self.dialog.close()
     def rejected(self):
