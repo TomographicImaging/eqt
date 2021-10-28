@@ -7,6 +7,8 @@ import os
 from eqt.ui import UIFormFactory, FormDialog
 import unittest
 
+# skip the tests on GitHub actions
+skip_as_on_github_action = True
 
 class MainUI(QtWidgets.QMainWindow):
 
@@ -76,6 +78,7 @@ _instance = None
 class DialogTest(unittest.TestCase):
     '''Test the margarita mixer GUI'''
 
+    @unittest.skipUnless(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
     def setUp(self):
         '''Create the GUI'''
         super(DialogTest, self).setUp()
@@ -91,20 +94,24 @@ class DialogTest(unittest.TestCase):
         # QTest.mouseClick(self.window.push_button, Qt.LeftButton)
         # self.dialog = window.dialog
 
+    @unittest.skipUnless(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
     def tearDown(self):
         del self.app
         super(DialogTest, self).tearDown()
 
+    @unittest.skipUnless(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
     def test_close(self):
         self.window.close()
         self.assertTrue(True)
 
+    @unittest.skipUnless(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
     def test_openclose_dialog(self):
         QTest.mouseClick(self.window.push_button, Qt.LeftButton)
         dialog = self.window.dialog
         print(dialog)
         dialog.close()
 
+    @unittest.skipUnless(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
     def stest_defaults(self):
         '''Test the GUI in its default state'''
 
@@ -117,11 +124,3 @@ class DialogTest(unittest.TestCase):
         print("click")
         print(self.window.dialog.Ok, self.window.dialog.Cancel)
         QTest.mouseClick(self.window.push_button, Qt.LeftButton)
-
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-
-    window = MainUI()
-
-    sys.exit(app.exec_())
