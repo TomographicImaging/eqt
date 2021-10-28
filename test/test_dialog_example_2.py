@@ -8,7 +8,10 @@ from eqt.ui import UIFormFactory, FormDialog
 import unittest
 
 # skip the tests on GitHub actions
-skip_as_on_github_action = True
+if os.environ.get('CONDA_BUILD', 0) == 1:
+    skip_as_conda_build = True
+else:
+    skip_as_conda_build = False
 
 class MainUI(QtWidgets.QMainWindow):
 
@@ -78,7 +81,7 @@ _instance = None
 class DialogTest(unittest.TestCase):
     '''Test the margarita mixer GUI'''
 
-    @unittest.skipIf(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
+    @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
     def setUp(self):
         '''Create the GUI'''
         super(DialogTest, self).setUp()
@@ -94,24 +97,24 @@ class DialogTest(unittest.TestCase):
         # QTest.mouseClick(self.window.push_button, Qt.LeftButton)
         # self.dialog = window.dialog
 
-    @unittest.skipIf(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
+    @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
     def tearDown(self):
         del self.app
         super(DialogTest, self).tearDown()
 
-    @unittest.skipIf(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
+    @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
     def test_close(self):
         self.window.close()
         self.assertTrue(True)
 
-    @unittest.skipIf(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
+    @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
     def test_openclose_dialog(self):
         QTest.mouseClick(self.window.push_button, Qt.LeftButton)
         dialog = self.window.dialog
         print(dialog)
         dialog.close()
 
-    @unittest.skipUnless(skip_as_on_github_action, "On GitHub do not do any test with interfaces")
+    @unittest.skipUnless(skip_as_conda_build, "On conda builds do not do any test with interfaces")
     def stest_defaults(self):
         '''Test the GUI in its default state'''
 
