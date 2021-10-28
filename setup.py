@@ -30,14 +30,19 @@ def version2pep440(version):
     return v_pep440
 
 
-git_version_string = subprocess.check_output('git describe', shell=True).decode("utf-8")[1:]
+git_version_string = subprocess.check_output('git describe', shell=True).decode("utf-8").rstrip()[1:]
     
 
 #with open("README.rst", "r") as fh:
 #    long_description = fh.read()
 long_description = 'A number of templates and tools to develop Qt GUIs with Python effectively.'
 
-if os.environ.get('CONDA_BUILD', 0) == 0:
+if os.environ.get('CONDA_BUILD', 0) == '1':
+    # if it is a conda build requirements are going to be satisfied by conda
+    install_requires = []
+    version = git_version_string
+    cwd = os.path.join(os.environ.get('RECIPE_DIR'),'..')
+else:
     install_requires = [
     
         'sphinx',
@@ -45,15 +50,18 @@ if os.environ.get('CONDA_BUILD', 0) == 0:
 
     ]
     version = version2pep440(git_version_string)
-    
-else:
-    # if it is a conda build requirements are going to be satisfied by conda
-    install_requires = []
-    version = git_version_string
+    cwd = os.getcwd()
 
     
 print ('version {}'.format(version))
+print(cwd)
+fname = os.path.join(cwd, 'eqt', 'version.py')
+print("write version at: ", fname)
 
+if os.path.exists(fname):
+    os.remove(fname)
+with open(fname, 'w') as f:
+    f.write("version = \"{}\"".format(version))
 name = "eqt"
 
 setup(name=name,

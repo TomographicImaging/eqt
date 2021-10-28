@@ -1,5 +1,7 @@
 ## v**
 * Adds methods to add titles and separators to the FormWidget
+* Adds version string from git describe
+* Added unit tests and a way to disable interactive tests if run on conda build
 * Adds UIMultiStepWidget
 
 ## v0.1.0
