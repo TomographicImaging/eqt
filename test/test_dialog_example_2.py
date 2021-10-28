@@ -13,6 +13,8 @@ if os.environ.get('CONDA_BUILD', 0) == 1:
 else:
     skip_as_conda_build = False
 
+print ("skip_as_conda_build is set to ", skip_as_conda_build)
+
 class MainUI(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
