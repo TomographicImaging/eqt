@@ -62,7 +62,7 @@ print("write version at: ", fname)
 if os.path.exists(fname):
     os.remove(fname)
 with open(fname, 'w') as f:
-    f.write('version = \'{}\''.format(version))
+    f.write("version = \"{}\"".format(version))
 name = "eqt"
 
 setup(name=name,
