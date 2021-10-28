@@ -37,7 +37,7 @@ git_version_string = subprocess.check_output('git describe', shell=True).decode(
 #    long_description = fh.read()
 long_description = 'A number of templates and tools to develop Qt GUIs with Python effectively.'
 
-if os.environ.get('CONDA_BUILD', 0) == 0:
+if os.environ.get('CONDA_BUILD', 0) == '0':
     install_requires = [
     
         'sphinx',
