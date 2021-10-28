@@ -45,15 +45,24 @@ if os.environ.get('CONDA_BUILD', 0) == 0:
 
     ]
     version = version2pep440(git_version_string)
+    cwd = os.getcwd()
     
 else:
     # if it is a conda build requirements are going to be satisfied by conda
     install_requires = []
     version = git_version_string
+    cwd = os.path.join(os.environ.get('RECIPE_DIR'),'..')
 
     
 print ('version {}'.format(version))
+print(cwd)
+fname = os.path.join(cwd, 'eqt', 'version.py')
+print("write version at: ", fname)
 
+if os.path.exists(fname):
+    os.remove(fname)
+with open(fname, 'w') as f:
+    f.write('version = \'{}\''.format(version))
 name = "eqt"
 
 setup(name=name,
