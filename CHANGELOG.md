@@ -1,5 +1,6 @@
 ## v**
 * Adds methods to add titles and separators to the FormWidget
+* Adds UIMultiStepWidget
 
 ## v0.1.0
 * Fixes FormDockWidget by setting a FormWidget as the DockWidget's widget
