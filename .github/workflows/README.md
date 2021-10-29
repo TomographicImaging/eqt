@@ -5,7 +5,7 @@ This github action builds and tests the conda package, by using the [conda-packa
 
 When pushing to main *all* variants are built and tested.
 
-When making an [annotated](https://git-scm.com/book/en/v2/Git-Basics-Tagging) tag, *all* variants are built, tested and published to the [paskino conda channel for qt-elements](https://anaconda.org/paskino/eqt/files). This includes linux, windows and macOS versions.
+When making an [annotated](https://git-scm.com/book/en/v2/Git-Basics-Tagging) tag, *all* variants are built, tested and published to the [paskino conda channel for qt-elements](https://anaconda.org/paskino/eqt/files). This package is noarch.
 
 When opening or modifying a pull request to main, a single variant is built and tested, but not published. This variant is `python=3.7` and `numpy=1.18`.
 
