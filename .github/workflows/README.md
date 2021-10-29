@@ -9,7 +9,7 @@ When making an [annotated](https://git-scm.com/book/en/v2/Git-Basics-Tagging) ta
 
 When opening or modifying a pull request to main, a single variant is built and tested, but not published. This variant is `python=3.7` and `numpy=1.18`.
 
-## Building the PyPi Package: [main.yml](https://github.com/paskino/qt-elements/blob/main/.github/workflows/main.yml)
+## Building the PyPi Package: [pypi_publish.yml](https://github.com/paskino/qt-elements/blob/main/.github/workflows/pypi_publish.yml)
 This github action builds the pypi package, by using the [deploy-pypi action](https://github.com/casperdcl/deploy-pypi).
 
 When pushing to main it is built and checked.
