@@ -25,11 +25,27 @@ from PySide2.QtWidgets import (QAction, QApplication, QCheckBox, QComboBox,
 from qdarkstyle.dark.palette import DarkPalette
 from qdarkstyle.light.palette import LightPalette
 
+# TODO: fix progress of zipping files
+
 
 class MainWindow(QMainWindow):
+    ''''
+    A MainWindow with:
+    - File menu including settings dialog to set stylesheet
+    - methods to create + update progress bar in a dialog window
+    - method for warning dialog
+    - method to start qprocess and attach connections to it
+    - Methods to save session and produce save dialogs (optionally)
+    '''
 
     def __init__(self, title="", save_sessions=True, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+        ''''
+        if save_sessions is set to True:
+        - a folder will be created for the session
+        - 'Save' and 'Save & Exit' buttons will be added to the File menu
+        - Upon closing the app user will be prompted whether to save
+        - Save dialog has option to compress files'''
 
         self.save_sessions = save_sessions
 
@@ -37,6 +53,8 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle(title)
         #self.create_dockwidgets()
+
+        print("The title is: ", title)
 
         self.settings = QSettings(title)
 
@@ -56,9 +74,11 @@ class MainWindow(QMainWindow):
         if self.settings.value("dark_mode") is None:
             self.settings.setValue("dark_mode", "true")
         if self.settings.value("dark_mode") == "true":
-            style = qdarkstyle.load_stylesheet(palette=DarkPalette)
+            palette=DarkPalette
         else:
-            style = qdarkstyle.load_stylesheet(palette=LightPalette)
+            palette=LightPalette
+        style = qdarkstyle.load_stylesheet(palette=palette)
+        print("setting style to: ", palette)
         self.setStyleSheet(style)
 
     def create_menu(self):
@@ -66,9 +86,10 @@ class MainWindow(QMainWindow):
         self.menu = self.menuBar()
 
         file_menu = QMenu("File")
+        self.file_menu = file_menu
 
         settings_action = QAction("Settings", self)
-        settings_action.triggered.connect(self.open_settings_window)
+        settings_action.triggered.connect(self.open_settings_dialog)
         file_menu.addAction(settings_action)
 
         if self.save_sessions:
@@ -91,7 +112,10 @@ class MainWindow(QMainWindow):
     # dialogs: --------------------------------------------------------------------------
 
     def warningDialog(self, message='', window_title='', detailed_text=''):
-        # move to eqt MainWindow
+        ''' Produces a warning dialog with:
+        window_title (str): title of the window
+        message (str): error message in the window
+        detailed_text (str): message which appears when window is expanded'''
         dialog = QMessageBox(self)
         dialog.setIcon(QMessageBox.Information)
         dialog.setText(message)
@@ -102,6 +126,12 @@ class MainWindow(QMainWindow):
         return retval
 
     def create_progress_window(self, title, text, max = 100, cancel = None):
+        ''' Creates a dialog box with a progress bar.
+        title (str): title of the window
+        text (str): text which appears above progress bar
+        max (int): maximum value of the progress bar
+        cancel (method): method to carry out if progress bar is cancelled. If set to None, no cancel
+        button is added to the dialog, so it is impossible to cancel the task'''
         # move to eqt MainWindow
         self.progress_window = QProgressDialog(text, "Cancel", 0, max, self, QtCore.Qt.Window) 
         self.progress_window.setWindowTitle(title)
@@ -116,12 +146,44 @@ class MainWindow(QMainWindow):
             self.progress_window.canceled.connect(cancel)
 
     def update_progress_bar(self, value):
+        ''' updates the progress bar in the progress dialog
+        if value (float/int) is bigger than the current progress value'''
         if int(value) > self.progress_window.value():
             self.progress_window.setValue(value)
 
-    def open_settings_window(self):
-        settings_window = SettingsWindow(self)
-        settings_window.show()
+
+    ## Settings dialog --------------------------------------------------------------------
+
+    def open_settings_dialog(self):
+        settings_dialog = SettingsDialog(self)
+        self.setup_settings_dialog(settings_dialog)
+        settings_dialog.show()
+
+    def setup_settings_dialog(self, settings_dialog):
+        settings_dialog.Ok.connect(lambda: self.settings_dialog_accept(settings_dialog))
+        settings_dialog.Cancel.connect(lambda: self.settings_dialog_quit(settings_dialog))
+
+        if self.settings.value("dark_mode") is not None:
+            if self.settings.value("dark_mode") == "true":
+                settings_dialog.fw.widgets['dark_checkbox_field'].setChecked(True)
+            else:
+                settings_dialog.fw.widgets['dark_checkbox_field'].setChecked(False)
+        else:
+            settings_dialog.fw.widgets['dark_checkbox_field'].setChecked(True)
+    
+    
+    def settings_dialog_accept(self, settings_dialog):
+        print("qt settings dialog accept")
+        if settings_dialog.fw.widgets['dark_checkbox_field'].isChecked():
+            self.settings.setValue("dark_mode", "true")
+        else:
+            self.settings.setValue("dark_mode", "false")
+        self.set_app_style()
+            
+        settings_dialog.close()
+
+    def settings_dialog_quit(self, settings_dialog):
+        settings_dialog.close()
 
     ### QProcess -------------------------------------------------------------------------------------------
 
@@ -305,6 +367,9 @@ class MainWindow(QMainWindow):
             self.close()
 
 
+
+# TODO: move connections outside of this class
+
 class SaveDialog(FormDialog):
     def __init__(self, parent=None, title="Save Session", event=None):
         FormDialog.__init__(self, parent, title)
@@ -372,10 +437,10 @@ class SaveDialog(FormDialog):
 
 
 
-class SettingsWindow(QDialog):
+class SettingsDialog(QDialog):
 
     def __init__(self, parent):
-        super(SettingsWindow, self).__init__(parent)
+        super(SettingsDialog, self).__init__(parent)
 
         self.parent = parent
 
@@ -384,43 +449,30 @@ class SettingsWindow(QDialog):
         fw = UIFormFactory.getQWidget(parent=self)
 
         dark_checkbox = QCheckBox("Dark Mode")
-        if self.parent.settings.value("dark_mode") is not None:
-            if self.parent.settings.value("dark_mode") == "true":
-                dark_checkbox.setChecked(True)
-            else:
-                dark_checkbox.setChecked(False)
-        else:
-            dark_checkbox.setChecked(True)
+
         fw.addSpanningWidget(dark_checkbox, 'dark_checkbox')
 
-        self.buttons = QDialogButtonBox(
+        self.buttonBox = QDialogButtonBox(
            QDialogButtonBox.Save | QDialogButtonBox.Cancel,
            Qt.Horizontal, self)
-        self.buttons.accepted.connect(self.accept)
-        self.buttons.rejected.connect(self.quit)
-        fw.uiElements['verticalLayout'].addWidget(self.buttons)
+        fw.uiElements['verticalLayout'].addWidget(self.buttonBox)
         self.setLayout(fw.uiElements['verticalLayout'])
 
         self.fw = fw
-        
 
-    def accept(self):
-        if self.fw.widgets['dark_checkbox_field'].isChecked():
-            self.parent.settings.setValue("dark_mode", "true")
-        else:
-            self.parent.settings.setValue("dark_mode", "false")
-        self.parent.set_app_style()
-            
-        self.close()
-
-    def quit(self):
-        self.close()
+    @property
+    def Ok(self):
+        '''returns a reference to the Dialog Ok button to connect its signals'''
+        return self.buttonBox.accepted
+    @property
+    def Cancel(self):
+        '''returns a reference to the Dialog Cancel button to connect its signals'''
+        return self.buttonBox.rejected
 
 
 
 def create_main_window():
-    window = MainWindow(
-        "Test Main Window")
+    window = MainWindow("Test Main Window")
     return window
 
 
