@@ -146,6 +146,16 @@ class UIStackedWidget(object):
         for label in labels:
             self.addTab(label)
 
+    def getTab(self, label):
+        ''' return the tab with label: label
+        Parameter
+        ---------
+        label: str
+            The label of the tab to be returned.
+            Note, the label may be different to the tab's title.'''
+        return self.tab[label]
+
+
 
 class StackedWidget(QWidget, UIStackedWidget):
     def __init__(self, parent=None, layout='vertical'):
