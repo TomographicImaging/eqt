@@ -153,7 +153,12 @@ class UIStackedWidget(object):
         label: str
             The label of the tab to be returned.
             Note, the label may be different to the tab's title.'''
-        return self.tab[label]
+        return self.tabs[label]
+
+    def getTabs(self):
+        ''' return the dict of tabs'''
+        print(self.tabs)
+        return self.tabs
 
 
 
@@ -180,6 +185,13 @@ class StackedDockWidget(QtWidgets.QDockWidget):
 
     def addTabs(self, titles):
         self.widget().addTabs(titles)
+
+    def getTab(self, label):
+        return self.widget().getTab(label)
+
+    def getTabs(self):
+        print("get tabs")
+        return self.widget().getTabs()
 
 
 class StackedWidgetFactory(QWidget):
