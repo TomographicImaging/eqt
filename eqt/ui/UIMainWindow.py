@@ -9,8 +9,8 @@ from functools import partial
 
 import qdarkstyle
 from eqt.threading import Worker
-from eqt.ui import FormDialog, UIFormFactory, UIMultiStepFactory
-from eqt.ui.UIMultiStepWidget import MultiStepWidget
+from eqt.ui import FormDialog, UIFormFactory
+from eqt.ui.UIMultiStepWidget import MultiStepWidget, UIMultiStepFactory
 from eqt.ui.UIStackedWidget import StackedWidgetFactory
 from PySide2 import QtCore
 from PySide2.QtCore import QProcess, QRegExp, QSettings, Qt, QThreadPool
