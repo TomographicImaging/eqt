@@ -52,9 +52,6 @@ class MainWindow(QMainWindow):
         self.threadpool = QThreadPool()
 
         self.setWindowTitle(title)
-        #self.create_dockwidgets()
-
-        print("The title is: ", title)
 
         self.settings = QSettings(title)
 
@@ -78,7 +75,6 @@ class MainWindow(QMainWindow):
         else:
             palette=LightPalette
         style = qdarkstyle.load_stylesheet(palette=palette)
-        print("setting style to: ", palette)
         self.setStyleSheet(style)
 
     def create_menu(self):
