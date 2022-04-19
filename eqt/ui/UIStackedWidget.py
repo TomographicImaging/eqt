@@ -189,7 +189,6 @@ class StackedDockWidget(QtWidgets.QDockWidget):
         return self.widget().getTab(label)
 
     def getTabs(self):
-        print("get tabs")
         return self.widget().getTabs()
 
 
