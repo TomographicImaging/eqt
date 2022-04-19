@@ -157,7 +157,6 @@ class UIStackedWidget(object):
 
     def getTabs(self):
         ''' return the dict of tabs'''
-        print(self.tabs)
         return self.tabs
 
 
