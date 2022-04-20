@@ -86,14 +86,40 @@ class UIStackedWidget(object):
     def currentIndex(self):
         return self.Stack.currentIndex()
 
-    def addTab(self, title, widget='form'):
+    def addTab(self, label, widget='form', title=None, number_title=True):
+        ''' Adds a tab to the StackedWidget.
+        
+        Parameters
+        ----------
+        label: str
+            The name that will be used to refer to the tab.
+        title: str
+            The name the tab will be listed as in the QListWidget.
+        number_title: bool, default True
+            Determines whether the title of the tab is generated 
+            by adding a number in front of the label. E.g. if the
+            label is "FBP" and this is the first tab that has been
+            added then the title will be "1 - FBP" if number_title
+            has been set to True and title=None
+        widget: QWidget or str: 'form', default 'form'
+            the widget that will be contained in the tab.
+            by default this is set to 'form' which means an empty
+            FormWidget is created'''
+
+        if title is None:
+            if number_title:
+                title_num = len(self.tabs) + 1
+                title = "{} - {}".format(str(title_num), label)
+            else:
+                raise Exception('''The title of the tab has not been set.
+                    Please set title - this must be a string, or set number_title to True.''')
         self.stack_list.addItem(title)
 
         if widget == 'form':
             widget = UIFormFactory.getQWidget(self)
 
         self.Stack.addWidget(widget)
-        self.tabs[title] = widget
+        self.tabs[label] = widget
         self.num_tabs += 1
         height_multiplier = self.num_tabs + 1
         if self.layout_type != 'vertical':
@@ -107,9 +133,32 @@ class UIStackedWidget(object):
         self.stack_list.setMaximumHeight(
             self.stack_list.sizeHintForRow(0)*height_multiplier)
 
-    def addTabs(self, titles):
-        for title in titles:
-            self.addTab(title=title)
+    def addTabs(self, labels):
+        '''
+        Adds multiple tabs to the StackedWidget
+        All tabs contain an empty FormWidget and their title is
+        their label, plus they are numbered according to their order.
+        Parameters
+        ----------
+        labels: list of str
+            The names that will be used to refer to the tabs.
+        '''
+        for label in labels:
+            self.addTab(label)
+
+    def getTab(self, label):
+        ''' return the tab with label: label
+        Parameter
+        ---------
+        label: str
+            The label of the tab to be returned.
+            Note, the label may be different to the tab's title.'''
+        return self.tabs[label]
+
+    def getTabs(self):
+        ''' return the dict of tabs'''
+        return self.tabs
+
 
 
 class StackedWidget(QWidget, UIStackedWidget):
@@ -135,6 +184,12 @@ class StackedDockWidget(QtWidgets.QDockWidget):
 
     def addTabs(self, titles):
         self.widget().addTabs(titles)
+
+    def getTab(self, label):
+        return self.widget().getTab(label)
+
+    def getTabs(self):
+        return self.widget().getTabs()
 
 
 class StackedWidgetFactory(QWidget):
