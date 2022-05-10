@@ -1,5 +1,6 @@
 
-
+## v0.2.2
+* By default, automatically number the tab titles in a StackWidget
 
 ## v0.2.1
 * Adds methods to add titles and separators to the FormWidget
