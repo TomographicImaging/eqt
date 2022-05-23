@@ -1,3 +1,6 @@
+## vx.x.x
+Notes:
+- testing github action by making a PR that triggers it to run
 
 ## v0.2.2
 * By default, automatically number the tab titles in a StackedWidget
