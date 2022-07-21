@@ -8,19 +8,19 @@ from PySide2.QtWidgets import QProgressDialog
 
 
 class ProgressTimerDialog(QProgressDialog):
-    def __init__(self, process_name, cancelText="Cancel",  parent=None, flags=Qt.WindowFlags(), auto_close=True, cancel_method=None):
+    def __init__(self, process_name, cancelText="Cancel",  parent=None, flags=Qt.WindowFlags(), cancel_method=None):
 
         labelText = "Running {}".format(process_name)
 
         QProgressDialog.__init__(self, labelText, cancelText, 0, 0, parent, flags)
 
         self.setWindowTitle(process_name)
-        self.setWindowModality(QtCore.Qt.ApplicationModal) #This means the other windows can't be used while this is open
         self.setMinimumDuration(0)
+        #This means the other windows can't be used while this is open:
+        self.setWindowModality(QtCore.Qt.ApplicationModal) 
         self.setWindowFlag(QtCore.Qt.WindowCloseButtonHint, False)
         self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
         self.setWindowFlag(QtCore.Qt.WindowMinimizeButtonHint, False)
-        self.setAutoClose(auto_close)
         if cancel_method is None:
             self.setCancelButton(None)
         else:

@@ -1,14 +1,10 @@
 from PySide2 import QtCore, QtWidgets
-import glob, sys, os
-from eqt.ui import UIFormFactory
+import sys
 from eqt.ui.progress_timer_dialog import ProgressTimerDialog
 from eqt.threading import Worker
 from time import sleep
-from PySide2.QtCore import QProcess, QRegExp, QSettings, Qt, QThreadPool
-from PySide2.QtGui import QCloseEvent, QKeySequence, QRegExpValidator
-from PySide2.QtWidgets import (QAction, QComboBox, QDockWidget, QFileDialog,
-                               QLabel, QMainWindow, QMenu, QMessageBox,
-                               QProgressDialog, QStackedWidget, QTabWidget)
+from PySide2.QtCore import QThreadPool
+
 
 class MainUI(QtWidgets.QMainWindow):
 
@@ -49,17 +45,6 @@ class MainUI(QtWidgets.QMainWindow):
         self.progress_windows[process_name] = progress_window
         progress_window.show()
 
-
-    def accepted(self):
-        print ("accepted")
-        print (self.fw.widgets['input1_field'].text())
-        print (self.fw.widgets['input2_field'].currentText())
-        
-        self.dialog.close()
-
-    def rejected(self):
-        print ("rejected")
-        self.dialog.close()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
