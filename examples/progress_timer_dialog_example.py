@@ -1,6 +1,6 @@
 from PySide2 import QtCore, QtWidgets
 import sys
-from eqt.ui.progress_timer_dialog import ProgressTimerDialog
+from eqt.ui import ProgressTimerDialog
 from eqt.threading import Worker
 from time import sleep
 from PySide2.QtCore import QThreadPool
