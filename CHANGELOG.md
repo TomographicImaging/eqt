@@ -1,3 +1,5 @@
+## v ???
+* Add ProgressTimerDialog and example.
 
 ## v0.2.2
 * By default, automatically number the tab titles in a StackedWidget
