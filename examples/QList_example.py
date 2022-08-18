@@ -4,6 +4,12 @@ from eqt.ui import UIFormFactory
 from eqt.ui.UIFormWidget import FormWidget
 from PySide2.QtWidgets import QListWidget
 from PySide2.QtCore import Qt
+try:
+    import qdarkstyle
+    from qdarkstyle.dark.palette import DarkPalette
+    HAS_QDARKSTYLE = True
+except:
+    HAS_QDARKSTYLE = False
 
 def createListWidget():
     listWidget = QListWidget()
@@ -49,6 +55,10 @@ class MainUI(QtWidgets.QMainWindow):
 
         self.setCentralWidget(widg)
 
+        if  HAS_QDARKSTYLE:
+            style = qdarkstyle.load_stylesheet(palette=DarkPalette)
+            self.setStyleSheet(style)
+
         self.show()
 
 class ListWidgetWithDeleteButtons(QtWidgets.QListWidget):
@@ -63,25 +73,28 @@ class ListWidgetWithDeleteButtons(QtWidgets.QListWidget):
         for item_name in items:
             group_box = QtWidgets.QGroupBox()
             label = QtWidgets.QLabel(parent=group_box, text=item_name)
-            # verticalLayout = QtWidgets.QHBoxLayout(self)
-            # verticalLayout.addWidget(label)
-            # verticalLayout.addWidget(QtWidgets.QPushButton("Delete!"))
-            
-            # group_box.setLayout(verticalLayout)
 
             form_widget = FormWidget()
 
+            form_widget.uiElements['verticalLayout'].setContentsMargins(1,1,1, 1)
+            form_widget.uiElements['groupBoxFormLayout'].setContentsMargins(1,1,10, 1)
+            #print(form_widget.uiElements['verticalLayout'].setSpacing(100))
+
             btn = QtWidgets.QPushButton()
 
-            pixmapi = getattr(QtWidgets.QStyle, 'SP_DockWidgetCloseButton')
+            pixmapi = getattr(QtWidgets.QStyle, 'SP_DialogCancelButton')   #DockWidgetCloseButton')
             icon = self.style().standardIcon(pixmapi)
             btn.setIcon(icon)
 
             button = btn
             button.setMaximumSize(button.minimumSizeHint())
-            form_widget.addWidget(button, label, item_name)
+            form_widget.addWidget(button, label, item_name) #, widget_alignment=QtCore.Qt.AlignRight)
+            # form_widget.uiElements['groupBoxFormLayout'].setFormAlignment(QtCore.Qt.AlignRight)
+            label.setAlignment(QtCore.Qt.AlignRight)
+            
             item = QtWidgets.QListWidgetItem(self)
-            item.setSizeHint(form_widget.sizeHint())
+            print(form_widget.sizeHint())
+            item.setSizeHint(form_widget.sizeHint()+ QtCore.QSize(5, 10))
             self.addItem(item)
             self.setItemWidget(item, form_widget)
             #self.setItemWidget(item, group_box)
