@@ -45,9 +45,6 @@ class MainUI(QtWidgets.QMainWindow):
         qlist = ListWidgetWithDeleteButtons()
         qlist.addItems(["Transmission to Absorption", "Centre of Rotation Correction", "Beam Profile Correction"])
         
-        #pb.clicked.connect(lambda: self.openFormDialog())
-        #qlist = createListWidget()
-        
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(qlist)
         
@@ -70,59 +67,54 @@ class ListWidgetWithDeleteButtons(QtWidgets.QListWidget):
         #self.setStyleSheet("QListWidget {margin: 0px;} QListWidget::item { padding: 0px; }")
         self.setSpacing(0)
         self.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
+        self.setDefaultDropAction(Qt.MoveAction)
 
+        self.close_buttons = {}
+        self.items = {}
 
     def addItems(self, items):
         for item_name in items:
+            print(item_name)
             form_widget = QtWidgets.QWidget()
 
             verticalLayout = QtWidgets.QVBoxLayout(form_widget)
-
-            # Add vertical layout to main widget (self)
-            # verticalLayout.addWidget(self)
+            # Add vertical layout to main widget
             form_widget.setLayout(verticalLayout)
-
             # Add group box
             groupBox = QtWidgets.QGroupBox(form_widget)
-
             # Add horizontal layout to group box
             layout = QtWidgets.QHBoxLayout(groupBox)
-
             # Add elements to layout
             verticalLayout.addWidget(groupBox)
 
+            verticalLayout.setContentsMargins(1, 0, 1, 0)
+            label = QtWidgets.QLabel(groupBox, text=item_name)
             
 
-            verticalLayout.setContentsMargins(1,0,1, 0)
-            #print(form_widget.uiElements['verticalLayout'].setSpacing(100))
-            label = QtWidgets.QLabel(groupBox, text=item_name) #parent=group_box,
-            btn = QtWidgets.QPushButton()
+            self.close_buttons[item_name] = QtWidgets.QPushButton()
 
-            pixmapi = getattr(QtWidgets.QStyle, 'SP_DialogCancelButton')   #DockWidgetCloseButton')
+            pixmapi = getattr(QtWidgets.QStyle, 'SP_DialogCancelButton')
             icon = self.style().standardIcon(pixmapi)
-            btn.setIcon(icon)
+            self.close_buttons[item_name].setIcon(icon)
 
-            button = btn
-            button.setMaximumSize(button.minimumSizeHint())
+
+            self.close_buttons[item_name].setMaximumSize(self.close_buttons[item_name].minimumSizeHint())
             layout.addWidget(label)
-            layout.addWidget(button )
-            #layout.setWidget(button)#, alignment=QtCore.Qt.AlignRight)
+            layout.addWidget(self.close_buttons[item_name])
             layout.setContentsMargins(2,2,2,2)
-            # form_widget.uiElements['groupBoxFormLayout'].setFormAlignment(QtCore.Qt.AlignRight)
-            #label.setAlignment(QtCore.Qt.AlignRight)
-            
             
             item = QtWidgets.QListWidgetItem(self)
-            print(form_widget.sizeHint())
-            item.setSizeHint(form_widget.sizeHint()+ QtCore.QSize(5, 10))
+            item.setSizeHint(form_widget.sizeHint() + QtCore.QSize(5, 10))
             self.addItem(item)
             self.setItemWidget(item, form_widget)
-            #self.setItemWidget(item, group_box)
-        # QtWidgets.QListWidget.addItems(self, items)
-        # for i in range(self.count()):
-        #     print(i)
-        #     item = self.item(i)
-        #     #self.setItemWidget(item, self.close_button)
+            self.items[item_name] = item
+
+        for item_name in items:
+            self.close_buttons[item_name].clicked.connect(lambda:self.on_button_clicked(item_name))
+
+    def on_button_clicked(self, item_name):
+        self.takeItem(self.indexFromItem(self.items[item_name]).row())
+        del self.items[item_name]
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
