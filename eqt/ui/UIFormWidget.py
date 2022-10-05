@@ -122,6 +122,19 @@ class FormDockWidget(QtWidgets.QDockWidget):
     def addWidget(self, qwidget, qlabel, name):
         self.widget().addWidget(qwidget, qlabel, name)
 
+    def getWidget(self, name, role='widget'):
+        '''returns the Widget by the name with which it has been added
+        
+        By default it returns the widget that is the field in the form. 
+        The user can get the label by specifying the role to be label
+        
+        Raises ValueError if the role is not widget or label.
+        '''
+        allowed_roles = ['widget', 'label']
+        if role in allowed_roles:
+            return self.widget().widgets['{}_{}'.format(name, role)]
+        raise ValueError('Unexpected role: expected any of {}, got {}'.format(allowed_roles, role))
+
 
 class UIFormFactory(QtWidgets.QWidget):
     # def generateUIFormView(QtWidgets.QWidget):
@@ -132,8 +145,8 @@ class UIFormFactory(QtWidgets.QWidget):
     main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, dockWidget)
     '''
     @staticmethod
-    def getQDockWidget(parent=None):
-        return FormDockWidget(parent)
+    def getQDockWidget(parent=None, title=None):
+        return FormDockWidget(parent, title)
 
     @staticmethod
     def getQWidget(parent=None):
