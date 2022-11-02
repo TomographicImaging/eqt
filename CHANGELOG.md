@@ -1,3 +1,6 @@
+## v x.x.x
+* Use v2.0.0 of conda build action
+
 ## v0.3.0
 * Add ProgressTimerDialog and example.
 * Delete ErrorObserver, as this is relevant to VTK, not Qt, so it has been moved to the CILViewer repo.
