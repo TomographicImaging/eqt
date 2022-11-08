@@ -122,7 +122,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
     def addWidget(self, qwidget, qlabel, name):
         self.widget().addWidget(qwidget, qlabel, name)
 
-    def getWidget(self, name, role='widget'):
+    def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
         
         By default it returns the widget that is the field in the form. 
