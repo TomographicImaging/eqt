@@ -1,4 +1,4 @@
-## vx.x.x
+## v0.4.0
 * Add ReOrderableListWidget and ReOrderableListDockWidget
 * Add example of using the ReOrderableListWidget
 
