@@ -1,3 +1,7 @@
+## vx.x.x
+* Add ReOrderableListWidget and ReOrderableListDockWidget
+* Add example of using the ReOrderableListWidget
+
 ## v0.3.0
 * Add ProgressTimerDialog and example.
 * Delete ErrorObserver, as this is relevant to VTK, not Qt, so it has been moved to the CILViewer repo.
