@@ -128,7 +128,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         By default it returns the widget that is the field in the form. 
         The user can get the label by specifying the role to be label
         
-        Raises ValueError if the role is not widget or label.
+        Raises ValueError if the role is not field or label.
         '''
         allowed_roles = ['field', 'label']
         if role in allowed_roles:
