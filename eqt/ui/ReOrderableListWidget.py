@@ -1,17 +1,15 @@
-import sys
-from PySide2 import QtGui,QtCore, QtWidgets
+from PySide2 import QtCore, QtWidgets
 
 class ReOrderableListWidget(QtWidgets.QTableWidget):      
     def __init__(self,parent=None):
         super(ReOrderableListWidget,self).__init__(parent)
         self.setColumnCount(1)
-        self.setColumnWidth(0, self.width()/2)
         self.verticalHeader().setVisible(False)
         self.horizontalHeader().setVisible(False)
         self.verticalHeader().setDefaultSectionSize(35)
-        self.setMinimumSize(self.maximumSize())
+        self.horizontalHeader().setStretchLastSection(True)
+        self.resizeColumnsToContents()
         
-
     def addItem(self, name):
         #new row
         row=self.rowCount()
@@ -70,25 +68,14 @@ class ReOrderableListWidget(QtWidgets.QTableWidget):
         #text in column 1
         self.setItem(row,0,item)
 
-        self.setMaximumSize(self._getSizeForTable())
-
     def addItems(self, names):
         for name in names:
             self.addItem(name)
 
-    def _getSizeForTable(self):
-        w = self.verticalHeader().width() + 4 # +4 seems to be needed
-        for i in range(self.columnCount()):
-            w += self.columnWidth(i) # seems to include gridline
-        h = self.horizontalHeader().height() + 4
-        for i in range(self.rowCount()):
-            h += self.rowHeight(i)
-        return QtCore.QSize(w, h)
-
     def onClickDelete(self):
         # find the item with the same name to get the row
         text=self.sender().property("name")
-        item=self.findItems(text.strip("_delete"),QtCore.Qt.MatchExactly)[0]
+        item=self.findItems(text.replace("_delete", ""), QtCore.Qt.MatchExactly)[0]
         self.removeRow(item.row())
 
     def onClickUp(self):
@@ -130,3 +117,9 @@ class ReOrderableListWidget(QtWidgets.QTableWidget):
             item = self.item(row, 0)
             text_list.append(item.text())
         return text_list
+
+class ReOrderableListDockWidget(QtWidgets.QDockWidget):
+    def __init__(self, parent=None):
+        super(ReOrderableListDockWidget, self).__init__(parent)
+        # Make a vertical layout
+        self.setWidget(ReOrderableListWidget())
