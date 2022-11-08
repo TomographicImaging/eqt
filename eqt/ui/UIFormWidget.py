@@ -130,7 +130,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         
         Raises ValueError if the role is not widget or label.
         '''
-        allowed_roles = ['widget', 'label']
+        allowed_roles = ['field', 'label']
         if role in allowed_roles:
             return self.widget().widgets['{}_{}'.format(name, role)]
         raise ValueError('Unexpected role: expected any of {}, got {}'.format(allowed_roles, role))
