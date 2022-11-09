@@ -1,11 +1,11 @@
 ## v0.4.0
 * Add ReOrderableListWidget and ReOrderableListDockWidget
 * Add example of using the ReOrderableListWidget
+* Add getWidget method to FormWidget, FormDockWidget and FormDialog
 
 ## v0.3.0
 * Add ProgressTimerDialog and example.
 * Delete ErrorObserver, as this is relevant to VTK, not Qt, so it has been moved to the CILViewer repo.
-* Add getWidget method to FormWidget, FormDockWidget and FormDialog
 
 ## v0.2.2
 * By default, automatically number the tab titles in a StackedWidget
