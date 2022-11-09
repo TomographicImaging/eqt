@@ -80,4 +80,14 @@ class FormDialog(QtWidgets.QDialog):
     def insertWidget(self, index, qwidget):
         '''inserts a widget to the vertical layout at the specific index'''
         self.formWidget.uiElements['verticalLayout'].insertWidget(index, qwidget)
+
+    def getWidget(self, name, role='field'):
+        '''returns the Widget by the name with which it has been added
+        
+        By default it returns the widget that is the field in the form. 
+        The user can get the label by specifying the role to be label
+        
+        Raises ValueError if the role is not field or label.
+        '''
+        return self.formWidget.getWidget(name, role)
         
