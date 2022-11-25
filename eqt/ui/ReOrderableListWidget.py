@@ -1,4 +1,4 @@
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 
 class ReOrderableListWidget(QtWidgets.QTableWidget):      
     def __init__(self,parent=None):

@@ -2,9 +2,9 @@ import time
 from time import sleep
 
 from eqt.threading import Worker
-from PySide2 import QtCore
-from PySide2.QtCore import Qt, QThreadPool
-from PySide2.QtWidgets import QProgressDialog
+from PySide6 import QtCore
+from PySide6.QtCore import Qt, QThreadPool
+from PySide6.QtWidgets import QProgressDialog
 
 
 class ProgressTimerDialog(QProgressDialog):

@@ -1,5 +1,5 @@
 from eqt.ui.ReOrderableListWidget import ReOrderableListWidget
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 import sys
 try:
     import qdarkstyle

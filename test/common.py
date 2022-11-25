@@ -1,5 +1,5 @@
 from eqt.ui import UIFormFactory, FormDialog
-from PySide2 import QtWidgets
+from PySide6 import QtWidgets
 
 class MainUI(QtWidgets.QMainWindow):
 

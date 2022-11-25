@@ -1,6 +1,6 @@
-from PySide2 import QtCore, QtWidgets, QtTest
-from PySide2.QtTest import QTest
-from PySide2.QtCore import Qt
+from PySide6 import QtCore, QtWidgets, QtTest
+from PySide6.QtTest import QTest
+from PySide6.QtCore import Qt
 import glob
 import sys
 import os

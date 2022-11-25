@@ -46,7 +46,7 @@ else:
     install_requires = [
     
         'sphinx',
-        'pyside2'
+        'PySide6'
 
     ]
     version = version2pep440(git_version_string)

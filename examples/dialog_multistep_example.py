@@ -1,5 +1,5 @@
 from typing import MutableMapping
-from PySide2 import QtCore, QtWidgets
+from PySide6 import QtCore, QtWidgets
 import glob, sys, os
 from eqt.ui import UIMultiStepFactory
 from eqt.ui import UIFormFactory

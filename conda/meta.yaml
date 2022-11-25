@@ -27,7 +27,7 @@ requirements:
     - sphinx
   run:
     - python
-    - pyside2
+    - PySide6
 
 about:
   home: https://github.com/paskino/qt-elements
