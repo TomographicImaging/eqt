@@ -1,3 +1,7 @@
+## v0.x.x
+* Add getWidgets method to FormWidget, FormDockWidget and FormDialog
+* Add setWidgetVisibility method to FormWidget, FormDockWidget and FormDialog 
+
 ## v0.4.0
 * Add ReOrderableListWidget and ReOrderableListDockWidget
 * Add example of using the ReOrderableListWidget
