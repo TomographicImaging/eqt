@@ -68,6 +68,29 @@ class UIFormWidget(object):
             return self.widgets['{}_{}'.format(name, role)]
         raise ValueError('Unexpected role: expected any of {}, got {}'.format(allowed_roles, role))
 
+    def setWidgetVisible(self, name, visible):
+        '''
+        Sets the visibility of the widget and associated label with the given name.
+
+        Parameters
+        ----------
+        name: str
+            The name of the widget to set visible/invisible
+        visible: bool
+            True to set the widget visible, False to hide it
+        '''
+        allowed_roles = ['field', 'label']
+        for role in allowed_roles:
+            try:
+                self.getWidget(name, role).setVisible(visible)
+            except:
+                # We may not have a label for the widget
+                pass
+    
+    def getWidgets(self):
+        '''returns a dictionary of all the widgets in the form'''
+        return self.widgets
+
     def addTitle(self, qlabel, name):
         if isinstance(qlabel, str):
             txt = qlabel
@@ -144,6 +167,25 @@ class FormDockWidget(QtWidgets.QDockWidget):
         Raises ValueError if the role is not field or label.
         '''
         return self.widget().getWidget(name, role)
+    
+    def getWidgets(self):
+        '''returns a dictionary of all the widgets in the form'''
+        return self.widget().getWidgets()
+    
+    def setWidgetVisible(self, name, visible):
+        '''
+        Sets the visibility of the widget and associated label with the given name.
+        Parameters
+        ----------
+        name: str
+            The name of the widget to set visible/invisible
+        visible: bool
+            True to set the widget visible, False to hide it
+        '''
+
+        self.widget().setWidgetVisible(name, visible)
+
+
 
 
 class UIFormFactory(QtWidgets.QWidget):
