@@ -1,3 +1,12 @@
+# import PySide6
+# import os
+# dirname = os.path.dirname(PySide6.__file__)
+# print(dirname)
+# plugin_path = dirname
+# # plugin_path = os.path.join(dirname, 'plugins', 'platforms')
+# #plugin_path = r"C:\Users\lhe97136\Miniconda3\Library\bin"
+# os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path
+
 from PySide6 import QtCore, QtWidgets
 import glob, sys, os
 from eqt.ui import UIFormFactory, FormDialog
