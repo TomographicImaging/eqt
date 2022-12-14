@@ -90,4 +90,20 @@ class FormDialog(QtWidgets.QDialog):
         Raises ValueError if the role is not field or label.
         '''
         return self.formWidget.getWidget(name, role)
+
+    def getWidgets(self):
+        '''returns a dictionary of all the widgets in the form'''
+        return self.formWidget.getWidgets()
+    
+    def setWidgetVisible(self, name, visible):
+        '''
+        Sets the visibility of the widget and associated label with the given name.
+        Parameters:
+            visible: bool
+                True to set the widget visible, False to hide it
+            name: str
+                The name of the widget to set visible/invisible
+        '''
+
+        self.formWidget.setWidgetVisible(name, visible)
         
