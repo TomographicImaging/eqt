@@ -1,4 +1,5 @@
 from PySide2 import QtWidgets
+from eqt.ui.UISliderWidget import UISliderWidget
 
 
 class UIFormWidget(object):
@@ -139,6 +140,127 @@ class UIFormWidget(object):
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
 
+
+    def getAllWidgetStates(self):
+        '''
+        Returns the state of all widgets in the form.
+        Returns
+        -------
+        dict
+            A dictionary of the states of all widgets in the form, keyed by the name of the widget
+        '''
+        all_widget_states = {}
+        for name, widget in self.formWidget.widgets.items():
+            widget_state = self.getWidgetState(name, widget)
+            all_widget_states[name] = widget_state
+        return all_widget_states
+
+    def getWidgetState(self, name, widget=None):
+        '''
+        Returns the state of the widget with the given name.
+        If the widget is not given, it will be retrieved from the widgets dictionary.
+
+        Parameters
+        ----------
+        name: str
+            The name of the widget to get the state of
+        widget: QWidget, optional, default None
+            The widget to get the state of. If not given, it will be retrieved from the widgets dictionary.
+        
+        Returns
+        -------
+        dict
+            A dictionary of the state of the widget, with the key being the name of the widget, and the value
+            being a dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
+            and visible state of the widget.
+            The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
+            This dictionary can be used to restore the state of the widget using the setWidgetState method.
+        '''
+        if widget is None:
+            widget = self.formWidget.widgets[name]
+        widget_state = {}
+
+        widget_state[name]['enabled'] = widget.isEnabled()
+        widget_state[name]['visible'] = widget.isVisible()
+
+        if isinstance(widget, QtWidgets.QLabel):
+            widget_state[name]['value'] = widget.text()
+        elif isinstance(widget, QtWidgets.QCheckBox):
+            widget_state[name]['value'] = widget.isChecked()
+        elif isinstance(widget, QtWidgets.QComboBox):
+            widget_state[name]['value'] = widget.currentIndex()
+        elif isinstance(widget, UISliderWidget.UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
+            widget_state[name]['value'] = widget.value()
+        elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
+            widget_state[name]['value'] = widget.value()
+        elif isinstance(widget, QtWidgets.QPushButton):
+            widget_state[name]['value'] = widget.isPressed()
+        elif isinstance(widget, QtWidgets.QLineEdit):
+            widget_state[name]['value'] = widget.text()
+        elif isinstance(widget, QtWidgets.QRadioButton):
+            widget_state[name]['value'] = widget.isChecked()
+        elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
+            widget_state[name]['value'] = widget.toPlainText()
+
+        return widget_state
+
+
+    def applyWidgetState(self, state):
+        '''
+        Applies the given state to the widgets named in the state dictionary.
+
+        Parameters
+        ----------
+        state: dict
+            A dictionary of the state of the widget/s, with the key/s being the name of the widget/s, and the value/s
+            being a dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
+            and visible state of the widget.
+            The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
+        '''
+        for name, state in state.items():
+            for key, value in state.items():
+                widget = self.formWidget.widgets[name]
+                if key == 'enabled':
+                    widget.setEnabled(value)
+                elif key == 'visible':
+                    widget.setVisible(value)
+                elif key == 'value':
+                    if isinstance(widget, QtWidgets.QLabel):
+                        widget.setText(value)
+                    elif isinstance(widget, QtWidgets.QCheckBox):
+                        widget.setChecked(value)
+                    elif isinstance(widget, QtWidgets.QComboBox):
+                        widget.setCurrentIndex(value)
+                    elif isinstance(widget, UISliderWidget.UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
+                        widget.setValue(value)
+                    elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
+                        widget.setValue(value)
+                    elif isinstance(widget, QtWidgets.QPushButton):
+                        widget.setPressed(value)
+                    elif isinstance(widget, QtWidgets.QLineEdit):
+                        widget.setText(value)
+                    elif isinstance(widget, QtWidgets.QRadioButton):
+                        widget.setChecked(value)
+                    elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
+                        widget.setPlainText(value)
+
+    def saveAllWidgetStates(self):
+        '''
+        Saves the state of all widgets in the form.
+        This can be used to restore the state of the widgets using the restoreAllSavedWidgetStates method.
+        '''
+        self.widget_states = self.getAllWidgetStates()
+    
+    def restoreAllSavedWidgetStates(self):
+        '''
+        Restores the state of all widgets in the form to the state saved by the saveAllWidgetStates method.
+        If the saveAllWidgetStates method has not been called, this method will do nothing.
+        '''
+        if hasattr(self, 'widget_settings'):
+            self.applyWidgetSettings(self.widget_settings)
+
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
     def __init__(self, parent=None):
         # dockWidgetContents = QtWidgets.QWidget()
@@ -184,6 +306,62 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
 
         self.widget().setWidgetVisible(name, visible)
+
+    def saveAllWidgetStates(self):
+        '''
+        Saves the state of all widgets in the form.
+        This can be used to restore the state of the widgets using the restoreAllSavedWidgetStates method.
+        '''
+        self.widget().saveAllWidgetStates()
+
+    def restoreAllSavedWidgetStates(self):
+        '''
+        Restores the state of all widgets in the form to the state saved by the saveAllWidgetStates method.
+        If the saveAllWidgetStates method has not been called, this method will do nothing.
+        '''
+        self.widget().restoreAllSavedWidgetStates()
+
+    def getAllWidgetStates(self):
+        '''
+        Returns a dictionary of the state of all widgets in the form.
+        Returns
+        -------
+        state: dict
+            A dictionary of the state of the widget/s, with the key/s being the name of the widget/s, and the value/s
+            being a dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
+            and visible state of the widget. The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
+        '''
+        return self.widget().getAllWidgetStates()
+
+    def getWidgetState(self, name):
+        '''
+        Returns a dictionary of the state of the widget with the given name.
+        Returns
+        -------
+        state: dict
+            A dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
+            and visible state of the widget. The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {'value': 1, 'enabled': True, 'visible': True}
+        '''
+        return self.widget().getWidgetState(name)
+
+    def applyWidgetState(self, state):
+        '''
+        Applies the given state to the widgets named in the state dictionary.
+
+        Parameters
+        ----------
+        state: dict
+            A dictionary of the state of the widget/s, with the key/s being the name of the widget/s, and the value/s
+            being a dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
+            and visible state of the widget.
+            The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
+        '''
+        return self.widget().applyWidgetState(state)
+
+    
 
 
 
