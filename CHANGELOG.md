@@ -1,4 +1,7 @@
 ## v0.x.x
+* Use pip install in the conda recipe, instead of setup.py install
+
+## v0.5.0
 * Add getWidgets method to FormWidget, FormDockWidget and FormDialog
 * Add setWidgetVisibility method to FormWidget, FormDockWidget and FormDialog 
 
