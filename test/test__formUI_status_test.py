@@ -42,11 +42,12 @@ def add_every_widget_to_form(form):
 @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
 class FormDialogStatusTest(unittest.TestCase):
 
+    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
     def setUp(self):
         self.form = FormDialog()
         add_every_widget_to_form(self.form)
         
-
+    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
     def test_visibility_of_widget_saved_to_state(self):
         # Check that the visibility of the widget is saved to the state
         # Have to use magic mock as we can't set the visibility of the QLabel
@@ -64,6 +65,7 @@ class FormDialogStatusTest(unittest.TestCase):
 
         self.assertEqual(self.form.getWidgetState('label_field')['visible'], final_label_visibility)
 
+    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
     def test_enabled_state_of_widget_saved_to_state(self):
         # Check that the enabled state of the widget is saved to the state
         
@@ -78,6 +80,7 @@ class FormDialogStatusTest(unittest.TestCase):
 
         self.assertEqual(self.form.getWidgetState('label_field')['enabled'], final_label_enabled_state)
 
+    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
     def test_value_of_QLabel_saved_to_state(self):
         # Check that the value of the QLabel is saved to the state
         
