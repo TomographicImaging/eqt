@@ -3,29 +3,28 @@ import sys
 import unittest
 from unittest import mock
 
+from eqt.ui.FormDialog import FormDialog
+from PySide2 import QtWidgets
+from PySide2.QtWidgets import QApplication
+from eqt.ui.UISliderWidget import UISliderWidget
 
-def my_excepthook(type, value, tback):
-    # log the exception here
-    print ("Skip this test because: ", e)
+# TODO:
+# Add tests for FormWidget, and FormDockWidget
+# Add example for FormDialog
+# test using role names for retrieval vs normal names
+
+# skip the tests on GitHub actions
+if os.environ.get('CONDA_BUILD', '0') == '1':
     skip_test = True
-
-    # then call the default handler
-    sys.__excepthook__(type, value, tback) 
-
-sys.excepthook = my_excepthook
-
-
-try:
-    print("Try to start QApplication")
-    from eqt.ui.FormDialog import FormDialog
-    from PySide2 import QtWidgets
-    from PySide2.QtWidgets import QApplication, QPushButton
-    from eqt.ui.UISliderWidget import UISliderWidget
-    app = QApplication(sys.argv)
+else:
     skip_test = False
-    print("We do not skip this test")
-except Exception as e:
-    print ("Skip this test because: ", e)
+
+print("skip_test is set to ", skip_test)
+
+
+if not skip_test:
+    app = QApplication(sys.argv)
+else:
     skip_test = True
 
 
@@ -82,8 +81,6 @@ class FormDialogStatusTest(unittest.TestCase):
         initial_label_visibility = True
         self.form.getWidget('label').isVisible = mock.MagicMock()
         self.form.getWidget('label').isVisible.return_value = initial_label_visibility
-
-        # TODO: should we specify whether field or label?
         
         self.assertEqual(self.form.getWidgetState('label_field')['visible'], initial_label_visibility)
 
@@ -188,6 +185,7 @@ class FormDialogStatusTest(unittest.TestCase):
         
         self.assertEqual(self.form.getWidgetState('slider_field')['value'], final_slider_value)
 
+    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
     def test_getWidgetState_returns_UISliderWidget_value(self):
         # Check that the value of the UISliderWidget is returned in the state
         
@@ -242,6 +240,7 @@ class FormDialogStatusTest(unittest.TestCase):
         
         self.assertEqual(self.form.getWidgetState('plainTextEdit_field')['value'], final_plainTextEdit_value)
 
+    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
     def test_getWidgetState_returns_QPushButton_value(self):
         # Check that the value of the QPushButton is saved to the state
         
@@ -255,6 +254,7 @@ class FormDialogStatusTest(unittest.TestCase):
         
         self.assertEqual(self.form.getWidgetState('button_field')['value'], final_button_value)
 
+    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
     def test_getWidgetState_returns_QRadioButton_value(self):
         # Check that the value of the QRadioButton is saved to the state
         
