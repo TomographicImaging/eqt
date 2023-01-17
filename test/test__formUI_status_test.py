@@ -22,6 +22,7 @@ try:
     from PySide2.QtWidgets import QApplication, QPushButton
     from eqt.ui.UISliderWidget import UISliderWidget
     app = QApplication(sys.argv)
+    app.exec_()
     skip_test = False
     print("We do not skip this test")
 except Exception as e:
