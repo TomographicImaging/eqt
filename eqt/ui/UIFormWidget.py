@@ -210,16 +210,14 @@ class UIFormWidget(object):
 
         if isinstance(widget, QtWidgets.QLabel):
             widget_state['value'] = widget.text()
-        elif isinstance(widget, QtWidgets.QCheckBox):
+        elif isinstance(widget, QtWidgets.QCheckBox) or isinstance(widget, QtWidgets.QPushButton):
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, QtWidgets.QComboBox):
             widget_state['value'] = widget.currentIndex()
-        elif isinstance(widget, UISliderWidget.UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
+        elif isinstance(widget, UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
             widget_state['value'] = widget.value()
         elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
             widget_state['value'] = widget.value()
-        elif isinstance(widget, QtWidgets.QPushButton):
-            widget_state['value'] = widget.isPressed()
         elif isinstance(widget, QtWidgets.QLineEdit):
             widget_state['value'] = widget.text()
         elif isinstance(widget, QtWidgets.QRadioButton):
@@ -318,8 +316,8 @@ class UIFormWidget(object):
         Restores the state of all widgets in the form to the state saved by the saveAllWidgetStates method.
         If the saveAllWidgetStates method has not been called, this method will do nothing.
         '''
-        if hasattr(self, 'widget_settings'):
-            self.applyWidgetSettings(self.widget_settings)
+        if hasattr(self, 'widget_states'):
+            self.applyWidgetStates(self.widget_states)
 
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
     def __init__(self, parent=None):

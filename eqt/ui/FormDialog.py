@@ -166,7 +166,7 @@ class FormDialog(QtWidgets.QDialog):
             The value may be a string, boolean, or integer, depending on the type of widget.
             E.g. {'value': 1, 'enabled': True, 'visible': True}
         '''
-        return self.widget().applyWidgetState(name, state, role)
+        return self.formWidget.applyWidgetState(name, state, role)
 
     def applyWidgetStates(self, state):
         '''
@@ -181,5 +181,5 @@ class FormDialog(QtWidgets.QDialog):
             The value may be a string, boolean, or integer, depending on the type of widget.
             E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
         '''
-        return self.widget().applyWidgetStates(state)
+        return self.formWidget.applyWidgetStates(state)
         
