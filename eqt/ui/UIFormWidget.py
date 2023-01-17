@@ -150,7 +150,7 @@ class UIFormWidget(object):
             A dictionary of the states of all widgets in the form, keyed by the name of the widget, 
             and the value being a dictionary with the state of the widget. The dictionary
             containing the state of the widget has the keys 'visible', 'value' and 'enabled', and the values
-            
+
         '''
         all_widget_states = {}
         for name, widget in self.widgets.items():
@@ -158,95 +158,153 @@ class UIFormWidget(object):
             all_widget_states[name] = widget_state
         return all_widget_states
 
-    def getWidgetState(self, name, widget=None):
+    def getWidgetState(self, name=None, widget=None, role=None):
         '''
-        Returns the state of the widget with the given name.
-        If the widget is not given, it will be retrieved from the widgets dictionary.
+        Returns the state of the widget.
+        If the widget is not given, it will be retrieved from the widgets dictionary using the name.
 
         Parameters
         ----------
-        name: str
-            The name of the widget to get the state of
+        name: str, default None
+            The name of the widget to get the state of.
         widget: QWidget, optional, default None
-            The widget to get the state of. If not given, it will be retrieved from the widgets dictionary.
+            The widget to get the state of. If not given, it will be retrieved from the widgets dictionary using the name.
+        role: str, optional, default None, values: 'label', 'field', None.
+            The role of the widget to get the state of. If not given, the state will be returned for the widget with name: name.
+            If this fails, and the role is not given, the state will be returned for the widget with name: name_field.
+            If given, the state will be returned for the widget with name: name_role.
+
         
         Returns
         -------
         dict
-            A dictionary of the state of the widget, with the key being the name of the widget, and the value
-            being a dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
-            and visible state of the widget.
+            A dictionary of the state of the widget, with the keys 'value', 'enabled', and 'visible',
+            which store the value, enabled state, and visible state of the widget.
             The value may be a string, boolean, or integer, depending on the type of widget.
             E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
             This dictionary can be used to restore the state of the widget using the setWidgetState method.
         '''
+        if widget is None and name is None:
+            raise ValueError('Either widget or name must be given')
+
         if widget is None:
-            widget = self.widgets[name]
-        widget_state = {name: {}}
-        widget_state[name]['enabled'] = widget.isEnabled()
-        widget_state[name]['visible'] = widget.isVisible()
+            if role is not None:
+                if role not in ['label', 'field']:
+                    raise ValueError('role must be either "label", "field" or None')
+                name = name + '_' + role
+
+            try:
+                widget = self.widgets[name]
+            except KeyError:
+                if role is None:
+                    try:
+                        widget = self.widgets[name + '_field']
+                    except KeyError:
+                            raise KeyError('No widget with name: ' + name + ' or ' + name + '_field')
+                else:
+                    raise KeyError('No widget with name: ' + name)
+
+        widget_state = {}
+        widget_state['enabled'] = widget.isEnabled()
+        widget_state['visible'] = widget.isVisible()
 
         if isinstance(widget, QtWidgets.QLabel):
-            widget_state[name]['value'] = widget.text()
+            widget_state['value'] = widget.text()
         elif isinstance(widget, QtWidgets.QCheckBox):
-            widget_state[name]['value'] = widget.isChecked()
+            widget_state['value'] = widget.isChecked()
         elif isinstance(widget, QtWidgets.QComboBox):
-            widget_state[name]['value'] = widget.currentIndex()
+            widget_state['value'] = widget.currentIndex()
         elif isinstance(widget, UISliderWidget.UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
-            widget_state[name]['value'] = widget.value()
+            widget_state['value'] = widget.value()
         elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
-            widget_state[name]['value'] = widget.value()
+            widget_state['value'] = widget.value()
         elif isinstance(widget, QtWidgets.QPushButton):
-            widget_state[name]['value'] = widget.isPressed()
+            widget_state['value'] = widget.isPressed()
         elif isinstance(widget, QtWidgets.QLineEdit):
-            widget_state[name]['value'] = widget.text()
+            widget_state['value'] = widget.text()
         elif isinstance(widget, QtWidgets.QRadioButton):
-            widget_state[name]['value'] = widget.isChecked()
+            widget_state['value'] = widget.isChecked()
         elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
-            widget_state[name]['value'] = widget.toPlainText()
+            widget_state['value'] = widget.toPlainText()
 
         return widget_state
 
 
-    def applyWidgetState(self, state):
+    def applyWidgetState(self, name, state, role=None):
         '''
-        Applies the given state to the widget/s named in the state dictionary.
+        Applies the given state to the widget with the given name.
+
+        Parameters
+        ----------
+        name: str
+            The name of the widget to apply the state to
+        role: str, optional, default None, values: 'label', 'field', None.
+            The role of the widget to apply the state to. If not given, the state will be applied to the widget with name: name.
+            If this fails, and the role is not given, the state will be applied to the widget with name: name_field.
+            If given, the state will be applied to the widget with name: name_role.
+        state: dict
+            A dictionary of the state of the widget, with  keys 'value', 'enabled', and 'visible', which store the value, enabled state,
+            and visible state of the widget.
+            The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {'value': 1, 'enabled': True, 'visible': True}
+        '''
+        if role is not None:
+            if role not in ['label', 'field']:
+                raise ValueError('role must be either "label", "field" or None')
+            name = name + '_' + role
+
+        try:
+            widget = self.widgets[name]
+        except KeyError:
+            if role is None:
+                try:
+                    widget = self.widgets[name + '_field']
+                except KeyError:
+                        raise KeyError('No widget with name: ' + name + ' or ' + name + '_field')
+            else:
+                raise KeyError('No widget with name: ' + name)
+        
+        for key, value in state.items():
+            if key == 'enabled':
+                widget.setEnabled(value)
+            elif key == 'visible':
+                widget.setVisible(value)
+            elif key == 'value':
+                if isinstance(widget, QtWidgets.QLabel):
+                    widget.setText(value)
+                elif isinstance(widget, QtWidgets.QCheckBox):
+                    widget.setChecked(value)
+                elif isinstance(widget, QtWidgets.QComboBox):
+                    widget.setCurrentIndex(value)
+                elif isinstance(widget, UISliderWidget.UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
+                    widget.setValue(value)
+                elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
+                    widget.setValue(value)
+                elif isinstance(widget, QtWidgets.QPushButton):
+                    widget.setPressed(value)
+                elif isinstance(widget, QtWidgets.QLineEdit):
+                    widget.setText(value)
+                elif isinstance(widget, QtWidgets.QRadioButton):
+                    widget.setChecked(value)
+                elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
+                    widget.setPlainText(value)
+
+
+    def applyWidgetStates(self, state):
+        '''
+        Applies the given state to the widgets in the form.
 
         Parameters
         ----------
         state: dict
-            A dictionary of the state of the widget/s, with the key/s being the name of the widget/s, and the value/s
+            A dictionary of the state of the widgets, with the key being the name of the widget, and the value
             being a dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
             and visible state of the widget.
             The value may be a string, boolean, or integer, depending on the type of widget.
             E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
         '''
-        for name, state in state.items():
-            for key, value in state.items():
-                widget = self.widgets[name]
-                if key == 'enabled':
-                    widget.setEnabled(value)
-                elif key == 'visible':
-                    widget.setVisible(value)
-                elif key == 'value':
-                    if isinstance(widget, QtWidgets.QLabel):
-                        widget.setText(value)
-                    elif isinstance(widget, QtWidgets.QCheckBox):
-                        widget.setChecked(value)
-                    elif isinstance(widget, QtWidgets.QComboBox):
-                        widget.setCurrentIndex(value)
-                    elif isinstance(widget, UISliderWidget.UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
-                        widget.setValue(value)
-                    elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
-                        widget.setValue(value)
-                    elif isinstance(widget, QtWidgets.QPushButton):
-                        widget.setPressed(value)
-                    elif isinstance(widget, QtWidgets.QLineEdit):
-                        widget.setText(value)
-                    elif isinstance(widget, QtWidgets.QRadioButton):
-                        widget.setChecked(value)
-                    elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
-                        widget.setPlainText(value)
+        for name, widget_state in state.items():
+            self.applyWidgetState(name, widget_state)
 
     def saveAllWidgetStates(self):
         '''
@@ -348,20 +406,40 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
         return self.widget().getWidgetState(name)
 
-    def applyWidgetState(self, state):
+    def applyWidgetState(self, name, state, role=None):
         '''
-        Applies the given state to the widgets named in the state dictionary.
+        Applies the given state to the widget with the given name.
+
+        Parameters
+        ----------
+        name: str
+            The name of the widget to apply the state to
+        role: str, optional, default None, values: 'label', 'field', None.
+            The role of the widget to apply the state to. If not given, the state will be applied to the widget with name: name.
+            If this fails, and the role is not given, the state will be applied to the widget with name: name_field.
+            If given, the state will be applied to the widget with name: name_role.
+        state: dict
+            A dictionary of the state of the widget, with  keys 'value', 'enabled', and 'visible', which store the value, enabled state,
+            and visible state of the widget.
+            The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {'value': 1, 'enabled': True, 'visible': True}
+        '''
+        return self.widget().applyWidgetState(name, state, role)
+
+    def applyWidgetStates(self, state):
+        '''
+        Applies the given state to the widgets in the form given by the keys of the state dictionary.
 
         Parameters
         ----------
         state: dict
-            A dictionary of the state of the widget/s, with the key/s being the name of the widget/s, and the value/s
+            A dictionary of the state of the widgets, with the keys being the name of the widgets, and the value
             being a dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
             and visible state of the widget.
             The value may be a string, boolean, or integer, depending on the type of widget.
             E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
         '''
-        return self.widget().applyWidgetState(state)
+        return self.widget().applyWidgetStates(state)
 
     
 

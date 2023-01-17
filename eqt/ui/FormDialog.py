@@ -148,18 +148,38 @@ class FormDialog(QtWidgets.QDialog):
         '''
         return self.formWidget.getWidgetState(name)
 
-    def applyWidgetState(self, state):
+    def applyWidgetState(self, name, state, role=None):
         '''
-        Applies the given state to the widgets named in the state dictionary.
+        Applies the given state to the widget with the given name.
+
+        Parameters
+        ----------
+        name: str
+            The name of the widget to apply the state to
+        role: str, optional, default None, values: 'label', 'field', None.
+            The role of the widget to apply the state to. If not given, the state will be applied to the widget with name: name.
+            If this fails, and the role is not given, the state will be applied to the widget with name: name_field.
+            If given, the state will be applied to the widget with name: name_role.
+        state: dict
+            A dictionary of the state of the widget, with  keys 'value', 'enabled', and 'visible', which store the value, enabled state,
+            and visible state of the widget.
+            The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {'value': 1, 'enabled': True, 'visible': True}
+        '''
+        return self.widget().applyWidgetState(name, state, role)
+
+    def applyWidgetStates(self, state):
+        '''
+        Applies the given state to the widgets in the form given by the keys of the state dictionary.
 
         Parameters
         ----------
         state: dict
-            A dictionary of the state of the widget/s, with the key/s being the name of the widget/s, and the value/s
+            A dictionary of the state of the widgets, with the keys being the name of the widgets, and the value
             being a dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
             and visible state of the widget.
             The value may be a string, boolean, or integer, depending on the type of widget.
             E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
         '''
-        return self.formWidget.applyWidgetState(state)
+        return self.widget().applyWidgetStates(state)
         
