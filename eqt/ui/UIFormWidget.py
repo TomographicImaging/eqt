@@ -150,7 +150,7 @@ class UIFormWidget(object):
             A dictionary of the states of all widgets in the form, keyed by the name of the widget
         '''
         all_widget_states = {}
-        for name, widget in self.formWidget.widgets.items():
+        for name, widget in self.widgets.items():
             widget_state = self.getWidgetState(name, widget)
             all_widget_states[name] = widget_state
         return all_widget_states
@@ -178,9 +178,8 @@ class UIFormWidget(object):
             This dictionary can be used to restore the state of the widget using the setWidgetState method.
         '''
         if widget is None:
-            widget = self.formWidget.widgets[name]
-        widget_state = {}
-
+            widget = self.widgets[name]
+        widget_state = {name: {}}
         widget_state[name]['enabled'] = widget.isEnabled()
         widget_state[name]['visible'] = widget.isVisible()
 
@@ -221,7 +220,7 @@ class UIFormWidget(object):
         '''
         for name, state in state.items():
             for key, value in state.items():
-                widget = self.formWidget.widgets[name]
+                widget = self.widgets[name]
                 if key == 'enabled':
                     widget.setEnabled(value)
                 elif key == 'visible':

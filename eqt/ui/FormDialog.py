@@ -135,8 +135,10 @@ class FormDialog(QtWidgets.QDialog):
         return self.formWidget.getAllWidgetStates()
 
     def getWidgetState(self, name):
+        # TODO: add role parameter, to get the state of the label or field, optionally
         '''
         Returns a dictionary of the state of the widget with the given name.
+
         Returns
         -------
         state: dict
