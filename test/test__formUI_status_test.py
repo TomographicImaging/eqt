@@ -4,6 +4,17 @@ import unittest
 from unittest import mock
 
 
+def my_excepthook(type, value, tback):
+    # log the exception here
+    print ("Skip this test because: ", e)
+    skip_test = True
+
+    # then call the default handler
+    sys.__excepthook__(type, value, tback) 
+
+sys.excepthook = my_excepthook
+
+
 try:
     print("Try to start QApplication")
     from eqt.ui.FormDialog import FormDialog
