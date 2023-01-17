@@ -5,6 +5,7 @@ from unittest import mock
 
 
 try:
+    print("Try to start QApplication")
     from eqt.ui.FormDialog import FormDialog
     from PySide2 import QtWidgets
     from PySide2.QtWidgets import QApplication, QPushButton
