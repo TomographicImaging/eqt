@@ -147,7 +147,10 @@ class UIFormWidget(object):
         Returns
         -------
         dict
-            A dictionary of the states of all widgets in the form, keyed by the name of the widget
+            A dictionary of the states of all widgets in the form, keyed by the name of the widget, 
+            and the value being a dictionary with the state of the widget. The dictionary
+            containing the state of the widget has the keys 'visible', 'value' and 'enabled', and the values
+            
         '''
         all_widget_states = {}
         for name, widget in self.widgets.items():
@@ -207,7 +210,7 @@ class UIFormWidget(object):
 
     def applyWidgetState(self, state):
         '''
-        Applies the given state to the widgets named in the state dictionary.
+        Applies the given state to the widget/s named in the state dictionary.
 
         Parameters
         ----------

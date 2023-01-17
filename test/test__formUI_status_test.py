@@ -5,12 +5,12 @@ import sys
 import unittest
 from unittest import mock
 
-from eqt.ui.FormDialog import FormDialog
-from PySide2 import QtWidgets
-from PySide2.QtWidgets import QApplication, QPushButton
-from eqt.ui.UISliderWidget import UISliderWidget
 
 try:
+    from eqt.ui.FormDialog import FormDialog
+    from PySide2 import QtWidgets
+    from PySide2.QtWidgets import QApplication, QPushButton
+    from eqt.ui.UISliderWidget import UISliderWidget
     app = QApplication(sys.argv)
     skip_test = False
 except Exception as e:
@@ -18,23 +18,34 @@ except Exception as e:
     skip_test = True
 
 
+def add_every_widget_to_form(form):
+    '''
+    Generate every widget and add it to the form
+    Parameters
+    ----------
+    form : FormWidget, FormDialog or FormDockWidget
+        The form to add the widgets to
+    '''
+    form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
+    form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
+    form.addWidget(QtWidgets.QComboBox(), 'ComboBox: ', 'comboBox')
+    form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
+    form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
+    form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
+    form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
+    form.addWidget(QtWidgets.QRadioButton('test'), 'RadioButton: ', 'radioButton')
+    form.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
+    form.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')
+    form.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
+    form.addWidget(QtWidgets.QPushButton('test'), 'Button: ', 'button')
+
+
 @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
 class FormDialogStatusTest(unittest.TestCase):
 
     def setUp(self):
         self.form = FormDialog()
-        self.form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
-        self.form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
-        self.form.addWidget(QtWidgets.QComboBox(), 'ComboBox: ', 'comboBox')
-        self.form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
-        self.form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
-        self.form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-        self.form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
-        self.form.addWidget(QtWidgets.QRadioButton('test'), 'RadioButton: ', 'radioButton')
-        self.form.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
-        self.form.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')
-        self.form.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
-        self.form.addWidget(QtWidgets.QPushButton('test'), 'Button: ', 'button')
+        add_every_widget_to_form(self.form)
         
 
     def test_visibility_of_widget_saved_to_state(self):
@@ -81,7 +92,3 @@ class FormDialogStatusTest(unittest.TestCase):
         self.form.getWidget('label').setText(final_label_value)
         
         self.assertEqual(self.form.getWidgetState('label_field')['label_field']['value'], final_label_value)
-
-
-if __name__ == "__main__":
-    unittest.main()
