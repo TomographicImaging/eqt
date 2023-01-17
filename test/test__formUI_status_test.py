@@ -10,31 +10,18 @@ from PySide2 import QtWidgets
 from PySide2.QtWidgets import QApplication, QPushButton
 from eqt.ui.UISliderWidget import UISliderWidget
 
+try:
+    app = QApplication(sys.argv)
+    skip_test = False
+except Exception as e:
+    print ("Skip this test because: ", e)
+    skip_test = True
 
-app = QApplication(sys.argv)
 
-
+@unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
 class FormDialogStatusTest(unittest.TestCase):
 
-    # @mock.patch("ccpi.web_viewer.trame_viewer.vtk")
-    # @mock.patch("ccpi.web_viewer.trame_viewer.TrameViewer.update_slice_data")
-    # def setUp(self, _, vtk_module):
-    #     # Get the head data
-    #     self.head_path = os.path.join(sys.prefix, 'share', 'cil', 'head.mha')
-    #     self.file_list = [self.head_path, "other_file_path_dir/other_file"]
-
-    #     # add the cil_viewer and defaults for a default __init__
-    #     self.cil_viewer = mock.MagicMock()
-    #     self.map_range = [0, 3790]
-    #     self.cil_viewer.getSliceMapRange.return_value = self.map_range
-
-    #     self.trame_viewer = TrameViewer(self.cil_viewer, self.file_list)
-
-    #     # Assert on the mocks/patched objects after __init__
-    #     vtk_module.VtkRemoteView.assert_called_once_with(self.cil_viewer.renWin, trame_server=server, ref="view")
-
     def setUp(self):
-        
         self.form = FormDialog()
         self.form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         self.form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
