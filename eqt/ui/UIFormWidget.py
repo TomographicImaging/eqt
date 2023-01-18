@@ -219,7 +219,7 @@ class UIFormWidget(object):
             widget_state['value'] = widget.currentIndex()
         elif isinstance(widget, UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
             widget_state['value'] = widget.value()
-        elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
+        elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
             widget_state['value'] = widget.value()
         elif isinstance(widget, QtWidgets.QLineEdit):
             widget_state['value'] = widget.text()
