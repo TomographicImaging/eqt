@@ -182,7 +182,7 @@ class UIFormWidget(object):
             A dictionary of the state of the widget, with the keys 'value', 'enabled', and 'visible',
             which store the value, enabled state, and visible state of the widget.
             The value may be a string, boolean, or integer, depending on the type of widget.
-            E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
+            E.g. {'value': 1, 'enabled': True, 'visible': True}
             This dictionary can be used to restore the state of the widget using the setWidgetState method.
         '''
         if widget is None:
@@ -417,7 +417,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
             A dictionary of the state of the widget, with the keys 'value', 'enabled', and 'visible',
             which store the value, enabled state, and visible state of the widget.
             The value may be a string, boolean, or integer, depending on the type of widget.
-            E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
+            E.g. {'value': 1, 'enabled': True, 'visible': True}
             This dictionary can be used to restore the state of the widget using the setWidgetState method.
         '''
         return self.widget().getWidgetState(widget, role)
@@ -458,8 +458,6 @@ class FormDockWidget(QtWidgets.QDockWidget):
         return self.widget().applyWidgetStates(state)
 
     
-
-
 
 
 class UIFormFactory(QtWidgets.QWidget):
