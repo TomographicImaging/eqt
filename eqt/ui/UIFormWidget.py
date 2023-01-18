@@ -274,12 +274,12 @@ class UIFormWidget(object):
                     widget.setChecked(value)
                 elif isinstance(widget, QtWidgets.QComboBox):
                     widget.setCurrentIndex(value)
-                elif isinstance(widget, UISliderWidget.UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
+                elif isinstance(widget, UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
                     widget.setValue(value)
                 elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
                     widget.setValue(value)
                 elif isinstance(widget, QtWidgets.QPushButton):
-                    widget.setPressed(value)
+                    widget.setChecked(value)
                 elif isinstance(widget, QtWidgets.QLineEdit):
                     widget.setText(value)
                 elif isinstance(widget, QtWidgets.QRadioButton):
