@@ -277,7 +277,7 @@ class UIFormWidget(object):
                     widget.setChecked(value)
                 elif isinstance(widget, QtWidgets.QComboBox):
                     widget.setCurrentIndex(value)
-                elif isinstance(widget, UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
+                elif isinstance(widget, (UISliderWidget, QtWidgets.QSlider)):
                     widget.setValue(value)
                 elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
                     widget.setValue(value)
