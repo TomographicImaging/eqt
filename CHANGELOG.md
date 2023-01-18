@@ -1,4 +1,24 @@
-## v0.x.x
+## vx.x.x
+
+- Adds the following new methods to UIFormWidget, FormWidget, FormDialog and FormDockWidget:
+   - `saveAllWidgetStates` - Saves the state of all widgets in the form. This can be used to restore the state of the widgets using the restoreAllSavedWidgetStates method.
+
+   - `restoreAllSavedWidgetStates` - Restores the state of all widgets in the form to the state saved by the saveAllWidgetStates method. If the saveAllWidgetStates method has not been called, this method will do nothing.
+
+   - `getAllWidgetStates` - Returns a dictionary of the state of all widgets in the form.
+
+   - `getWidgetState` - Returns the state of the widget.
+
+   - `applyWidgetState` - Applies the given state to the widget with the given name.
+
+   - `applyWidgetStates`  - Applies the given state to the widgets in the form given by the keys of the state dictionary.
+
+- Adds an example of a FormDialog: `dialog_save_state_example.py` where all of the widgets are saved and restored if you press "Ok", whereas the previous values of the dialog are restored if you press "Cancel".
+- Adds unit tests to cover: `saveAllWidgetStates`, `restoreAllSavedWidgetStates`, `getAllWidgetStates`, `getWidgetState`, `applyWidgetState`, `applyWidgetStates`
+- setup.py:
+  - Always normalise the version from git describe to pep440
+
+## v0.5.0
 * Add getWidgets method to FormWidget, FormDockWidget and FormDialog
 * Add setWidgetVisibility method to FormWidget, FormDockWidget and FormDialog 
 

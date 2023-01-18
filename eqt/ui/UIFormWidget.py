@@ -213,19 +213,19 @@ class UIFormWidget(object):
 
         if isinstance(widget, QtWidgets.QLabel):
             widget_state['value'] = widget.text()
-        elif isinstance(widget, QtWidgets.QCheckBox) or isinstance(widget, QtWidgets.QPushButton):
+        elif isinstance(widget, (QtWidgets.QCheckBox, QtWidgets.QPushButton)):
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, QtWidgets.QComboBox):
             widget_state['value'] = widget.currentIndex()
         elif isinstance(widget, UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
             widget_state['value'] = widget.value()
-        elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
+        elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
             widget_state['value'] = widget.value()
         elif isinstance(widget, QtWidgets.QLineEdit):
             widget_state['value'] = widget.text()
         elif isinstance(widget, QtWidgets.QRadioButton):
             widget_state['value'] = widget.isChecked()
-        elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
+        elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
 
         return widget_state
@@ -277,9 +277,9 @@ class UIFormWidget(object):
                     widget.setChecked(value)
                 elif isinstance(widget, QtWidgets.QComboBox):
                     widget.setCurrentIndex(value)
-                elif isinstance(widget, UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
+                elif isinstance(widget, (UISliderWidget, QtWidgets.QSlider)):
                     widget.setValue(value)
-                elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
+                elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
                     widget.setValue(value)
                 elif isinstance(widget, QtWidgets.QPushButton):
                     widget.setChecked(value)
@@ -287,7 +287,7 @@ class UIFormWidget(object):
                     widget.setText(value)
                 elif isinstance(widget, QtWidgets.QRadioButton):
                     widget.setChecked(value)
-                elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
+                elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
 
 
