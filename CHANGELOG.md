@@ -15,6 +15,8 @@
 
 - Adds an example of a FormDialog: `dialog_save_state_example.py` where all of the widgets are saved and restored if you press "Ok", whereas the previous values of the dialog are restored if you press "Cancel".
 - Adds unit tests to cover: `saveAllWidgetStates`, `restoreAllSavedWidgetStates`, `getAllWidgetStates`, `getWidgetState`, `applyWidgetState`, `applyWidgetStates`
+- setup.py:
+  - Always normalise the version from git describe to pep440
 
 ## v0.5.0
 * Add getWidgets method to FormWidget, FormDockWidget and FormDialog
