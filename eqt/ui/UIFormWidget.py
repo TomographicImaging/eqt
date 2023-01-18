@@ -154,24 +154,23 @@ class UIFormWidget(object):
         '''
         all_widget_states = {}
         for name, widget in self.widgets.items():
-            widget_state = self.getWidgetState(name, widget)
+            widget_state = self.getWidgetState(widget)
             all_widget_states[name] = widget_state
         return all_widget_states
 
-    def getWidgetState(self, name=None, widget=None, role=None):
+    def getWidgetState(self, widget, role=None):
         '''
         Returns the state of the widget.
-        If the widget is not given, it will be retrieved from the widgets dictionary using the name.
 
         Parameters
         ----------
-        name: str, default None
-            The name of the widget to get the state of.
-        widget: QWidget, optional, default None
-            The widget to get the state of. If not given, it will be retrieved from the widgets dictionary using the name.
+        widget: QWidget or str
+            The widget to get the state of, or the name of the widget to get the state of, in which case it will be retrieved from
+            the widgets dictionary using the name.
         role: str, optional, default None, values: 'label', 'field', None.
-            The role of the widget to get the state of. If not given, the state will be returned for the widget with name: name.
-            If this fails, and the role is not given, the state will be returned for the widget with name: name_field.
+            The role of the widget to get the state of. This is only used if widget is a string.
+            If not given, the state will be returned for the widget with name: widget.
+            If this fails, and the role is not given, the state will be returned for the widget with name: widget_field.
             If given, the state will be returned for the widget with name: name_role.
 
         
@@ -184,14 +183,16 @@ class UIFormWidget(object):
             E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
             This dictionary can be used to restore the state of the widget using the setWidgetState method.
         '''
-        if widget is None and name is None:
-            raise ValueError('Either widget or name must be given')
-
         if widget is None:
+            raise ValueError('The widget (or name of widget) must be given')
+
+        if isinstance(widget, str):
             if role is not None:
                 if role not in ['label', 'field']:
                     raise ValueError('role must be either "label", "field" or None')
-                name = name + '_' + role
+                name = widget + '_' + role
+            else:
+                name = widget
 
             try:
                 widget = self.widgets[name]
@@ -392,17 +393,32 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
         return self.widget().getAllWidgetStates()
 
-    def getWidgetState(self, name):
+    def getWidgetState(self, widget, role=None):
         '''
-        Returns a dictionary of the state of the widget with the given name.
+        Returns the state of the widget.
+
+        Parameters
+        ----------
+        widget: QWidget or str
+            The widget to get the state of, or the name of the widget to get the state of, in which case it will be retrieved from
+            the widgets dictionary using the name.
+        role: str, optional, default None, values: 'label', 'field', None.
+            The role of the widget to get the state of. This is only used if widget is a string.
+            If not given, the state will be returned for the widget with name: widget.
+            If this fails, and the role is not given, the state will be returned for the widget with name: widget_field.
+            If given, the state will be returned for the widget with name: name_role.
+
+        
         Returns
         -------
-        state: dict
-            A dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
-            and visible state of the widget. The value may be a string, boolean, or integer, depending on the type of widget.
-            E.g. {'value': 1, 'enabled': True, 'visible': True}
+        dict
+            A dictionary of the state of the widget, with the keys 'value', 'enabled', and 'visible',
+            which store the value, enabled state, and visible state of the widget.
+            The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
+            This dictionary can be used to restore the state of the widget using the setWidgetState method.
         '''
-        return self.widget().getWidgetState(name)
+        return self.widget().getWidgetState(widget, role)
 
     def applyWidgetState(self, name, state, role=None):
         '''

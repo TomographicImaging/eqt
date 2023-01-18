@@ -134,19 +134,32 @@ class FormDialog(QtWidgets.QDialog):
         '''
         return self.formWidget.getAllWidgetStates()
 
-    def getWidgetState(self, name):
-        # TODO: add role parameter, to get the state of the label or field, optionally
+    def getWidgetState(self, widget, role=None):
         '''
-        Returns a dictionary of the state of the widget with the given name.
+        Returns the state of the widget.
 
+        Parameters
+        ----------
+        widget: QWidget or str
+            The widget to get the state of, or the name of the widget to get the state of, in which case it will be retrieved from
+            the widgets dictionary using the name.
+        role: str, optional, default None, values: 'label', 'field', None.
+            The role of the widget to get the state of. This is only used if widget is a string.
+            If not given, the state will be returned for the widget with name: widget.
+            If this fails, and the role is not given, the state will be returned for the widget with name: widget_field.
+            If given, the state will be returned for the widget with name: name_role.
+
+        
         Returns
         -------
-        state: dict
-            A dictionary with the keys 'value', 'enabled', and 'visible', which store the value, enabled state,
-            and visible state of the widget. The value may be a string, boolean, or integer, depending on the type of widget.
-            E.g. {'value': 1, 'enabled': True, 'visible': True}
+        dict
+            A dictionary of the state of the widget, with the keys 'value', 'enabled', and 'visible',
+            which store the value, enabled state, and visible state of the widget.
+            The value may be a string, boolean, or integer, depending on the type of widget.
+            E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
+            This dictionary can be used to restore the state of the widget using the setWidgetState method.
         '''
-        return self.formWidget.getWidgetState(name)
+        return self.formWidget.getWidgetState(widget, role)
 
     def applyWidgetState(self, name, state, role=None):
         '''
