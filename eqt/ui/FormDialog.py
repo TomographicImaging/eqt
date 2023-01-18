@@ -1,3 +1,4 @@
+# Author: Edoardo Pasca, Laura Murgatroyd, Samuel Stock
 from PySide2 import QtCore, QtGui, QtWidgets
 from eqt.ui import UIFormFactory
 

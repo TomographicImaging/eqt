@@ -1,3 +1,5 @@
+# Author: Laura Murgatroyd
+
 from PySide2 import QtWidgets
 import sys
 from eqt.ui import FormDialog

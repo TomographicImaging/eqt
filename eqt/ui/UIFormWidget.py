@@ -1,3 +1,5 @@
+# Author: Edoardo Pasca, Laura Murgatroyd, Samuel Stock
+
 from PySide2 import QtWidgets
 from eqt.ui.UISliderWidget import UISliderWidget
 
