@@ -213,7 +213,7 @@ class UIFormWidget(object):
 
         if isinstance(widget, QtWidgets.QLabel):
             widget_state['value'] = widget.text()
-        elif isinstance(widget, QtWidgets.QCheckBox) or isinstance(widget, QtWidgets.QPushButton):
+        elif isinstance(widget, (QtWidgets.QCheckBox, QtWidgets.QPushButton)):
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, QtWidgets.QComboBox):
             widget_state['value'] = widget.currentIndex()
