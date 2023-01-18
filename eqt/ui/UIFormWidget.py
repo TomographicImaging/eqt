@@ -225,7 +225,7 @@ class UIFormWidget(object):
             widget_state['value'] = widget.text()
         elif isinstance(widget, QtWidgets.QRadioButton):
             widget_state['value'] = widget.isChecked()
-        elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
+        elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
 
         return widget_state
@@ -279,7 +279,7 @@ class UIFormWidget(object):
                     widget.setCurrentIndex(value)
                 elif isinstance(widget, UISliderWidget) or isinstance(widget, QtWidgets.QSlider):
                     widget.setValue(value)
-                elif isinstance(widget, QtWidgets.QDoubleSpinBox) or isinstance(widget, QtWidgets.QSpinBox):
+                elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
                     widget.setValue(value)
                 elif isinstance(widget, QtWidgets.QPushButton):
                     widget.setChecked(value)
@@ -287,7 +287,7 @@ class UIFormWidget(object):
                     widget.setText(value)
                 elif isinstance(widget, QtWidgets.QRadioButton):
                     widget.setChecked(value)
-                elif isinstance(widget, QtWidgets.QTextEdit) or isinstance(widget, QtWidgets.QPlainTextEdit):
+                elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
 
 
