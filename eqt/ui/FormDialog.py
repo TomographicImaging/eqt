@@ -149,7 +149,7 @@ class FormDialog(QtWidgets.QDialog):
             The role of the widget to get the state of. This is only used if widget is a string.
             If not given, the state will be returned for the widget with name: widget.
             If this fails, and the role is not given, the state will be returned for the widget with name: widget_field.
-            If given, the state will be returned for the widget with name: name_role.
+            If given, the state will be returned for the widget with name: widget_role.
 
         
         Returns
