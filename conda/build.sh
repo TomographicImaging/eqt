@@ -5,4 +5,4 @@
 
 #$PYTHON -m pip install eqt --no-deps
 cd $RECIPE_DIR/..
-$PYTHON setup.py install
+pip install .
