@@ -40,7 +40,6 @@ long_description = 'A number of templates and tools to develop Qt GUIs with Pyth
 if os.environ.get('CONDA_BUILD', 0) == '1':
     # if it is a conda build requirements are going to be satisfied by conda
     install_requires = []
-    version = git_version_string
     cwd = os.path.join(os.environ.get('RECIPE_DIR'),'..')
 else:
     install_requires = [
@@ -49,8 +48,9 @@ else:
         'pyside2'
 
     ]
-    version = version2pep440(git_version_string)
     cwd = os.getcwd()
+
+version = version2pep440(git_version_string)
 
     
 print ('version {}'.format(version))
