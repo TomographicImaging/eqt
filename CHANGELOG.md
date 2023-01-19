@@ -1,5 +1,5 @@
-## vx.x.x
-
+## v0.x.x
+- Use pip install in the conda recipe, instead of setup.py install
 - Adds the following new methods to UIFormWidget, FormWidget, FormDialog and FormDockWidget:
    - `saveAllWidgetStates` - Saves the state of all widgets in the form. This can be used to restore the state of the widgets using the restoreAllSavedWidgetStates method.
 
