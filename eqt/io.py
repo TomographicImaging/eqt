@@ -34,7 +34,8 @@ def zip_directory(directory, compress=True, **kwargs):
         for r, d, f in os.walk(directory):
             for _file in f:
                 fname = os.path.join(r, _file)
-                zip.write(fname, _file, compress_type=compress_type)
+                arcname = fname[len(directory)+1:]
+                zip.write(fname, arcname, compress_type=compress_type)
                 # Could potentially be used for reporting progress:
                 #progress_callback.emit(os.path.getsize(fname)/total_size)
         zip.close() 

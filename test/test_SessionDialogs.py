@@ -1,9 +1,9 @@
 from eqt.ui.SessionDialogs import WarningDialog, ErrorDialog, SaveSessionDialog, SessionDirectorySelectionDialog, LoadSessionDialog
 import os
 import unittest
-from PySide2.QtWidgets import QApplication
+from PySide2.QtWidgets import QApplication, QFileDialog
 import sys
-
+from unittest.mock import patch
 # skip the tests on GitHub actions
 if os.environ.get('CONDA_BUILD', '0') == '1':
     skip_as_conda_build = True
@@ -77,10 +77,35 @@ class TestSessionDirectorySelectionDialog(unittest.TestCase):
 
         self.assertEqual(sdsd.getWidget("select_session_directory").text(), "Select a session directory to save and retrieve all Test App Sessions:")
 
-    def test_browse_for_dir_button(self):
+    @patch("PySide2.QtWidgets.QFileDialog.getExistingDirectory")
+    def test_browse_for_dir_button_makes_file_dialog_for_getting_dir(self, mock_dialog_call):
         sdsd = SessionDirectorySelectionDialog()
-        # TODO: make test for this
         sdsd.browse_for_dir()
+        mock_dialog_call.assert_called_once()
+
+    @patch("PySide2.QtWidgets.QFileDialog.getExistingDirectory")
+    def test_browse_button_calls_browse_for_dir(self, mock_dialog_call):
+        sdsd = SessionDirectorySelectionDialog()
+        sdsd.browse_for_dir = unittest.mock.Mock()
+        QFileDialog.getExistingDirectory = unittest.mock.Mock()
+        sdsd.getWidget("browse_button").click()       
+        sdsd.browse_for_dir.assert_called_once()
+
+    def test_browse_dialog_updates_session_directory_label(self):
+        example_dir = "C:\\Users\\test_user\\Documents\\test_dir"
+        sdsd = SessionDirectorySelectionDialog()
+        QFileDialog.getExistingDirectory = unittest.mock.Mock()
+        QFileDialog.getExistingDirectory.return_value = example_dir
+        sdsd.browse_for_dir()
+        self.assertEqual(sdsd.getWidget("selected_dir").text(), os.path.basename(example_dir))
+
+    def test_browse_dialog_updates_selected_dir_attribute(self):
+        example_dir = "C:\\Users\\test_user\\Documents\\test_dir"
+        sdsd = SessionDirectorySelectionDialog()
+        QFileDialog.getExistingDirectory = unittest.mock.Mock()
+        QFileDialog.getExistingDirectory.return_value = example_dir
+        sdsd.browse_for_dir()
+        self.assertEqual(sdsd.selected_dir, example_dir)
 
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestLoadSessionDialog(unittest.TestCase):
@@ -93,7 +118,10 @@ class TestLoadSessionDialog(unittest.TestCase):
         lsd = LoadSessionDialog(title=title)
         self.assertEqual(lsd.windowTitle(), title)
 
-
+    def test_init_with_location_of_session_files_param(self):
+        location_of_session_files = "C:\\Users\\test_user\\Documents\\test_dir"
+        lsd = LoadSessionDialog(location_of_session_files=location_of_session_files)
+        self.assertEqual(lsd.getWidget("sessions_directory").text(), "Currently loading sessions from: C:\\Users\\test_user\\Documents\\test_dir")
 
 if __name__ == "__main__":
     unittest.main()
