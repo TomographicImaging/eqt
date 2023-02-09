@@ -179,6 +179,7 @@ class TestSessionMainWindowSetupSession(unittest.TestCase):
             else:
                 os.rmdir(session_folder_name)
 
+@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSessionMainWindowCreateSessionSelector(unittest.TestCase):
     '''
     Tests the createSessionSelector method of the SessionMainWindow class
@@ -224,6 +225,7 @@ class TestSessionMainWindowCreateSessionSelector(unittest.TestCase):
         os.chdir("..")
         shutil.rmtree("Test Folder")
 
+@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSessionMainWindowCreateLoadSessionDialog(unittest.TestCase):
     '''
     Tests the createLoadSessionDialog method of the SessionMainWindow class
@@ -266,6 +268,7 @@ class TestSessionMainWindowCreateLoadSessionDialog(unittest.TestCase):
         dialog.Cancel.click()
         self.smw.loadSessionNew.assert_called_once()
 
+@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSelectLoadSessionsDirectorySelectedInSessionSelector(unittest.TestCase):
     '''
     Tests the selectLoadSessionsDirectorySelectedInSessionSelector method of the SessionMainWindow class
@@ -287,7 +290,7 @@ class TestSelectLoadSessionsDirectorySelectedInSessionSelector(unittest.TestCase
         assert self.load_session_dialog.close.called_once()
         assert self.smw.createSessionsDirectorySelectionDialog.called_once_with(new_session=True)
 
-
+@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestCreateSessionFolder(unittest.TestCase):
     '''
     Tests the createSessionFolder method of the SessionMainWindow class
@@ -319,6 +322,7 @@ class TestCreateSessionFolder(unittest.TestCase):
             os.chdir("..")
             shutil.rmtree("Test Folder")
 
+@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestLoadSessionConfig(unittest.TestCase):
     '''
     Tests the loadSessionConfig method of the SessionMainWindow class
@@ -362,7 +366,7 @@ class TestLoadSessionConfig(unittest.TestCase):
             os.chdir("..")
             shutil.rmtree("Test Folder")
 
-
+@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSaveSession(unittest.TestCase):
     '''
     Tests:
@@ -453,7 +457,7 @@ class TestSaveSession(unittest.TestCase):
             os.chdir("..")
             shutil.rmtree("Test Folder")
         
-
+@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestRemoveTempMethods(unittest.TestCase):
     '''
     Tests:
