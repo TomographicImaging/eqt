@@ -6,6 +6,17 @@ import os
 
 class SaveSessionDialog(FormDialog):
     def __init__(self, parent=None, title="Save Session"):
+        '''
+        A dialog to save a session. Prompts the user for a name for the session, and whether to compress the files.
+
+        Parameters
+        ----------
+        parent : QWidget
+            The parent widget.
+        title : str
+            The title of the dialog.
+        '''
+
         FormDialog.__init__(self, parent, title)
         self.parent = parent
         
@@ -28,6 +39,8 @@ class SaveSessionDialog(FormDialog):
 class SessionDirectorySelectionDialog(FormDialog):
     def __init__(self, parent=None, app_name=None):
         '''
+        A dialog to select a directory in which to save and retrieve sessions.
+
         Parameters
         ----------
         parent : QWidget
@@ -75,6 +88,18 @@ class SessionDirectorySelectionDialog(FormDialog):
 
 class LoadSessionDialog(FormDialog):
     def __init__(self, parent=None, title="Load a Session", location_of_session_files="."):
+        '''
+        A dialog to load a session. Prompts the user to select a session from a list of available sessions.
+
+        Parameters
+        ----------
+        parent : QWidget
+            The parent widget.
+        title : str
+            The title of the dialog.
+        location_of_session_files : str
+            The directory in which to look for session files.
+        '''
         FormDialog.__init__(self, parent, title)
         self.parent = parent
 
@@ -96,6 +121,20 @@ class LoadSessionDialog(FormDialog):
 
 class WarningDialog(QMessageBox):
     def __init__(self, parent=None, message=None, window_title=None, detailed_text=None):
+        '''
+        A dialog to display a warning message.
+        
+        Parameters
+        ----------
+        parent : QWidget
+            The parent widget.
+        message : str
+            The message to display.
+        window_title : str
+            The title of the dialog.
+        detailed_text : str
+            The detailed text to display.
+        '''
         QMessageBox.__init__(self, parent)
         self.setIcon(QMessageBox.Information)
         self.setText(message)
@@ -104,6 +143,21 @@ class WarningDialog(QMessageBox):
 
 class ErrorDialog(QMessageBox):
     def __init__(self, parent=None, message=None, window_title=None, detailed_text=None):
+        '''
+        A dialog to display an error message.
+        The icon is a red circle with a white X.
+        
+        Parameters
+        ----------
+        parent : QWidget
+            The parent widget.
+        message : str
+            The message to display.
+        window_title : str
+            The title of the dialog.
+        detailed_text : str
+            The detailed text to display.
+        '''
         QMessageBox.__init__(self, parent)
         self.setIcon(QMessageBox.Critical)
         self.setText(message)

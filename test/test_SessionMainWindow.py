@@ -525,6 +525,9 @@ class TestRemoveTempMethods(unittest.TestCase):
         self.smw.finishProcess.assert_called_once_with(process_name)
         self.smw.close.assert_called_once()
 
+if __name__ == "__main__":
+    unittest.main()
+
 
             
             
