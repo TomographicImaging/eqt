@@ -328,7 +328,7 @@ class SessionMainWindow(QMainWindow):
         date_and_time = selected_text.split(' ')[-1]
         selected_folder = ""
 
-        for r, d, f in os.walk('.'):
+        for _, _, f in os.walk('.'):
             for _file in f:
                 if date_and_time + '.zip' in _file:
                     selected_folder = os.path.join('.', _file)
