@@ -11,7 +11,7 @@ from epac_ct.version import version
 __version__ = version
 
 
-class ExampleMainWindow(SessionMainWindow):
+class ExampleSessionMainWindow(SessionMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         form_widget = FormWidget(self)
@@ -71,7 +71,7 @@ def add_every_widget_to_form(form):
 
 
 def create_main_window():
-    window = ExampleMainWindow(
+    window = ExampleSessionMainWindow(
         "Example Session Main Window{}".format(__version__), "Example7-Sessions", settings_name="Example7")
     
     return window

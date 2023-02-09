@@ -227,7 +227,6 @@ class SessionMainWindow(QMainWindow):
         if session_folder_selection_dialog.selected_dir is not None:
             self.createSessionsDirectoryAndMakeSessionSelector(session_folder_selection_dialog.selected_dir)
             session_folder_selection_dialog.close()
-        # TODO: potentially add a warning/error isf the user has not picked a dir.
 
     def onSessionDirectorySelectionDialogOkInSession(self, session_folder_selection_dialog):
         '''
@@ -418,9 +417,6 @@ class SessionMainWindow(QMainWindow):
 
         This method occurs when we call self.close() or when the user clicks the X button on the window.
         '''
-        print("Enters closeEvent")
-        print(event)
-        print(type(event))
         
         if not self.should_really_close:
             self.createSaveWindow(event)
