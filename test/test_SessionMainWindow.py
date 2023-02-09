@@ -314,7 +314,7 @@ class TestCreateSessionFolder(unittest.TestCase):
         os.chdir("..")
         try:
             shutil.rmtree("Test Folder")
-        except:
+        except Exception:
             os.chdir("..")
             shutil.rmtree("Test Folder")
 
@@ -339,8 +339,6 @@ class TestLoadSessionConfig(unittest.TestCase):
             'test_int_key': 1, 'test_float_key': 1.0, 'test_bool_key': True,
             'test_list_key': [1, 2, 3], 'test_dict_key': {'test_key': 'test_value'}}
 
-        import json
-
         os.mkdir("Test Folder")
         os.chdir("Test Folder")
         os.mkdir(self.session_folder)
@@ -358,7 +356,7 @@ class TestLoadSessionConfig(unittest.TestCase):
         os.chdir("..")
         try:
             shutil.rmtree("Test Folder")
-        except:
+        except Exception:
             os.chdir("..")
             shutil.rmtree("Test Folder")
 
@@ -419,7 +417,7 @@ class TestSaveSession(unittest.TestCase):
             os.chdir("..")
             try:
                 shutil.rmtree("Test Folder")
-            except:
+            except Exception:
                 os.chdir("..")
                 shutil.rmtree("Test Folder")
 
@@ -475,7 +473,7 @@ class TestRemoveTempMethods(unittest.TestCase):
         except Exception as e:
             try:
                 shutil.rmtree(self.smw.current_session_folder)
-            except:
+            except Exception:
                 pass
             raise e
 
@@ -493,7 +491,7 @@ class TestRemoveTempMethods(unittest.TestCase):
             try:
                 os.chdir("..")
                 shutil.rmtree(self.smw.current_session_folder)
-            except:
+            except Exception:
                 pass
             raise e
 

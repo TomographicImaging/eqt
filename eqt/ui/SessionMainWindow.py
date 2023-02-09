@@ -5,18 +5,18 @@ from datetime import datetime
 from functools import partial
 
 import qdarkstyle
-from eqt.threading import Worker
-from eqt.ui.ProgressTimerDialog import ProgressTimerDialog
 from PySide2.QtCore import QSettings, QThreadPool
 from PySide2.QtGui import QCloseEvent, QKeySequence
-from PySide2.QtWidgets import (QAction, QMainWindow, QMenu)
+from PySide2.QtWidgets import QAction, QMainWindow
 from qdarkstyle.dark.palette import DarkPalette
 from qdarkstyle.light.palette import LightPalette
 
-from eqt.ui.SessionDialogs import ErrorDialog, WarningDialog
-from eqt.ui.SessionDialogs import (LoadSessionDialog, SaveSessionDialog,
-                                       SessionDirectorySelectionDialog)
 from eqt.io import zip_directory
+from eqt.threading import Worker
+from eqt.ui.ProgressTimerDialog import ProgressTimerDialog
+from eqt.ui.SessionDialogs import (ErrorDialog, LoadSessionDialog,
+                                   SaveSessionDialog,
+                                   SessionDirectorySelectionDialog)
 
 
 class SessionMainWindow(QMainWindow):
@@ -146,7 +146,7 @@ class SessionMainWindow(QMainWindow):
         If no sessions exist, create a new session
         '''
         zip_folders = []
-        for r, d, f in os.walk('.'):
+        for _, _, f in os.walk('.'):
             for _file in f:
                 if '.zip' in _file:
                     array = _file.split("_")
