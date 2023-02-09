@@ -1,12 +1,13 @@
 import sys
 
-from eqt.ui.UIFormWidget import FormWidget
-from eqt.ui.UISliderWidget import UISliderWidget
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QApplication
 
-from epac_ct.qt.SessionMainWindow import SessionMainWindow
-from epac_ct.version import version
+from eqt.ui.SessionMainWindow import SessionMainWindow
+from eqt.ui.UIFormWidget import FormWidget
+from eqt.ui.UISliderWidget import UISliderWidget
+
+from eqt.version import version
 
 __version__ = version
 
