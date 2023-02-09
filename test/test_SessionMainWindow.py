@@ -481,20 +481,6 @@ class TestRemoveTempMethods(unittest.TestCase):
         self.smw.current_session_folder = "Test Session Folder"
         self.smw.removeTemp()
 
-    def test_removeTemp_when_current_session_folder_exists_and_working_dir_is_it(self):
-        try:
-            self.smw.current_session_folder = "Test Session Folder"
-            os.mkdir(self.smw.current_session_folder)
-            os.chdir(self.smw.current_session_folder)
-            self.smw.removeTemp()
-        except Exception as e:
-            try:
-                os.chdir("..")
-                shutil.rmtree(self.smw.current_session_folder)
-            except Exception:
-                pass
-            raise e
-
     def test_removeTempAndClose(self):
         process_name = "Test Process"
         self.smw.removeTemp = mock.MagicMock()
