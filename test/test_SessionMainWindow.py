@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import sys
@@ -7,16 +8,11 @@ from unittest import mock
 from unittest.mock import patch
 
 from PySide2.QtCore import QSettings, QThreadPool
-from PySide2.QtWidgets import QApplication, QFileDialog, QMenu, QMenuBar
+from PySide2.QtWidgets import QApplication,QMenu, QMenuBar
 
 import eqt
-from eqt.ui.SessionDialogs import (ErrorDialog, LoadSessionDialog,
-                                   SaveSessionDialog,
-                                   SessionDirectorySelectionDialog,
-                                   WarningDialog)
-from eqt.ui.SessionMainWindow import SessionMainWindow
 from eqt.io import zip_directory
-import json
+from eqt.ui.SessionMainWindow import SessionMainWindow
 
 # skip the tests on GitHub actions
 if os.environ.get('CONDA_BUILD', '0') == '1':
@@ -524,28 +520,6 @@ class TestRemoveTempMethods(unittest.TestCase):
         self.smw.removeTemp.assert_called_once()
         self.smw.finishProcess.assert_called_once_with(process_name)
         self.smw.close.assert_called_once()
-
-if __name__ == "__main__":
-    unittest.main()
-
-
-            
-            
-
-
-  
-
-
-
-
-
-            
-
-
-      
-
-    
-
 
 if __name__ == "__main__":
     unittest.main()

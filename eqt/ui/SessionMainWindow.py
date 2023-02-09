@@ -21,10 +21,7 @@ from eqt.io import zip_directory
 
 class SessionMainWindow(QMainWindow):
     '''
-    A base class for a main window that can save and load sessions.
-    
-    This class provides the following functionality:
-    
+    A base class for a main window that can save and load sessions.   
     '''
 
     def __init__(self, title, app_name, settings_name=None, **kwargs):

@@ -12,6 +12,13 @@ __version__ = version
 
 
 class ExampleSessionMainWindow(SessionMainWindow):
+    '''
+    This is an example of a SessionMainWindow.
+    It is used to show how to use the SessionMainWindow class.
+    
+    To test out this example, change the state of the widgets and save the session.
+    Then load the session again and check if the state of the widgets is the same as before.
+    '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         form_widget = FormWidget(self)
