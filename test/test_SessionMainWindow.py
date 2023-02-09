@@ -474,8 +474,7 @@ class TestRemoveTempMethods(unittest.TestCase):
             try:
                 shutil.rmtree(self.smw.current_session_folder)
             except Exception:
-                pass
-            raise e
+                raise e
 
     def test_removeTemp_when_current_session_folder_does_not_exist(self):
         self.smw.current_session_folder = "Test Session Folder"
