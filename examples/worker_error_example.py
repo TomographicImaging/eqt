@@ -13,7 +13,7 @@ class MainUI(QtWidgets.QMainWindow):
         
         pb = QtWidgets.QPushButton(self)
         pb.setText("Start Process")
-        pb.clicked.connect(lambda: self.startProcess())
+        pb.clicked.connect(self.startProcess)
         
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
