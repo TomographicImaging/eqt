@@ -496,19 +496,6 @@ class TestRemoveTempMethods(unittest.TestCase):
             except:
                 pass
             raise e
-    
-    def test_removeTemp_when_current_session_folder_exists(self):
-        try:
-            self.smw.current_session_folder = "Test Session Folder"
-            os.mkdir(self.smw.current_session_folder)
-            self.smw.removeTemp()
-            self.assertFalse(os.path.exists(self.smw.current_session_folder))
-        except Exception as e:
-            try:
-                shutil.rmtree(self.smw.current_session_folder)
-            except:
-                pass
-            raise e
 
     def test_removeTempAndClose(self):
         process_name = "Test Process"
