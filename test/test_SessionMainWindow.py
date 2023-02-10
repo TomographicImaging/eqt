@@ -404,6 +404,10 @@ class TestSaveSession(unittest.TestCase):
 
         try:
             self.smw.moveSessionFolder(self.session_name)
+            # Method should move us into the new session directory:
+            self.assertEqual(os.getcwd(), os.path.join(self.smw.sessions_directory, new_folder_to_save_to))
+            # Move out of the folder, for testing:
+            os.chdir("..")
             self.assertEqual(os.path.basename(self.smw.current_session_folder), new_folder_to_save_to)
             self.assertTrue(os.path.exists(new_folder_to_save_to))
             self.assertTrue(os.path.exists(os.path.join(new_folder_to_save_to, "test_file.txt")))

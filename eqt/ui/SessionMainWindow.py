@@ -533,6 +533,8 @@ class SessionMainWindow(QMainWindow):
         '''
         self.moveSessionFolder(session_name)
         self.saveSessionConfigToJson()
+        # Move out of the session folder before zippping:
+        os.chdir('..')
         zip_directory(self.current_session_folder, compress)
 
     def getSessionConfig(self):
@@ -550,6 +552,7 @@ class SessionMainWindow(QMainWindow):
         '''
         Creates a new session folder, and moves the current session folder to it.
         Saves new session folder as self.current_session_folder
+        Moves into the new session folder
         '''
 
         now_string = datetime.now().strftime("%d-%m-%Y-%H-%M")
@@ -557,6 +560,7 @@ class SessionMainWindow(QMainWindow):
         os.chdir('..')
         shutil.move(self.current_session_folder, new_folder_to_save_to)
         self.current_session_folder = new_folder_to_save_to
+        os.chdir(self.current_session_folder)
 
 
     def saveSessionConfigToJson(self):
