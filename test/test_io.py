@@ -22,13 +22,21 @@ class TestZipDirectory(unittest.TestCase):
         with open(self.subfile, "w+") as f:
             f.write("test")
 
-    def test_zip_directory(self):
-        zip_directory(self.folder)
+    def _test_zip_directory(self):
         # Check the zip file exists:
         assert os.path.exists(self.folder + ".zip")
         # extract the zipfile and check the subfile exists:
         shutil.unpack_archive(self.folder + ".zip", "extracted")
         assert os.path.exists(os.path.join("extracted", "Test Subfolder", "test_file.txt"))
+
+    def test_zip_directory_compress_True(self):
+        zip_directory(self.folder)
+        self._test_zip_directory()
+
+    def test_zip_directory_compress_False(self):
+        zip_directory(self.folder, compress=False)
+        self._test_zip_directory()
+
 
     def tearDown(self):
         shutil.rmtree(self.folder)

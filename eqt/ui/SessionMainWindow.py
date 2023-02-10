@@ -21,7 +21,27 @@ from eqt.ui.SessionDialogs import (ErrorDialog, LoadSessionDialog,
 
 class SessionMainWindow(QMainWindow):
     '''
-    A base class for a main window that can save and load sessions.   
+    A base class for a main window that can save and load sessions.
+    
+    This class is meant to be subclassed, and the subclass should implement
+    the following methods:
+    - getSessionConfig
+    - finishLoadConfig
+
+
+    Properties of Note:
+    -------------------
+    self.settings
+        This is a QSettings object that is used to save and load the session
+        settings such as the light/dark theme, the session directory, etc.
+    self.progress_windows
+        This is a dictionary of ProgressTimerDialog objects, where the key is
+        the name of the progress window.
+    self.sessions_directory
+        This is the path to the directory where the session folders are saved.
+        This is set by the user using the menu option "Settings > Set Session Directory".
+        Inside the folder specified by self.sessions_directory, there will be a folder
+        called self.sessions_directory_name, which is where the session folders are saved.
     '''
 
     def __init__(self, title, app_name, settings_name=None, **kwargs):
@@ -53,7 +73,6 @@ class SessionMainWindow(QMainWindow):
 
         self.progress_windows = {}
 
-        
 
 
     # Create the menu ----------------------------------------------------------
@@ -126,7 +145,6 @@ class SessionMainWindow(QMainWindow):
         it will be loaded. If they select "New Session", a new session will be created.
         '''
         
-        print("In the settings we have: ", self.settings.value('sessions_folder'))
         if self.settings.value('sessions_folder') is None:
             # get user to select directory, then within that directory we create a folder called session_folder_name,
             # which will then contain all of the session folders.
@@ -264,9 +282,7 @@ class SessionMainWindow(QMainWindow):
         if not os.path.isdir(self.sessions_directory_name):
             os.mkdir(self.sessions_directory_name)
         os.chdir(self.sessions_directory_name)
-        print("Setting the value in the settings: ", os.getcwd())
         self.settings.setValue('sessions_folder', os.getcwd())
-        print("In the settings we have: ", self.settings.value('sessions_folder'))
         self.sessions_directory = os.path.abspath(os.getcwd())
 
 
@@ -334,8 +350,6 @@ class SessionMainWindow(QMainWindow):
                     selected_folder = os.path.join('.', _file)
                     break
 
-        print("going to unpack: ", selected_folder)
-
         shutil.unpack_archive(selected_folder, selected_folder[:-4])
         loaded_folder= selected_folder[:-4]
         self.current_session_folder = loaded_folder
@@ -383,7 +397,6 @@ class SessionMainWindow(QMainWindow):
         detailed_text : str
             The detailed text of the progress bar
         '''
-        print("Creating unknown progress window", process_name)
 
         progress_window = ProgressTimerDialog(process_name, parent=self)
         self.saveReferenceToProgressWindow(progress_window, process_name)
@@ -417,9 +430,7 @@ class SessionMainWindow(QMainWindow):
         
         if not self.should_really_close:
             self.createSaveWindow(event)
-            event.ignore()
-        else:
-            print("self.should_really_close", self.should_really_close)
+            event.ignore()           
 
 
     def createSaveWindow(self, event):
@@ -455,7 +466,6 @@ class SessionMainWindow(QMainWindow):
             dialog.Ok.clicked.connect(lambda: self.saveDialogAccepted(dialog))
             dialog.Cancel.setText('Cancel')
 
-        print("About to open save dialog")
         dialog.open()
 
     def saveDialogAccepted(self, dialog):
@@ -463,10 +473,8 @@ class SessionMainWindow(QMainWindow):
         Called when the user clicks 'Save' in the save dialog.
         This saves the session and then closes the dialog.
         '''
-        print("Save accepted")
         compress = dialog.widgets['compress_field'].isChecked()
         dialog.close()
-        print("Calling save session")
         session_name = dialog.widgets['session_name_field'].text()
         self.runSaveSessionWorker(session_name, compress, None)
 
@@ -482,12 +490,10 @@ class SessionMainWindow(QMainWindow):
         Called when the user clicks 'Save' in the save and quit dialog.
         This saves the session and then closes the app.
         '''
-        print("Save quit accepted")
         self.should_really_close = True
         compress = dialog.widgets['compress_field'].isChecked()
         session_name = dialog.widgets['session_name_field'].text()
         dialog.close()
-        print("Calling save session")
         self.runSaveSessionWorker(session_name, compress, QCloseEvent())
 
     def saveQuitDialogRejected(self, dialog):
@@ -513,7 +519,6 @@ class SessionMainWindow(QMainWindow):
         If the event is anything else, then the app will not be closed, by calling
         self.closeSaveWindow.
         '''
-        print("runSaveSessionWorker")
         process_name = 'Save Session'
 
         self.createUnknownProgressWindow(process_name, "Saving", "Saving Session")
@@ -584,11 +589,9 @@ class SessionMainWindow(QMainWindow):
         '''
         Removes the temp directory for this session, and closes the app.
         '''
-        print("Removing temp and closing")
         self.removeTemp()
         self.finishProcess(process_name)
         self.should_really_close = True
-        #self.closeEvent(event)
         self.close()
 
     def removeTemp(self):
