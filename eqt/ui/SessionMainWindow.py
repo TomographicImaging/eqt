@@ -16,13 +16,13 @@ from eqt.threading import Worker
 from eqt.ui.ProgressTimerDialog import ProgressTimerDialog
 from eqt.ui.SessionDialogs import (ErrorDialog, LoadSessionDialog,
                                    SaveSessionDialog,
-                                   SessionDirectorySelectionDialog)
+                                   SessionDirectorySelectionDialog, AppSettingsDialog)
 
 
 class SessionMainWindow(QMainWindow):
     '''
     A base class for a main window that can save and load sessions.
-    
+
     This class is meant to be subclassed, and the subclass should implement
     the following methods:
     - getSessionConfig
@@ -58,7 +58,7 @@ class SessionMainWindow(QMainWindow):
 
         self.setAppStyle()
 
-        self.menu = self.createMenu()
+        self.menu_bar, self.menus = self.createMenu()
 
         # This is the name of the directory where the session folders are saved
         # This will be within a directory that is picked by the user
@@ -89,9 +89,19 @@ class SessionMainWindow(QMainWindow):
                 This will exit the application without saving the current session
 
         Settings
+            App Settings
+                This will open a dialog to change the application settings, such as
+                the light/dark theme
             Session Directory
                 This will open a dialog to select the path where the session folders
                 are saved
+
+        Returns
+        -------
+        menu : QMenuBar
+            The menu bar
+        menus: dict
+            A dictionary of the menu names and the corresponding QMenu objects
 
 
         Notes
@@ -121,11 +131,60 @@ class SessionMainWindow(QMainWindow):
 
         settings_menu = menu.addMenu("Settings")
 
+        app_settings_action = QAction("App Settings", self)
+        app_settings_action.triggered.connect(self.createAppSettingsDialog)
+        settings_menu.addAction(app_settings_action)
+
         session_folder_action = QAction("Set Session Directory", self)
         session_folder_action.triggered.connect(lambda: self.createSessionsDirectorySelectionDialog(new_session=False))
         settings_menu.addAction(session_folder_action)
 
-        return menu
+        menus = {
+            "File": file_menu,
+            "Settings": settings_menu
+        }
+
+        return menu, menus
+
+
+    # Settings -----------------------------------------------------------------
+
+    def setAppStyle(self):
+        '''Sets app stylesheet, based on user's settings '''
+        if self.settings.value("dark_mode") is None:
+            self.settings.setValue("dark_mode", "true")
+        if self.settings.value("dark_mode") == "true":
+            style = qdarkstyle.load_stylesheet(palette=DarkPalette)
+        else:
+            style = qdarkstyle.load_stylesheet(palette=LightPalette)
+        self.setStyleSheet(style)
+
+    def createAppSettingsDialog(self):
+        '''Create a dialog to change the application settings, such as the light/dark theme'''
+        dialog = AppSettingsDialog(self)
+        self.setAppSettingsDialogWidgets(dialog)
+        dialog.Ok.clicked.connect(lambda: self.onAppSettingsDialogAccepted(dialog))
+        dialog.Cancel.clicked.connect(dialog.close)
+        dialog.open()
+
+
+    def setAppSettingsDialogWidgets(self, dialog):
+        '''Set the widgets on the app settings dialog, based on the 
+        current settings of the app'''
+        if self.settings.value("dark_mode") == "true":
+            dialog.widgets['dark_checkbox_field'].setChecked(True)
+        else:
+            dialog.widgets['dark_checkbox_field'].setChecked(False)
+
+
+    def onAppSettingsDialogAccepted(self, dialog):
+        '''This method is called when the user clicks "Ok" on the app settings dialog'''
+        if dialog.widgets['dark_checkbox_field'].isChecked():
+            self.settings.setValue("dark_mode", "true")
+        else:
+            self.settings.setValue("dark_mode", "false")
+        self.setAppStyle()
+        dialog.close()
 
 
 
@@ -406,18 +465,6 @@ class SessionMainWindow(QMainWindow):
         self.progress_windows[process_name] = progress_window
 
 
-
-    # Aesthetic ----------------------------------------------------------------
-
-    def setAppStyle(self):
-        '''Sets app stylesheet, based on user's settings '''
-        if self.settings.value("dark_mode") is None:
-            self.settings.setValue("dark_mode", "true")
-        if self.settings.value("dark_mode") == "true":
-            style = qdarkstyle.load_stylesheet(palette=DarkPalette)
-        else:
-            style = qdarkstyle.load_stylesheet(palette=LightPalette)
-        self.setStyleSheet(style)
 
     # Handling Closing And Saving Sessions -------------------------------------
     

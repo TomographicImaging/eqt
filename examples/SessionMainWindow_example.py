@@ -80,7 +80,7 @@ def add_every_widget_to_form(form):
 
 def create_main_window():
     window = ExampleSessionMainWindow(
-        "Example Session Main Window{}".format(__version__), "Example7-Sessions", settings_name="Example7")
+        "Example Session Main Window{}".format(__version__), "Example1", settings_name="Example2")
     
     return window
 

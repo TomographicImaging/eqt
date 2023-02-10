@@ -71,10 +71,11 @@ class TestSessionMainWindowInit(unittest.TestCase):
         smw = SessionMainWindow(self.title, self.app_name)
         smw.setAppStyle.assert_called_once()
 
-    @patch('eqt.ui.SessionMainWindow.SessionMainWindow.createMenu')
+    @patch('eqt.ui.SessionMainWindow.SessionMainWindow.createMenu', return_value=(QMenuBar(), {}))
     def test_init_calls_createMenu(self, mock_menu_bar):  
         smw = SessionMainWindow(self.title, self.app_name)     
-        assert smw.menu is not None
+        assert smw.menu_bar is not None
+        assert smw.menus is not None
         smw.createMenu.assert_called_once()
 
     def test_sessions_directory_name_set(self):
@@ -104,17 +105,23 @@ class TestSessionMainWindowMenuBar(unittest.TestCase):
         self.app_name="app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
 
-    def test_createMenu_returns_QMenuBar(self):
+    def test_createMenu_returns_QMenuBar_and_dict(self):
         assert self.smw.createMenu() is not None
-        assert isinstance(self.smw.createMenu(), QMenuBar)
+        assert isinstance(self.smw.createMenu()[0], QMenuBar)
+        assert isinstance(self.smw.createMenu()[1], dict)
+        # dict should contain the expected menus
+        assert "File" in self.smw.createMenu()[1]
+        assert "Settings" in self.smw.createMenu()[1]
+        assert isinstance(self.smw.createMenu()[1]["File"], QMenu)
+        assert isinstance(self.smw.createMenu()[1]["Settings"], QMenu)
 
     def test_menu_has_file_and_settings_menu(self):
-        actions = self.smw.menu.actions()
+        actions = self.smw.menu_bar.actions()
         assert actions[0].text() == "File"
         assert actions[1].text() == "Settings"
 
     def test_file_menu_has_expected_actions(self):
-        menus = self.smw.menu.findChildren(QMenu)
+        menus = self.smw.menu_bar.findChildren(QMenu)
         file_menu = menus[0]
         assert file_menu.actions()[0].text() == "Save"
         assert file_menu.actions()[1].text() == "Save + Exit"
@@ -122,9 +129,10 @@ class TestSessionMainWindowMenuBar(unittest.TestCase):
 
 
     def test_settings_menu_has_expected_actions(self):
-        menus = self.smw.menu.findChildren(QMenu)
+        menus = self.smw.menu_bar.findChildren(QMenu)
         settings_menu = menus[1]
-        self.assertEqual(settings_menu.actions()[0].text(), "Set Session Directory")
+        self.assertEqual(settings_menu.actions()[0].text(), "App Settings")
+        self.assertEqual(settings_menu.actions()[1].text(), "Set Session Directory")
 
 
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")

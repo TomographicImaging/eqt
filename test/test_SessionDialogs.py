@@ -1,4 +1,4 @@
-from eqt.ui.SessionDialogs import WarningDialog, ErrorDialog, SaveSessionDialog, SessionDirectorySelectionDialog, LoadSessionDialog
+from eqt.ui.SessionDialogs import WarningDialog, ErrorDialog, SaveSessionDialog, SessionDirectorySelectionDialog, LoadSessionDialog, AppSettingsDialog
 import os
 import unittest
 from PySide2.QtWidgets import QApplication, QFileDialog
@@ -122,6 +122,14 @@ class TestLoadSessionDialog(unittest.TestCase):
         location_of_session_files = "C:\\Users\\test_user\\Documents\\test_dir"
         lsd = LoadSessionDialog(location_of_session_files=location_of_session_files)
         self.assertEqual(lsd.getWidget("sessions_directory").text(), "Currently loading sessions from: C:\\Users\\test_user\\Documents\\test_dir")
+
+@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+class TestAppSettingsDialog(unittest.TestCase):
+
+    def test_init(self):
+        asd = AppSettingsDialog()
+        assert asd is not None
+
 
 if __name__ == "__main__":
     unittest.main()
