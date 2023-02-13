@@ -20,7 +20,6 @@ if os.environ.get('CONDA_BUILD', '0') == '1':
 else:
     skip_as_conda_build = False
 
-
 print ("skip_as_conda_build is set to ", skip_as_conda_build)
 
 if not skip_as_conda_build:
@@ -71,7 +70,7 @@ class TestSessionMainWindowInit(unittest.TestCase):
         smw = SessionMainWindow(self.title, self.app_name)
         smw.setAppStyle.assert_called_once()
 
-    @patch('eqt.ui.SessionMainWindow.SessionMainWindow.createMenu', return_value=(QMenuBar(), {}))
+    @patch('eqt.ui.SessionMainWindow.SessionMainWindow.createMenu', return_value=(1, {}))
     def test_init_calls_createMenu(self, mock_menu_bar):  
         smw = SessionMainWindow(self.title, self.app_name)     
         assert smw.menu_bar is not None
@@ -503,8 +502,6 @@ class TestRemoveTempMethods(unittest.TestCase):
         self.smw.finishProcess.assert_called_once_with(process_name)
         self.smw.close.assert_called_once()
 
-if __name__ == "__main__":
-    unittest.main()
 
 
 
