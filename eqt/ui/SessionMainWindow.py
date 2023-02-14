@@ -98,7 +98,7 @@ class SessionMainWindow(QMainWindow):
 
         Returns
         -------
-        menu : QMenuBar
+        menu_bar: QMenuBar
             The menu bar
         menus: dict
             A dictionary of the menu names and the corresponding QMenu objects
@@ -110,10 +110,10 @@ class SessionMainWindow(QMainWindow):
         
         '''
         
-        menu = self.menuBar()
+        menu_bar = self.menuBar()
 
         # If we add the menus this way, then the menuBar takes ownership of the menus:
-        file_menu = menu.addMenu("File")
+        file_menu = menu_bar.addMenu("File")
 
         save_action = QAction("Save", self)
         save_action.triggered.connect(
@@ -129,7 +129,7 @@ class SessionMainWindow(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
 
-        settings_menu = menu.addMenu("Settings")
+        settings_menu = menu_bar.addMenu("Settings")
 
         app_settings_action = QAction("App Settings", self)
         app_settings_action.triggered.connect(self.createAppSettingsDialog)
@@ -144,7 +144,7 @@ class SessionMainWindow(QMainWindow):
             "Settings": settings_menu
         }
 
-        return menu, menus
+        return menu_bar, menus
 
 
     # Settings -----------------------------------------------------------------
