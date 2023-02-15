@@ -52,5 +52,7 @@ class ProgressTimerDialog(QProgressDialog):
         # running then it continues forever, 
         # even after the progress window closes.
         self.run_cancelled = True
+        # need to wait for the thread to finish:
+        self.threadpool.waitForDone()
         QProgressDialog.close(self)
 

@@ -40,8 +40,9 @@ class SessionMainWindow(QMainWindow):
     self.sessions_directory
         This is the path to the directory where the session folders are saved.
         This is set by the user using the menu option "Settings > Set Session Directory".
-        Inside the folder specified by self.sessions_directory, there will be a folder
+        Inside the folder specified by the user, there will be a folder
         called self.sessions_directory_name, which is where the session folders are saved.
+        So self.sessions_directory will be: <user selected directory>/<self.sessions_directory_name>
     '''
 
     def __init__(self, title, app_name, settings_name=None, **kwargs):
@@ -210,7 +211,6 @@ class SessionMainWindow(QMainWindow):
             self.createSessionsDirectorySelectionDialog(new_session=True)
         else:
             session_folder_name  = self.settings.value('sessions_folder')
-            os.chdir(session_folder_name)
             self.sessions_directory = session_folder_name
             self.createSessionSelector()
 
@@ -223,7 +223,7 @@ class SessionMainWindow(QMainWindow):
         If no sessions exist, create a new session
         '''
         zip_folders = []
-        for _, _, f in os.walk('.'):
+        for _, _, f in os.walk(self.sessions_directory):
             for _file in f:
                 if '.zip' in _file:
                     array = _file.split("_")
@@ -326,7 +326,7 @@ class SessionMainWindow(QMainWindow):
         Also stores the path to self.sessions_directory_name
         '''
         # If the user has selected the sessions_directory_name folder, we want to move up a directory
-        # and then create the sessions_directory_name folder within that directory.
+        # before looking for the sessions_directory_name folder within that directory.
         # This is necessary because if the sessions_directory_name folder already exists and contains
         # sessions, we don't want to create another sessions_directory_name folder within it, as then the
         # existing sessions won't be available for loading.
@@ -336,13 +336,13 @@ class SessionMainWindow(QMainWindow):
         else:
             if not os.path.isdir(user_selected_directory):
                 os.mkdir(user_selected_directory)
-        os.chdir(user_selected_directory)
+        
+        sessions_directory = os.path.abspath(os.path.join(user_selected_directory, self.sessions_directory_name))
 
-        if not os.path.isdir(self.sessions_directory_name):
-            os.mkdir(self.sessions_directory_name)
-        os.chdir(self.sessions_directory_name)
-        self.settings.setValue('sessions_folder', os.getcwd())
-        self.sessions_directory = os.path.abspath(os.getcwd())
+        if not os.path.isdir(sessions_directory):
+            os.mkdir(sessions_directory)
+        self.settings.setValue('sessions_folder', sessions_directory)
+        self.sessions_directory = sessions_directory
 
 
     def loadSessionNew(self):
@@ -378,13 +378,12 @@ class SessionMainWindow(QMainWindow):
         '''
         Creates a session folder with the name:
         <app_name>-<date>-<time>
-        and moves to it.
         '''
         date_time = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
         session_folder_name = '{}-{}'.format(self.app_name, date_time)
-        os.mkdir(session_folder_name)
+        session_folder_path = os.path.join(self.sessions_directory, session_folder_name)
+        os.mkdir(session_folder_path)
         self.current_session_folder = os.path.abspath(session_folder_name)
-        os.chdir(self.current_session_folder)
 
 
     def loadSessionConfig(self, folder, **kwargs):
@@ -403,18 +402,17 @@ class SessionMainWindow(QMainWindow):
         date_and_time = selected_text.split(' ')[-1]
         selected_folder = ""
 
-        for _, _, f in os.walk('.'):
+        for _, _, f in os.walk(self.sessions_directory):
             for _file in f:
                 if date_and_time + '.zip' in _file:
-                    selected_folder = os.path.join('.', _file)
+                    selected_folder = os.path.join(self.sessions_directory, _file)
                     break
 
         shutil.unpack_archive(selected_folder, selected_folder[:-4])
         loaded_folder= selected_folder[:-4]
         self.current_session_folder = loaded_folder
-        os.chdir(self.current_session_folder)
 
-        json_filename = "session.json"
+        json_filename = os.path.join(self.current_session_folder, "session.json")
 
         with open(json_filename) as tmp:
             self.config = json.load(tmp)
@@ -431,8 +429,9 @@ class SessionMainWindow(QMainWindow):
         Called when a process has finished.
         Closes the progress bar and sets the process_finished flag to True.
         '''
-        self.progress_windows[process_name].close()
         self.process_finished = True
+        self.progress_windows[process_name].close()
+        
 
 
     # Progress Bar -------------------------------------------------------------
@@ -568,6 +567,7 @@ class SessionMainWindow(QMainWindow):
         '''
         process_name = 'Save Session'
 
+        self.process_finished = False
         self.createUnknownProgressWindow(process_name, "Saving", "Saving Session")
 
         saveSession_worker = Worker(self.saveSession, session_name, compress)
@@ -585,8 +585,6 @@ class SessionMainWindow(QMainWindow):
         '''
         self.moveSessionFolder(session_name)
         self.saveSessionConfigToJson()
-        # Move out of the session folder before zippping:
-        os.chdir('..')
         zip_directory(self.current_session_folder, compress)
 
     def getSessionConfig(self):
@@ -609,10 +607,8 @@ class SessionMainWindow(QMainWindow):
 
         now_string = datetime.now().strftime("%d-%m-%Y-%H-%M")
         new_folder_to_save_to = os.path.join(self.sessions_directory, session_name + "_" + now_string)
-        os.chdir('..')
         shutil.move(self.current_session_folder, new_folder_to_save_to)
         self.current_session_folder = new_folder_to_save_to
-        os.chdir(self.current_session_folder)
 
 
     def saveSessionConfigToJson(self):
@@ -648,16 +644,6 @@ class SessionMainWindow(QMainWindow):
         if hasattr(self, 'current_session_folder'):
             try:
                 shutil.rmtree(self.current_session_folder)
-            except FileNotFoundError:
-                os.chdir('..')
-                try:
-                    shutil.rmtree(self.current_session_folder)
-                except FileNotFoundError:
-                    pass
-                except PermissionError as e:
-                    dialog = ErrorDialog(self, str(e))
-                    dialog.exec_()
-                    self.removeTemp()
             except PermissionError as e:
                 dialog = ErrorDialog(self, str(e))
                 dialog.exec_()
@@ -670,6 +656,5 @@ class SessionMainWindow(QMainWindow):
         '''
         # move back to session dir in case we moved
         # out of it for zipping etc. :
-        os.chdir(self.current_session_folder)
         self.finishProcess(process_name)
         self.SaveWindow.close()

@@ -168,8 +168,7 @@ class TestSessionMainWindowSetupSession(unittest.TestCase):
             self.smw.createSessionsDirectorySelectionDialog.assert_not_called()
             self.smw.createSessionSelector.assert_called_once()
             self.assertEqual(self.smw.sessions_directory, session_folder_name)
-            # Should have moved us into the session folder:
-            self.assertEqual(os.path.basename(os.getcwd()), session_folder_name)
+
 
         except Exception as e:
             raise e
@@ -197,6 +196,8 @@ class TestSessionMainWindowCreateSessionSelector(unittest.TestCase):
         self.smw = SessionMainWindow(self.title, self.app_name)
         os.mkdir("Test Folder")
         os.chdir("Test Folder")
+        os.mkdir("Session Folder")
+        self.smw.sessions_directory = "."
 
     def test_createSessionSelector_when_no_session_zips_exist(self):
         self.smw.loadSessionNew = mock.MagicMock()
@@ -207,14 +208,15 @@ class TestSessionMainWindowCreateSessionSelector(unittest.TestCase):
 
     def test_createSessionSelector_when_session_zips_exist(self):
         # Make 2 zip files in the sessions directory:
+        os.chdir("Session Folder")
         shutil.make_archive("_session1_08-02-22", "zip")
         shutil.make_archive("session_2_08-02-22", "zip")
+        os.chdir("..")
 
         zip_folders = ["_session1 08-02-22", "session_2 08-02-22"]
 
         self.smw.createLoadSessionDialog = mock.MagicMock()
         self.smw.loadSessionNew = mock.MagicMock()
-        self.smw.sessions_directory = mock.MagicMock()
         self.smw.createSessionSelector()
         self.smw.loadSessionNew.assert_not_called()
 
@@ -314,16 +316,16 @@ class TestCreateSessionFolder(unittest.TestCase):
 
     def test_createSessionFolder(self):
         session_folder_name = "app_name-" + self.date_time
+        # We need to mock the sessions_directory method, as it has not been set up yet
+        # We want the session folder to be made in the current directory for this test
+        self.smw.sessions_directory = "."
         self.smw.createSessionFolder()
-        self.assertEqual(os.path.basename(os.getcwd()), session_folder_name)
+        assert os.path.exists(session_folder_name)
 
     def tearDown(self):
         os.chdir("..")
-        try:
-            shutil.rmtree("Test Folder")
-        except Exception:
-            os.chdir("..")
-            shutil.rmtree("Test Folder")
+        shutil.rmtree("Test Folder")
+
 
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestLoadSessionConfig(unittest.TestCase):
@@ -337,17 +339,20 @@ class TestLoadSessionConfig(unittest.TestCase):
     def setUp(self):
         '''
         Create a session zip file, which contains a session.json file'''
+        os.mkdir("Test Folder")
+        os.chdir("Test Folder")
+
         self.title="title"
         self.app_name="app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
-        self.session_folder = "app name 01-01-2020-00-00-00"
+        self.smw.sessions_directory = "Sessions Folder"
+        self.session_folder = os.path.join(self.smw.sessions_directory, "app name 01-01-2020-00-00-00")
 
         self.config = {'test_key': 'test_value', 'test_key2': 'test_value2',
             'test_int_key': 1, 'test_float_key': 1.0, 'test_bool_key': True,
             'test_list_key': [1, 2, 3], 'test_dict_key': {'test_key': 'test_value'}}
 
-        os.mkdir("Test Folder")
-        os.chdir("Test Folder")
+        os.mkdir(self.smw.sessions_directory)
         os.mkdir(self.session_folder)
 
         session_file = os.path.join(self.session_folder, "session.json")
@@ -396,26 +401,22 @@ class TestSaveSession(unittest.TestCase):
 
     def test_moveSessionFolder(self):
         os.mkdir("Test Folder")
-        os.chdir("Test Folder")
-        new_folder_to_save_to = self.session_name + "_" + datetime.now().strftime("%d-%m-%Y-%H-%M")
+        new_folder_to_save_to = os.path.join("Test Folder", self.session_name + "_" + datetime.now().strftime("%d-%m-%Y-%H-%M"))
 
         # Make the current session folder, with a test file inside it:
         
-        self.smw.sessions_directory = os.getcwd()
-        os.mkdir("Current Session Folder")
+        self.smw.sessions_directory = os.path.abspath("Test Folder")
+        current_session_folder = os.path.join(self.smw.sessions_directory, "Current Session Folder")
+        os.mkdir(current_session_folder)
         # Write file inside the folder:
-        with open(os.path.join("Current Session Folder", "test_file.txt"), "w+") as f:
+        with open(os.path.join(current_session_folder, "test_file.txt"), "w+") as f:
             f.write("test")
-        os.chdir("Current Session Folder")
-        self.smw.current_session_folder = os.getcwd()
+        # os.chdir("Current Session Folder")
+        self.smw.current_session_folder = current_session_folder
 
         try:
             self.smw.moveSessionFolder(self.session_name)
-            # Method should move us into the new session directory:
-            self.assertEqual(os.getcwd(), os.path.join(self.smw.sessions_directory, new_folder_to_save_to))
-            # Move out of the folder, for testing:
-            os.chdir("..")
-            self.assertEqual(os.path.basename(self.smw.current_session_folder), new_folder_to_save_to)
+            self.assertEqual(os.path.abspath(self.smw.current_session_folder), os.path.abspath(new_folder_to_save_to))
             self.assertTrue(os.path.exists(new_folder_to_save_to))
             self.assertTrue(os.path.exists(os.path.join(new_folder_to_save_to, "test_file.txt")))
             self.assertFalse(os.path.exists("Current Session Folder"))
@@ -425,12 +426,7 @@ class TestSaveSession(unittest.TestCase):
             raise e
 
         finally:
-            os.chdir("..")
-            try:
-                shutil.rmtree("Test Folder")
-            except Exception:
-                os.chdir("..")
-                shutil.rmtree("Test Folder")
+            shutil.rmtree("Test Folder")
 
     def test_saveSessionConfigToJson(self):
 
@@ -455,7 +451,6 @@ class TestSaveSession(unittest.TestCase):
             with open(session_file, "r") as f:
                 config = json.load(f)
             self.assertEqual(config, self.config)
-            print(config)
         except Exception as e:
             raise e
         finally:
@@ -489,7 +484,9 @@ class TestRemoveTempMethods(unittest.TestCase):
 
     def test_removeTemp_when_current_session_folder_does_not_exist(self):
         self.smw.current_session_folder = "Test Session Folder"
-        self.smw.removeTemp()
+        # Test this raises a FileNotFoundError:
+        with self.assertRaises(FileNotFoundError):
+            self.smw.removeTemp()
 
     def test_removeTempAndClose(self):
         process_name = "Test Process"
@@ -504,4 +501,5 @@ class TestRemoveTempMethods(unittest.TestCase):
 
 
 
-
+if __name__ == "__main__":
+    unittest.main()
