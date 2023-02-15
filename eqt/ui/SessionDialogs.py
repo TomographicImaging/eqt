@@ -66,12 +66,9 @@ class SessionDirectorySelectionDialog(FormDialog):
 
         self.addSpanningWidget(QLabel(label_text), 'select_session_directory')
 
-
-        self.addSpanningWidget(QLabel('No directory selected'), 'selected_dir')
-
         browse_button = QPushButton('Browse')
         browse_button.clicked.connect(self.browse_for_dir)
-        self.addSpanningWidget(browse_button, 'browse_button')
+        self.addWidget(browse_button, QLabel('No directory selected'), 'selected_dir')
 
         self.selected_dir = None
 
@@ -81,7 +78,7 @@ class SessionDirectorySelectionDialog(FormDialog):
     def browse_for_dir(self):
         dialog = QFileDialog(self.groupBox)
         directory = dialog.getExistingDirectory(self, "Select a Directory to Save the Session to")
-        self.getWidget('selected_dir').setText(os.path.basename(directory))
+        self.getWidget('selected_dir', 'label').setText(os.path.basename(directory))
         self.selected_dir = directory
 
 

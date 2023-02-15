@@ -64,7 +64,8 @@ class SessionMainWindow(QMainWindow):
 
         self.setAppStyle()
 
-        self.menu_bar, self.menus = self.createMenu()
+        self.createMenu()
+        self.addToMenu()
 
         # This is the name of the directory where the session folders are saved
         # This will be within a directory that is picked by the user
@@ -102,17 +103,19 @@ class SessionMainWindow(QMainWindow):
                 This will open a dialog to select the path where the session folders
                 are saved
 
+        Sets
+        ----
+        self.menu_bar: QMenuBar
+            The menu bar
+        self.menus: dict
+            A dictionary of the menu names and the corresponding QMenu objects
+
         Returns
         -------
         menu_bar: QMenuBar
             The menu bar
         menus: dict
             A dictionary of the menu names and the corresponding QMenu objects
-
-
-        Notes
-        -----
-        You may wish to override this method to add additional menu options
         
         '''
         
@@ -149,8 +152,23 @@ class SessionMainWindow(QMainWindow):
             "File": file_menu,
             "Settings": settings_menu
         }
+        
+        self.menu_bar = menu_bar
+        self.menus = menus
 
         return menu_bar, menus
+    
+    def addToMenu(self):
+        '''
+        You may wish to override this in a base class, to add
+        additional menu options.
+
+        The menu bar is available as self.menu_bar, and the menus are
+        available as self.menus, which is a dictionary of the menu names
+        and the corresponding QMenu objects.
+        '''
+
+        pass
 
 
     # Settings -----------------------------------------------------------------
@@ -292,7 +310,7 @@ class SessionMainWindow(QMainWindow):
             session_folder_selection_dialog.Cancel.clicked.connect(session_folder_selection_dialog.close)
 
         if self.sessions_directory is not None:
-                session_folder_selection_dialog.getWidget('selected_dir').setText(os.path.split(self.sessions_directory)[0])
+                session_folder_selection_dialog.getWidget('selected_dir', 'label').setText(os.path.split(self.sessions_directory)[0])
                 session_folder_selection_dialog.selected_dir = os.path.split(self.sessions_directory)[0]
 
         session_folder_selection_dialog.open()
