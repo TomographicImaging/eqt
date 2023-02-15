@@ -45,7 +45,7 @@ class SessionMainWindow(QMainWindow):
         So self.sessions_directory will be: <user selected directory>/<self.sessions_directory_name>
     '''
 
-    def __init__(self, title, app_name, settings_name=None, **kwargs):
+    def __init__(self, title, app_name, settings_name=None, organisation_name=None, **kwargs):
 
         super(SessionMainWindow, self).__init__(**kwargs)
 
@@ -54,8 +54,13 @@ class SessionMainWindow(QMainWindow):
         self.threadpool = QThreadPool()
 
         if settings_name is None:
-            settings_name = title
-        self.settings = QSettings(settings_name, settings_name)
+            settings_name = app_name
+        if organisation_name is None:
+            organisation_name = app_name
+
+        print("Creating settings with name: ", settings_name)
+        
+        self.settings = QSettings(organisation_name, settings_name)
 
         self.setAppStyle()
 

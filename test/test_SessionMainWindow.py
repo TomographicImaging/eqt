@@ -54,15 +54,15 @@ class TestSessionMainWindowInit(unittest.TestCase):
         smw = SessionMainWindow(self.title, self.app_name)
         assert smw.settings is not None
         assert(isinstance(smw.settings, QSettings))
-        self.assertEqual(smw.settings.organizationName(), self.title)
-        self.assertEqual(smw.settings.applicationName(), self.title)
+        self.assertEqual(smw.settings.organizationName(), self.app_name)
+        self.assertEqual(smw.settings.applicationName(), self.app_name)
 
     def test_init_creates_settings_when_settings_name_given(self):
         settings_name="settings_name"
         smw = SessionMainWindow(self.title, self.app_name, settings_name)
         assert smw.settings is not None
         assert(isinstance(smw.settings, QSettings))
-        self.assertEqual(smw.settings.organizationName(), settings_name)
+        self.assertEqual(smw.settings.organizationName(), self.app_name)
         self.assertEqual(smw.settings.applicationName(), settings_name)
 
     @patch('eqt.ui.SessionMainWindow.SessionMainWindow.setAppStyle')
