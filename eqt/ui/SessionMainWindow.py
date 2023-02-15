@@ -474,6 +474,13 @@ class SessionMainWindow(QMainWindow):
         This method occurs when we call self.close() or when the user clicks the X button on the window.
         '''
         
+        # Need to check that we are not inside the current session folder, as this will either be
+        # deleted or moved to a new location.
+
+        if self.current_session_folder in os.path.abspath(os.getcwd()):
+            # Move out into the folder that contains the session folders:
+            os.chdir(self.sessions_directory)
+
         if not self.should_really_close:
             self.createSaveWindow(event)
             event.ignore()           
