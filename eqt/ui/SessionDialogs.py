@@ -80,7 +80,7 @@ class SessionDirectorySelectionDialog(FormDialog):
 
     def browse_for_dir(self):
         dialog = QFileDialog(self.groupBox)
-        directory = dialog.getExistingDirectory(self, "Select Directory to Save Sessions")
+        directory = dialog.getExistingDirectory(self, "Select a Directory to Save the Session to")
         self.getWidget('selected_dir').setText(os.path.basename(directory))
         self.selected_dir = directory
 
