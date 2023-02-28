@@ -14,9 +14,9 @@ from qdarkstyle.light.palette import LightPalette
 from eqt.io import zip_directory
 from eqt.threading import Worker
 from eqt.ui.ProgressTimerDialog import ProgressTimerDialog
-from eqt.ui.SessionDialogs import (ErrorDialog, LoadSessionDialog,
-                                   SaveSessionDialog,
-                                   SessionDirectorySelectionDialog, AppSettingsDialog)
+from eqt.ui.SessionDialogs import (AppSettingsDialog, ErrorDialog,
+                                   LoadSessionDialog, SaveSessionDialog,
+                                   SessionDirectorySelectionDialog)
 
 
 class SessionMainWindow(QMainWindow):
@@ -39,10 +39,13 @@ class SessionMainWindow(QMainWindow):
         the name of the progress window.
     self.sessions_directory
         This is the path to the directory where the session folders are saved.
-        This is set by the user using the menu option "Settings > Set Session Directory".
-        Inside the folder specified by the user, there will be a folder
-        called self.sessions_directory_name, which is where the session folders are saved.
-        So self.sessions_directory will be: <user selected directory>/<self.sessions_directory_name>
+        This is set by the user using the menu option:
+        "Settings > Set Session Directory".
+        Inside the folder specified by the user, there will be a
+        folder called self.sessions_directory_name, which is where
+        the session folders are saved.
+        So self.sessions_directory will be:
+        <user selected directory>/<self.sessions_directory_name>
     '''
 
     def __init__(self, title, app_name, settings_name=None, organisation_name=None, **kwargs):
@@ -57,9 +60,7 @@ class SessionMainWindow(QMainWindow):
             settings_name = app_name
         if organisation_name is None:
             organisation_name = app_name
-
-        print("Creating settings with name: ", settings_name)
-        
+    
         self.settings = QSettings(organisation_name, settings_name)
 
         self.setAppStyle()
@@ -160,7 +161,7 @@ class SessionMainWindow(QMainWindow):
     
     def addToMenu(self):
         '''
-        You may wish to override this in a base class, to add
+        You may wish to override this in a child class, to add
         additional menu options.
 
         The menu bar is available as self.menu_bar, and the menus are
@@ -406,7 +407,7 @@ class SessionMainWindow(QMainWindow):
         session_folder_name = '{}-{}'.format(self.app_name, date_time)
         session_folder_path = os.path.join(self.sessions_directory, session_folder_name)
         os.mkdir(session_folder_path)
-        self.current_session_folder = os.path.abspath(session_folder_name)
+        self.current_session_folder = os.path.abspath(session_folder_path)
 
 
     def loadSessionConfig(self, folder, **kwargs):

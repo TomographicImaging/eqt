@@ -26,6 +26,12 @@ class ExampleSessionMainWindow(SessionMainWindow):
         add_every_widget_to_form(form_widget)
         self.setCentralWidget(form_widget)
 
+    def addToMenu(self):
+        ''' Adds an example extra menu.'''
+        extra_menu = self.menu_bar.addMenu("Extra Menu")
+        self.menu_bar.addMenu(extra_menu)
+        self.menus["Extra"] = extra_menu
+
     def getSessionConfig(self):
         '''
         This function is called when the user wants to save the current session.

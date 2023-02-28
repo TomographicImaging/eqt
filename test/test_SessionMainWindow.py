@@ -72,10 +72,11 @@ class TestSessionMainWindowInit(unittest.TestCase):
 
     @patch('eqt.ui.SessionMainWindow.SessionMainWindow.createMenu', return_value=(1, {}))
     def test_init_calls_createMenu(self, mock_menu_bar):  
-        smw = SessionMainWindow(self.title, self.app_name)     
+        smw = SessionMainWindow(self.title, self.app_name)
+        smw.createMenu.assert_called_once()     
         assert smw.menu_bar is not None
         assert smw.menus is not None
-        smw.createMenu.assert_called_once()
+        
 
     def test_sessions_directory_name_set(self):
         smw = SessionMainWindow(self.title, self.app_name)
