@@ -48,7 +48,8 @@ class SessionMainWindow(QMainWindow):
         <user selected directory>/<self.sessions_directory_name>
     '''
 
-    def __init__(self, title, app_name, settings_name=None, organisation_name=None, **kwargs):
+    def __init__(self, title, app_name, settings_name=None,
+                 organisation_name=None, **kwargs):
 
         super(SessionMainWindow, self).__init__(**kwargs)
 
@@ -60,7 +61,7 @@ class SessionMainWindow(QMainWindow):
             settings_name = app_name
         if organisation_name is None:
             organisation_name = app_name
-    
+
         self.settings = QSettings(organisation_name, settings_name)
 
         self.setAppStyle()
@@ -72,7 +73,8 @@ class SessionMainWindow(QMainWindow):
         # This will be within a directory that is picked by the user
         # i.e. the location of the session folders will be:
         # <user selected directory>/<self.sessions_directory_name>
-        self.sessions_directory_name = self.app_name.replace(" ", "-") + "-Sessions"
+        self.sessions_directory_name = self.app_name.replace(
+            " ", "-") + "-Sessions"
         self.sessions_directory = None
 
         self.setupSession()
@@ -80,8 +82,6 @@ class SessionMainWindow(QMainWindow):
         self.should_really_close = False
 
         self.progress_windows = {}
-
-
 
     # Create the menu ----------------------------------------------------------
 
@@ -117,9 +117,9 @@ class SessionMainWindow(QMainWindow):
             The menu bar
         menus: dict
             A dictionary of the menu names and the corresponding QMenu objects
-        
+
         '''
-        
+
         menu_bar = self.menuBar()
 
         # If we add the menus this way, then the menuBar takes ownership of the menus:
@@ -146,19 +146,20 @@ class SessionMainWindow(QMainWindow):
         settings_menu.addAction(app_settings_action)
 
         session_folder_action = QAction("Set Session Directory", self)
-        session_folder_action.triggered.connect(lambda: self.createSessionsDirectorySelectionDialog(new_session=False))
+        session_folder_action.triggered.connect(
+            lambda: self.createSessionsDirectorySelectionDialog(new_session=False))
         settings_menu.addAction(session_folder_action)
 
         menus = {
             "File": file_menu,
             "Settings": settings_menu
         }
-        
+
         self.menu_bar = menu_bar
         self.menus = menus
 
         return menu_bar, menus
-    
+
     def addToMenu(self):
         '''
         You may wish to override this in a child class, to add
@@ -170,7 +171,6 @@ class SessionMainWindow(QMainWindow):
         '''
 
         pass
-
 
     # Settings -----------------------------------------------------------------
 
@@ -188,22 +188,22 @@ class SessionMainWindow(QMainWindow):
         '''Create a dialog to change the application settings, such as the light/dark theme'''
         dialog = AppSettingsDialog(self)
         self.setAppSettingsDialogWidgets(dialog)
-        dialog.Ok.clicked.connect(lambda: self.onAppSettingsDialogAccepted(dialog))
+        dialog.Ok.clicked.connect(
+            lambda: self.onAppSettingsDialogAccepted(dialog))
         dialog.Cancel.clicked.connect(dialog.close)
         dialog.open()
 
-
     def setAppSettingsDialogWidgets(self, dialog):
-        '''Set the widgets on the app settings dialog, based on the 
+        '''Set the widgets on the app settings dialog, based on the
         current settings of the app'''
         if self.settings.value("dark_mode") == "true":
             dialog.widgets['dark_checkbox_field'].setChecked(True)
         else:
             dialog.widgets['dark_checkbox_field'].setChecked(False)
 
-
     def onAppSettingsDialogAccepted(self, dialog):
-        '''This method is called when the user clicks "Ok" on the app settings dialog'''
+        '''This method is called when the user clicks
+            "Ok" on the app settings dialog'''
         if dialog.widgets['dark_checkbox_field'].isChecked():
             self.settings.setValue("dark_mode", "true")
         else:
@@ -211,33 +211,30 @@ class SessionMainWindow(QMainWindow):
         self.setAppStyle()
         dialog.close()
 
-
-
     # Loading Sessions ---------------------------------------------------------
 
     def setupSession(self):
         '''
         Loads the appropriate dialogs to allow users to make selections about loading sessions:
-        
+
         If this is the first time they open the application, they will be asked to select a directory
         to store the sessions in. This directory will be stored in the settings, and will be used
         as the default directory for future sessions. Then, if any sessions exist already in that directory,
         they will be asked if they want to load one of those sessions, if not, a new session will be created.
-        
+
         If this is not the first time they open the application, they will be asked to select a session
         to load, if any sessions are present in the directory saved in the settings. If they select a session,
         it will be loaded. If they select "New Session", a new session will be created.
         '''
-        
+
         if self.settings.value('sessions_folder') is None:
             # get user to select directory, then within that directory we create a folder called session_folder_name,
             # which will then contain all of the session folders.
             self.createSessionsDirectorySelectionDialog(new_session=True)
         else:
-            session_folder_name  = self.settings.value('sessions_folder')
+            session_folder_name = self.settings.value('sessions_folder')
             self.sessions_directory = session_folder_name
             self.createSessionSelector()
-
 
     def createSessionSelector(self):
         ''''
@@ -251,26 +248,29 @@ class SessionMainWindow(QMainWindow):
             for _file in f:
                 if '.zip' in _file:
                     array = _file.split("_")
-                    if(len(array) > 1):
+                    if (len(array) > 1):
                         date = _file.split("_")[-1]
-                        name = _file.replace("_" + date, "") + " " + date.strip(".zip")
+                        name = _file.replace(
+                            "_" + date, "") + " " + date.strip(".zip")
                         zip_folders.append(name)
 
-        if len(zip_folders) == 0: 
+        if len(zip_folders) == 0:
             self.loadSessionNew()
         else:
-            self.SessionSelectionWindow = self.createLoadSessionDialog(zip_folders)
-            
+            self.SessionSelectionWindow = self.createLoadSessionDialog(
+                zip_folders)
 
     def createLoadSessionDialog(self, zip_folders):
         '''
         Create a LoadSessionDialog, populated with the names of the sessions
         saved in the current working directory.
         '''
-        dialog = LoadSessionDialog(parent=self, location_of_session_files=self.sessions_directory)
+        dialog = LoadSessionDialog(
+            parent=self, location_of_session_files=self.sessions_directory)
         dialog.widgets['select_session_field'].addItems(zip_folders)
         dialog.Ok.clicked.connect(self.loadSessionLoad)
-        dialog.Select.clicked.connect(lambda: self.selectLoadSessionsDirectorySelectedInSessionSelector(dialog))
+        dialog.Select.clicked.connect(
+            lambda: self.selectLoadSessionsDirectorySelectedInSessionSelector(dialog))
         dialog.Cancel.clicked.connect(self.loadSessionNew)
         dialog.open()
 
@@ -285,7 +285,6 @@ class SessionMainWindow(QMainWindow):
         load_session_dialog.close()
         self.createSessionsDirectorySelectionDialog(new_session=True)
 
-
     def createSessionsDirectorySelectionDialog(self, new_session=False):
         '''
         Create a SessionDirectorySelectionDialog, which allows the user to select
@@ -298,21 +297,27 @@ class SessionMainWindow(QMainWindow):
         new_session : bool
             Whether or not this method is called straight after the user has opened the application
         '''
-        session_folder_selection_dialog = SessionDirectorySelectionDialog(parent=self, app_name=self.app_name)
+        session_folder_selection_dialog = SessionDirectorySelectionDialog(
+            parent=self, app_name=self.app_name)
 
         if new_session:
             # Move on to creating directory and loading session names
-            session_folder_selection_dialog.Ok.clicked.connect(lambda: self.onSessionDirectorySelectionDialogOkNewSession(session_folder_selection_dialog))
+            session_folder_selection_dialog.Ok.clicked.connect(
+                lambda: self.onSessionDirectorySelectionDialogOkNewSession(session_folder_selection_dialog))
         else:
             # Splitting the path and the folder name, means that we only display the folder name that the user has selected
             # and not the full path including the self.sessions_directory_name:
-            session_folder_selection_dialog.Ok.clicked.connect(lambda: self.onSessionDirectorySelectionDialogOkInSession(session_folder_selection_dialog))
+            session_folder_selection_dialog.Ok.clicked.connect(
+                lambda: self.onSessionDirectorySelectionDialogOkInSession(session_folder_selection_dialog))
             session_folder_selection_dialog.Cancel.setEnabled(True)
-            session_folder_selection_dialog.Cancel.clicked.connect(session_folder_selection_dialog.close)
+            session_folder_selection_dialog.Cancel.clicked.connect(
+                session_folder_selection_dialog.close)
 
         if self.sessions_directory is not None:
-                session_folder_selection_dialog.getWidget('selected_dir', 'label').setText(os.path.split(self.sessions_directory)[0])
-                session_folder_selection_dialog.selected_dir = os.path.split(self.sessions_directory)[0]
+            session_folder_selection_dialog.getWidget('selected_dir', 'label').setText(
+                os.path.split(self.sessions_directory)[0])
+            session_folder_selection_dialog.selected_dir = os.path.split(
+                self.sessions_directory)[0]
 
         session_folder_selection_dialog.open()
 
@@ -323,7 +328,8 @@ class SessionMainWindow(QMainWindow):
         Runs if the user selects Ok on the SessionDirectorySelectionDialog when creating a new session
         '''
         if session_folder_selection_dialog.selected_dir is not None:
-            self.createSessionsDirectoryAndMakeSessionSelector(session_folder_selection_dialog.selected_dir)
+            self.createSessionsDirectoryAndMakeSessionSelector(
+                session_folder_selection_dialog.selected_dir)
             session_folder_selection_dialog.close()
 
     def onSessionDirectorySelectionDialogOkInSession(self, session_folder_selection_dialog):
@@ -331,9 +337,9 @@ class SessionMainWindow(QMainWindow):
         Runs if the user selects Ok on the SessionDirectorySelectionDialog when in a session
         '''
         if session_folder_selection_dialog.selected_dir is not None:
-            self.createSessionsDirectory(session_folder_selection_dialog.selected_dir)
+            self.createSessionsDirectory(
+                session_folder_selection_dialog.selected_dir)
         session_folder_selection_dialog.close()
-
 
     def createSessionsDirectoryAndMakeSessionSelector(self, user_chosen_directory):
         '''
@@ -354,20 +360,20 @@ class SessionMainWindow(QMainWindow):
         # This is necessary because if the sessions_directory_name folder already exists and contains
         # sessions, we don't want to create another sessions_directory_name folder within it, as then the
         # existing sessions won't be available for loading.
-        
+
         if os.path.basename(user_selected_directory) == self.sessions_directory_name:
             user_selected_directory = os.path.dirname(user_selected_directory)
         else:
             if not os.path.isdir(user_selected_directory):
                 os.mkdir(user_selected_directory)
-        
-        sessions_directory = os.path.abspath(os.path.join(user_selected_directory, self.sessions_directory_name))
+
+        sessions_directory = os.path.abspath(os.path.join(
+            user_selected_directory, self.sessions_directory_name))
 
         if not os.path.isdir(sessions_directory):
             os.mkdir(sessions_directory)
         self.settings.setValue('sessions_folder', sessions_directory)
         self.sessions_directory = sessions_directory
-
 
     def loadSessionNew(self):
         '''
@@ -376,7 +382,6 @@ class SessionMainWindow(QMainWindow):
         self.createSessionFolder()
         if hasattr(self, 'SessionSelectionWindow'):
             self.SessionSelectionWindow.close()
-
 
     def loadSessionLoad(self):
         '''
@@ -392,11 +397,10 @@ class SessionMainWindow(QMainWindow):
         self.process_finished = False
         self.createUnknownProgressWindow(process_name)
         config_worker = Worker(self.loadSessionConfig, folder=folder_name)
-        config_worker.signals.finished.connect(lambda: self.finishLoadConfig(process_name))
+        config_worker.signals.finished.connect(
+            lambda: self.finishLoadConfig(process_name))
         self.threadpool.start(config_worker)
         self.SessionSelectionWindow.close()
-
-
 
     def createSessionFolder(self):
         '''
@@ -405,17 +409,17 @@ class SessionMainWindow(QMainWindow):
         '''
         date_time = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
         session_folder_name = '{}-{}'.format(self.app_name, date_time)
-        session_folder_path = os.path.join(self.sessions_directory, session_folder_name)
+        session_folder_path = os.path.join(
+            self.sessions_directory, session_folder_name)
         os.mkdir(session_folder_path)
         self.current_session_folder = os.path.abspath(session_folder_path)
-
 
     def loadSessionConfig(self, folder, **kwargs):
         '''
         Unzips a session folder and saves the contents of the .json session file to
         self.config.
-        
-        
+
+
         Parameters
         ----------
         folder : str
@@ -429,14 +433,16 @@ class SessionMainWindow(QMainWindow):
         for _, _, f in os.walk(self.sessions_directory):
             for _file in f:
                 if date_and_time + '.zip' in _file:
-                    selected_folder = os.path.join(self.sessions_directory, _file)
+                    selected_folder = os.path.join(
+                        self.sessions_directory, _file)
                     break
 
         shutil.unpack_archive(selected_folder, selected_folder[:-4])
-        loaded_folder= selected_folder[:-4]
+        loaded_folder = selected_folder[:-4]
         self.current_session_folder = loaded_folder
 
-        json_filename = os.path.join(self.current_session_folder, "session.json")
+        json_filename = os.path.join(
+            self.current_session_folder, "session.json")
 
         with open(json_filename) as tmp:
             self.config = json.load(tmp)
@@ -455,8 +461,6 @@ class SessionMainWindow(QMainWindow):
         '''
         self.process_finished = True
         self.progress_windows[process_name].close()
-        
-
 
     # Progress Bar -------------------------------------------------------------
 
@@ -487,17 +491,15 @@ class SessionMainWindow(QMainWindow):
     def saveReferenceToProgressWindow(self, progress_window, process_name):
         self.progress_windows[process_name] = progress_window
 
-
-
     # Handling Closing And Saving Sessions -------------------------------------
-    
+
     def closeEvent(self, event):
         '''
         Overwrites the default closeEvent to prompt the user to save the session before closing.
 
         This method occurs when we call self.close() or when the user clicks the X button on the window.
         '''
-        
+
         # Need to check that we are not inside the current session folder, as this will either be
         # deleted or moved to a new location.
 
@@ -507,8 +509,7 @@ class SessionMainWindow(QMainWindow):
 
         if not self.should_really_close:
             self.createSaveWindow(event)
-            event.ignore()           
-
+            event.ignore()
 
     def createSaveWindow(self, event):
         ''''
@@ -528,18 +529,21 @@ class SessionMainWindow(QMainWindow):
         self.should_really_close = False
         dialog = SaveSessionDialog(parent=self, title='Save Session')
         self.SaveWindow = dialog
-        
+
         # We have 2 instances of the window.
         if isinstance(event, QCloseEvent):
             # This is the case where we are quitting the app and the window asks if we
             # would like to save
-            dialog.Cancel.clicked.connect(lambda: self.saveQuitDialogRejected(dialog))
-            dialog.Ok.clicked.connect(lambda: self.saveQuitDialogAccepted(dialog))
+            dialog.Cancel.clicked.connect(
+                lambda: self.saveQuitDialogRejected(dialog))
+            dialog.Ok.clicked.connect(
+                lambda: self.saveQuitDialogAccepted(dialog))
             dialog.Cancel.setText('Quit without saving')
         else:
             # This is the case where we are just choosing to 'Save' in the file menu
             # so we never quit the app.
-            dialog.Cancel.clicked.connect(lambda: self.saveDialogRejected(dialog))
+            dialog.Cancel.clicked.connect(
+                lambda: self.saveDialogRejected(dialog))
             dialog.Ok.clicked.connect(lambda: self.saveDialogAccepted(dialog))
             dialog.Cancel.setText('Cancel')
 
@@ -561,7 +565,7 @@ class SessionMainWindow(QMainWindow):
         This closes the dialog.
         '''
         dialog.close()
-        
+
     def saveQuitDialogAccepted(self, dialog):
         '''
         Called when the user clicks 'Save' in the save and quit dialog.
@@ -599,13 +603,16 @@ class SessionMainWindow(QMainWindow):
         process_name = 'Save Session'
 
         self.process_finished = False
-        self.createUnknownProgressWindow(process_name, "Saving", "Saving Session")
+        self.createUnknownProgressWindow(
+            process_name, "Saving", "Saving Session")
 
         saveSession_worker = Worker(self.saveSession, session_name, compress)
-        if type(event) == QCloseEvent: 
-            saveSession_worker.signals.finished.connect(lambda: self.removeTempAndClose(process_name))
+        if type(event) == QCloseEvent:
+            saveSession_worker.signals.finished.connect(
+                lambda: self.removeTempAndClose(process_name))
         else:
-            saveSession_worker.signals.finished.connect(lambda: self.closeSaveWindow(process_name))
+            saveSession_worker.signals.finished.connect(
+                lambda: self.closeSaveWindow(process_name))
         self.threadpool.start(saveSession_worker)
 
     def saveSession(self, session_name, compress, **kwargs):
@@ -628,7 +635,6 @@ class SessionMainWindow(QMainWindow):
         '''
         return {}
 
-
     def moveSessionFolder(self, session_name):
         '''
         Creates a new session folder, and moves the current session folder to it.
@@ -637,16 +643,17 @@ class SessionMainWindow(QMainWindow):
         '''
 
         now_string = datetime.now().strftime("%d-%m-%Y-%H-%M")
-        new_folder_to_save_to = os.path.join(self.sessions_directory, session_name + "_" + now_string)
+        new_folder_to_save_to = os.path.join(
+            self.sessions_directory, session_name + "_" + now_string)
         shutil.move(self.current_session_folder, new_folder_to_save_to)
         self.current_session_folder = new_folder_to_save_to
-
 
     def saveSessionConfigToJson(self):
         '''
         Saves the session config to a json file in the session folder: self.current_session_folder
         '''
-        session_file = os.path.join(self.current_session_folder, "session.json")
+        session_file = os.path.join(
+            self.current_session_folder, "session.json")
 
         self.config = self.getSessionConfig()
 
@@ -657,7 +664,6 @@ class SessionMainWindow(QMainWindow):
 
         with open(session_file, "w+") as f:
             json.dump(self.config, f)
-
 
     def removeTempAndClose(self, process_name):
         '''
@@ -679,7 +685,6 @@ class SessionMainWindow(QMainWindow):
                 dialog = ErrorDialog(self, str(e))
                 dialog.exec_()
                 self.removeTemp()
-
 
     def closeSaveWindow(self, process_name):
         '''
