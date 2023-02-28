@@ -23,7 +23,6 @@
 - Adds `io.py` - contains method for zipping a directory, used by SessionsMainWindow.py
 - Adds unit tests to cover `SessionsDialogs.py`, `io.py`, and a large proportion of `SessionsMainWindow.py`
 
-
 ## v0.5.0
 * Add getWidgets method to FormWidget, FormDockWidget and FormDialog
 * Add setWidgetVisibility method to FormWidget, FormDockWidget and FormDialog 
