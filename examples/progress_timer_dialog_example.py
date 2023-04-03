@@ -9,7 +9,7 @@ from eqt.ui.SessionDialogs import ErrorDialog
 
 class MainUI(QtWidgets.QMainWindow):
 
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
         
         pb = QtWidgets.QPushButton(self)
@@ -63,7 +63,8 @@ class MainUI(QtWidgets.QMainWindow):
         if not hasattr(self, 'progress_windows'):
             self.progress_windows = {}
 
-        progress_window = ProgressTimerDialog(process_name, parent=self, flags=QtCore.Qt.Window)
+        progress_window = ProgressTimerDialog(
+                process_name, parent=self, flags=QtCore.Qt.Window)
 
         self.progress_windows[process_name] = progress_window
         progress_window.show()

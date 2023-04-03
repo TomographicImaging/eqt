@@ -117,7 +117,7 @@ class LoadSessionDialog(FormDialog):
         self.Cancel.setText('New Session')
 
 class WarningDialog(QMessageBox):
-    def __init__(self, parent=None, message=None, window_title=None, detailed_text=None):
+    def __init__(self, parent=None, window_title=None, message=None, detailed_text=None):
         '''
         A dialog to display a warning message.
         

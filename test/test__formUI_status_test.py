@@ -22,7 +22,10 @@ print("skip_test is set to ", skip_test)
 
 
 if not skip_test:
-    app = QApplication(sys.argv)
+    if not QApplication.instance():
+        app = QApplication(sys.argv)
+    else:
+        app = QApplication.instance()
 else:
     skip_test = True
 

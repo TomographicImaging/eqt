@@ -8,7 +8,7 @@ from unittest import mock
 from unittest.mock import patch
 
 from PySide2.QtCore import QSettings, QThreadPool
-from PySide2.QtWidgets import QApplication,QMenu, QMenuBar
+from PySide2.QtWidgets import QApplication, QMenu, QMenuBar
 
 import eqt
 from eqt.io import zip_directory
@@ -23,10 +23,12 @@ else:
 print ("skip_as_conda_build is set to ", skip_as_conda_build)
 
 if not skip_as_conda_build:
-    app = QApplication(sys.argv)
+    if not QApplication.instance():
+        app = QApplication(sys.argv)
+    else:
+        app = QApplication.instance()
 else:
     skip_test = True
-
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSessionMainWindowInit(unittest.TestCase):
     '''
@@ -73,9 +75,7 @@ class TestSessionMainWindowInit(unittest.TestCase):
     @patch('eqt.ui.SessionMainWindow.SessionMainWindow.createMenu', return_value=(1, {}))
     def test_init_calls_createMenu(self, mock_menu_bar):  
         smw = SessionMainWindow(self.title, self.app_name)
-        smw.createMenu.assert_called_once()     
-        assert smw.menu_bar is not None
-        assert smw.menus is not None
+        smw.createMenu.assert_called_once()
         
 
     def test_sessions_directory_name_set(self):

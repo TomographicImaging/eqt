@@ -14,7 +14,10 @@ else:
 print ("skip_as_conda_build is set to ", skip_as_conda_build)
 
 if not skip_as_conda_build:
-    app = QApplication(sys.argv)
+    if not QApplication.instance():
+        app = QApplication(sys.argv)
+    else:
+        app = QApplication.instance()
 else:
     skip_test = True
 
@@ -88,7 +91,7 @@ class TestSessionDirectorySelectionDialog(unittest.TestCase):
         sdsd = SessionDirectorySelectionDialog()
         sdsd.browse_for_dir = unittest.mock.Mock()
         QFileDialog.getExistingDirectory = unittest.mock.Mock()
-        sdsd.getWidget("browse_button").click()       
+        sdsd.getWidget("selected_dir").click()   
         sdsd.browse_for_dir.assert_called_once()
 
     def test_browse_dialog_updates_session_directory_label(self):
@@ -97,7 +100,7 @@ class TestSessionDirectorySelectionDialog(unittest.TestCase):
         QFileDialog.getExistingDirectory = unittest.mock.Mock()
         QFileDialog.getExistingDirectory.return_value = example_dir
         sdsd.browse_for_dir()
-        self.assertEqual(sdsd.getWidget("selected_dir").text(), os.path.basename(example_dir))
+        self.assertEqual(sdsd.getWidget("selected_dir", "label").text(), os.path.basename(example_dir))
 
     def test_browse_dialog_updates_selected_dir_attribute(self):
         example_dir = "C:\\Users\\test_user\\Documents\\test_dir"
