@@ -105,15 +105,20 @@ class TestSessionMainWindowMenuBar(unittest.TestCase):
         self.app_name="app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
 
-    def test_createMenu_returns_QMenuBar_and_dict(self):
-        assert self.smw.createMenu() is not None
-        assert isinstance(self.smw.createMenu()[0], QMenuBar)
-        assert isinstance(self.smw.createMenu()[1], dict)
+    def test_createMenu_sets_menu_bar_and_menus(self):
+        # first remove the menu bar and menus which are created in the init
+        del self.smw.menu_bar
+        del self.smw.menus
+        self.smw.createMenu()
+        assert hasattr(self.smw, "menu_bar")
+        assert hasattr(self.smw, "menus")
+        assert isinstance(self.smw.menu_bar, QMenuBar)
+        assert isinstance(self.smw.menus, dict)
         # dict should contain the expected menus
-        assert "File" in self.smw.createMenu()[1]
-        assert "Settings" in self.smw.createMenu()[1]
-        assert isinstance(self.smw.createMenu()[1]["File"], QMenu)
-        assert isinstance(self.smw.createMenu()[1]["Settings"], QMenu)
+        assert "File" in self.smw.menus
+        assert "Settings" in self.smw.menus
+        assert isinstance(self.smw.menus["File"], QMenu)
+        assert isinstance(self.smw.menus["Settings"], QMenu)
 
     def test_menu_has_file_and_settings_menu(self):
         actions = self.smw.menu_bar.actions()

@@ -158,8 +158,6 @@ class SessionMainWindow(QMainWindow):
         self.menu_bar = menu_bar
         self.menus = menus
 
-        return menu_bar, menus
-
     def addToMenu(self):
         '''
         You may wish to override this in a child class, to add
