@@ -56,7 +56,7 @@ class MainUI(QtWidgets.QMainWindow):
         raise Exception("Error!!")
 
     def process_error_dialog(self, error, **kwargs):
-        dialog = ErrorDialog(self, str(error[1]), "Error", str(error[2]))
+        dialog = ErrorDialog(self, "Error", str(error[1]), str(error[2]))
         dialog.open()
 
     def create_timer_progress_window(self, process_name):

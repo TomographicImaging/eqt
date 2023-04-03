@@ -132,10 +132,10 @@ class WarningDialog(QMessageBox):
         ----------
         parent : QWidget
             The parent widget.
-        message : str
-            The message to display.
         window_title : str
             The title of the dialog.
+        message : str
+            The message to display.
         detailed_text : str
             The detailed text to display.
         '''
@@ -147,7 +147,7 @@ class WarningDialog(QMessageBox):
 
 
 class ErrorDialog(QMessageBox):
-    def __init__(self, parent=None, message=None, window_title=None, detailed_text=None):
+    def __init__(self, parent=None, window_title=None, message=None, detailed_text=None):
         '''
         A dialog to display an error message.
         The icon is a red circle with a white X.
@@ -156,10 +156,10 @@ class ErrorDialog(QMessageBox):
         ----------
         parent : QWidget
             The parent widget.
-        message : str
-            The message to display.
         window_title : str
             The title of the dialog.
+        message : str
+            The message to display.
         detailed_text : str
             The detailed text to display.
         '''

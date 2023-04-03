@@ -673,7 +673,7 @@ class SessionMainWindow(QMainWindow):
             try:
                 shutil.rmtree(self.current_session_folder)
             except PermissionError as e:
-                dialog = ErrorDialog(self, str(e))
+                dialog = ErrorDialog(self, message=str(e))
                 dialog.exec_()
                 self.removeTemp()
 
