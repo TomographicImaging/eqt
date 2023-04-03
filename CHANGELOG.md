@@ -17,6 +17,11 @@
 - Adds unit tests to cover: `saveAllWidgetStates`, `restoreAllSavedWidgetStates`, `getAllWidgetStates`, `getWidgetState`, `applyWidgetState`, `applyWidgetStates`
 - setup.py:
   - Always normalise the version from git describe to pep440
+- Adds `SessionsMainWindow.py` - which is a base class for our apps which create a session folder where any files generated in the app are saved, and provides the ability to permanently save and reload sessions.
+- Adds `SessionsMainWindow_example.py` - an example of using the SessionsMainWindow - you can run this example, change the state of widgets in the form, save the session, reload the session and see the state of the widgets be restored.
+- Adds `SessionsDialogs.py` - the dialogs used by the SessionsMainWindow.py
+- Adds `io.py` - contains method for zipping a directory, used by SessionsMainWindow.py
+- Adds unit tests to cover `SessionsDialogs.py`, `io.py`, and a large proportion of `SessionsMainWindow.py`
 
 ## v0.5.0
 * Add getWidgets method to FormWidget, FormDockWidget and FormDialog

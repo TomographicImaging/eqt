@@ -28,6 +28,7 @@ requirements:
   run:
     - python
     - pyside2
+    - qdarkstyle
 
 about:
   home: https://github.com/paskino/qt-elements
