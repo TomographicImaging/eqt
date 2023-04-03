@@ -20,7 +20,7 @@ if os.environ.get('CONDA_BUILD', '0') == '1':
 else:
     skip_as_conda_build = False
 
-print ("skip_as_conda_build is set to ", skip_as_conda_build)
+print("skip_as_conda_build is set to ", skip_as_conda_build)
 
 if not skip_as_conda_build:
     if not QApplication.instance():
@@ -29,6 +29,8 @@ if not skip_as_conda_build:
         app = QApplication.instance()
 else:
     skip_test = True
+
+
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSessionMainWindowInit(unittest.TestCase):
     '''
@@ -40,7 +42,6 @@ class TestSessionMainWindowInit(unittest.TestCase):
         self.title = "title"
         self.app_name = "App Name"
 
-
     def test_init_sets_title_and_app_name(self):
         smw = SessionMainWindow(self.title, self.app_name)
         assert smw is not None
@@ -50,20 +51,20 @@ class TestSessionMainWindowInit(unittest.TestCase):
     def test_init_creates_threadpool(self):
         smw = SessionMainWindow(self.title, self.app_name)
         assert smw.threadpool is not None
-        assert(isinstance(smw.threadpool, QThreadPool))
+        assert (isinstance(smw.threadpool, QThreadPool))
 
     def test_init_creates_settings(self):
         smw = SessionMainWindow(self.title, self.app_name)
         assert smw.settings is not None
-        assert(isinstance(smw.settings, QSettings))
+        assert (isinstance(smw.settings, QSettings))
         self.assertEqual(smw.settings.organizationName(), self.app_name)
         self.assertEqual(smw.settings.applicationName(), self.app_name)
 
     def test_init_creates_settings_when_settings_name_given(self):
-        settings_name="settings_name"
+        settings_name = "settings_name"
         smw = SessionMainWindow(self.title, self.app_name, settings_name)
         assert smw.settings is not None
-        assert(isinstance(smw.settings, QSettings))
+        assert (isinstance(smw.settings, QSettings))
         self.assertEqual(smw.settings.organizationName(), self.app_name)
         self.assertEqual(smw.settings.applicationName(), settings_name)
 
@@ -73,15 +74,14 @@ class TestSessionMainWindowInit(unittest.TestCase):
         smw.setAppStyle.assert_called_once()
 
     @patch('eqt.ui.SessionMainWindow.SessionMainWindow.createMenu', return_value=(1, {}))
-    def test_init_calls_createMenu(self, mock_menu_bar):  
+    def test_init_calls_createMenu(self, mock_menu_bar):
         smw = SessionMainWindow(self.title, self.app_name)
         smw.createMenu.assert_called_once()
-        
 
     def test_sessions_directory_name_set(self):
         smw = SessionMainWindow(self.title, self.app_name)
         self.assertEqual(smw.sessions_directory_name, "App-Name-Sessions")
-    
+
     def test_init_initialises_vars(self):
         smw = SessionMainWindow(self.title, self.app_name)
         self.assertEqual(smw.sessions_directory, None)
@@ -101,8 +101,8 @@ class TestSessionMainWindowMenuBar(unittest.TestCase):
     '''
 
     def setUp(self):
-        self.title="title"
-        self.app_name="app_name"
+        self.title = "title"
+        self.app_name = "app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
 
     def test_createMenu_sets_menu_bar_and_menus(self):
@@ -132,25 +132,25 @@ class TestSessionMainWindowMenuBar(unittest.TestCase):
         assert file_menu.actions()[1].text() == "Save + Exit"
         assert file_menu.actions()[2].text() == "Exit"
 
-
     def test_settings_menu_has_expected_actions(self):
         menus = self.smw.menu_bar.findChildren(QMenu)
         settings_menu = menus[1]
         self.assertEqual(settings_menu.actions()[0].text(), "App Settings")
-        self.assertEqual(settings_menu.actions()[1].text(), "Set Session Directory")
+        self.assertEqual(settings_menu.actions()[
+                         1].text(), "Set Session Directory")
 
 
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSessionMainWindowSetupSession(unittest.TestCase):
     '''
     Tests the setupSession method of the SessionMainWindow class
-    
+
     This method is responsible for setting up the session directory and session selector
     '''
 
     def setUp(self):
-        self.title="title"
-        self.app_name="app_name"
+        self.title = "title"
+        self.app_name = "app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
 
     def test_setupSession_when_sessions_folder_setting_is_None(self):
@@ -159,7 +159,8 @@ class TestSessionMainWindowSetupSession(unittest.TestCase):
         self.smw.createSessionSelector = mock.MagicMock()
         self.smw.settings.value = mock.MagicMock(return_value=None)
         self.smw.setupSession()
-        self.smw.createSessionsDirectorySelectionDialog.assert_called_once_with(new_session=True)
+        self.smw.createSessionsDirectorySelectionDialog.assert_called_once_with(
+            new_session=True)
         self.smw.createSessionSelector.assert_not_called()
 
     def test_setupSession_when_sessions_folder_setting_is_not_None(self):
@@ -169,12 +170,12 @@ class TestSessionMainWindowSetupSession(unittest.TestCase):
         session_folder_name = "session_folder_name"
         os.mkdir(session_folder_name)
         try:
-            self.smw.settings.value = mock.MagicMock(return_value=session_folder_name)
+            self.smw.settings.value = mock.MagicMock(
+                return_value=session_folder_name)
             self.smw.setupSession()
             self.smw.createSessionsDirectorySelectionDialog.assert_not_called()
             self.smw.createSessionSelector.assert_called_once()
             self.assertEqual(self.smw.sessions_directory, session_folder_name)
-
 
         except Exception as e:
             raise e
@@ -183,22 +184,23 @@ class TestSessionMainWindowSetupSession(unittest.TestCase):
             if os.path.basename(os.getcwd()) == session_folder_name:
                 os.chdir("..")
                 os.rmdir(session_folder_name)
-                
+
             else:
                 os.rmdir(session_folder_name)
+
 
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSessionMainWindowCreateSessionSelector(unittest.TestCase):
     '''
     Tests the createSessionSelector method of the SessionMainWindow class
-    
+
     This method is responsible for creating the session selector if any sessions exist,
     or calling a method to create a new session if no sessions exist
     '''
-    
+
     def setUp(self):
-        self.title="title"
-        self.app_name="app_name"
+        self.title = "title"
+        self.app_name = "app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
         os.mkdir("Test Folder")
         os.chdir("Test Folder")
@@ -228,26 +230,29 @@ class TestSessionMainWindowCreateSessionSelector(unittest.TestCase):
 
         # We do not know which order the zip files will be returned in, so we need to check both orders:
         try:
-            self.smw.createLoadSessionDialog.assert_called_once_with(zip_folders)
+            self.smw.createLoadSessionDialog.assert_called_once_with(
+                zip_folders)
         except AssertionError:
-            self.smw.createLoadSessionDialog.assert_called_once_with(zip_folders[::-1])
+            self.smw.createLoadSessionDialog.assert_called_once_with(
+                zip_folders[::-1])
 
     def tearDown(self):
         os.chdir("..")
         shutil.rmtree("Test Folder")
 
+
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSessionMainWindowCreateLoadSessionDialog(unittest.TestCase):
     '''
     Tests the createLoadSessionDialog method of the SessionMainWindow class
-    
+
     This method is responsible for creating the load session dialog
     and populating it with the available sessions
     '''
 
     def setUp(self):
-        self.title="title"
-        self.app_name="app_name"
+        self.title = "title"
+        self.app_name = "app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
         self.smw.sessions_directory = mock.MagicMock()
         self.zip_folders = ["zip_folder_1", "zip_folder_2"]
@@ -258,9 +263,10 @@ class TestSessionMainWindowCreateLoadSessionDialog(unittest.TestCase):
         assert isinstance(dialog, eqt.ui.SessionDialogs.LoadSessionDialog)
         select_session_combo = dialog.getWidget('select_session')
         assert select_session_combo is not None
-        items_in_combo = [select_session_combo.itemText(i) for i in range(select_session_combo.count())]
+        items_in_combo = [select_session_combo.itemText(
+            i) for i in range(select_session_combo.count())]
         assert items_in_combo == self.zip_folders
-    
+
     def test_createLoadSessionDialog_connections(self):
         dialog = self.smw.createLoadSessionDialog(self.zip_folders)
 
@@ -274,46 +280,50 @@ class TestSessionMainWindowCreateLoadSessionDialog(unittest.TestCase):
         self.smw.loadSessionLoad.assert_called_once()
 
         dialog.Select.click()
-        self.smw.selectLoadSessionsDirectorySelectedInSessionSelector.assert_called_with(dialog)
+        self.smw.selectLoadSessionsDirectorySelectedInSessionSelector.assert_called_with(
+            dialog)
 
         dialog.Cancel.click()
         self.smw.loadSessionNew.assert_called_once()
+
 
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSelectLoadSessionsDirectorySelectedInSessionSelector(unittest.TestCase):
     '''
     Tests the selectLoadSessionsDirectorySelectedInSessionSelector method of the SessionMainWindow class
-    
+
     This method sould close the passed dialog, and call the createSessionsDirectorySelectionDialog method
     with the new_session parameter set to True
     '''
 
     def setUp(self):
-        self.title="title"
-        self.app_name="app_name"
+        self.title = "title"
+        self.app_name = "app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
         self.load_session_dialog = mock.MagicMock()
         self.load_session_dialog.close = mock.MagicMock()
         self.smw.createSessionsDirectorySelectionDialog = mock.MagicMock()
 
     def test_selectLoadSessionsDirectorySelectedInSessionSelector(self):
-        self.smw.selectLoadSessionsDirectorySelectedInSessionSelector(self.load_session_dialog)
+        self.smw.selectLoadSessionsDirectorySelectedInSessionSelector(
+            self.load_session_dialog)
         assert self.load_session_dialog.close.called_once()
-        assert self.smw.createSessionsDirectorySelectionDialog.called_once_with(new_session=True)
+        assert self.smw.createSessionsDirectorySelectionDialog.called_once_with(
+            new_session=True)
+
 
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestCreateSessionFolder(unittest.TestCase):
     '''
     Tests the createSessionFolder method of the SessionMainWindow class
-    
+
     This method is responsible for creating a folder for the session and moving into it
     '''
 
     def setUp(self):
-        self.title="title"
-        self.app_name="app_name"
-        
-        
+        self.title = "title"
+        self.app_name = "app_name"
+
         self.smw = SessionMainWindow(self.title, self.app_name)
 
         os.mkdir("Test Folder")
@@ -337,7 +347,7 @@ class TestCreateSessionFolder(unittest.TestCase):
 class TestLoadSessionConfig(unittest.TestCase):
     '''
     Tests the loadSessionConfig method of the SessionMainWindow class
-    
+
     This method is responsible for unzipping a session folder and saving the contents of the .json session file to
     SessionMainWindow.config.
     '''
@@ -348,15 +358,16 @@ class TestLoadSessionConfig(unittest.TestCase):
         os.mkdir("Test Folder")
         os.chdir("Test Folder")
 
-        self.title="title"
-        self.app_name="app_name"
+        self.title = "title"
+        self.app_name = "app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
         self.smw.sessions_directory = "Sessions Folder"
-        self.session_folder = os.path.join(self.smw.sessions_directory, "app name 01-01-2020-00-00-00")
+        self.session_folder = os.path.join(
+            self.smw.sessions_directory, "app name 01-01-2020-00-00-00")
 
         self.config = {'test_key': 'test_value', 'test_key2': 'test_value2',
-            'test_int_key': 1, 'test_float_key': 1.0, 'test_bool_key': True,
-            'test_list_key': [1, 2, 3], 'test_dict_key': {'test_key': 'test_value'}}
+                       'test_int_key': 1, 'test_float_key': 1.0, 'test_bool_key': True,
+                       'test_list_key': [1, 2, 3], 'test_dict_key': {'test_key': 'test_value'}}
 
         os.mkdir(self.smw.sessions_directory)
         os.mkdir(self.session_folder)
@@ -378,6 +389,7 @@ class TestLoadSessionConfig(unittest.TestCase):
             os.chdir("..")
             shutil.rmtree("Test Folder")
 
+
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestSaveSession(unittest.TestCase):
     '''
@@ -385,15 +397,14 @@ class TestSaveSession(unittest.TestCase):
     - saveSession method of the SessionMainWindow class
     - moveSessionFolder method of the SessionMainWindow class
     - saveSessionConfigToJson method of the SessionMainWindow class
-    
+
     '''
 
     def setUp(self):
-        self.title="title"
-        self.app_name="app_name"
+        self.title = "title"
+        self.app_name = "app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
         self.session_name = self.app_name
-
 
     @mock.patch('eqt.ui.SessionMainWindow.zip_directory')
     def test_saveSession(self, mock_zip_directory):
@@ -403,16 +414,19 @@ class TestSaveSession(unittest.TestCase):
         self.smw.saveSession(self.session_name, compress=False)
         self.smw.moveSessionFolder.assert_called_once_with(self.session_name)
         self.smw.saveSessionConfigToJson.assert_called_once()
-        mock_zip_directory.assert_called_once_with(self.smw.current_session_folder, False)
+        mock_zip_directory.assert_called_once_with(
+            self.smw.current_session_folder, False)
 
     def test_moveSessionFolder(self):
         os.mkdir("Test Folder")
-        new_folder_to_save_to = os.path.join("Test Folder", self.session_name + "_" + datetime.now().strftime("%d-%m-%Y-%H-%M"))
+        new_folder_to_save_to = os.path.join(
+            "Test Folder", self.session_name + "_" + datetime.now().strftime("%d-%m-%Y-%H-%M"))
 
         # Make the current session folder, with a test file inside it:
-        
+
         self.smw.sessions_directory = os.path.abspath("Test Folder")
-        current_session_folder = os.path.join(self.smw.sessions_directory, "Current Session Folder")
+        current_session_folder = os.path.join(
+            self.smw.sessions_directory, "Current Session Folder")
         os.mkdir(current_session_folder)
         # Write file inside the folder:
         with open(os.path.join(current_session_folder, "test_file.txt"), "w+") as f:
@@ -422,11 +436,14 @@ class TestSaveSession(unittest.TestCase):
 
         try:
             self.smw.moveSessionFolder(self.session_name)
-            self.assertEqual(os.path.abspath(self.smw.current_session_folder), os.path.abspath(new_folder_to_save_to))
+            self.assertEqual(os.path.abspath(
+                self.smw.current_session_folder), os.path.abspath(new_folder_to_save_to))
             self.assertTrue(os.path.exists(new_folder_to_save_to))
-            self.assertTrue(os.path.exists(os.path.join(new_folder_to_save_to, "test_file.txt")))
+            self.assertTrue(os.path.exists(os.path.join(
+                new_folder_to_save_to, "test_file.txt")))
             self.assertFalse(os.path.exists("Current Session Folder"))
-            self.assertFalse(os.path.exists(os.path.join("Current Session Folder", "test_file.txt")))
+            self.assertFalse(os.path.exists(os.path.join(
+                "Current Session Folder", "test_file.txt")))
 
         except Exception as e:
             raise e
@@ -437,15 +454,15 @@ class TestSaveSession(unittest.TestCase):
     def test_saveSessionConfigToJson(self):
 
         self.config = {'test_key': 'test_value', 'test_key2': 'test_value2',
-            'test_int_key': 1, 'test_float_key': 1.0, 'test_bool_key': True,
-            'test_list_key': [1, 2, 3], 'test_dict_key': {'test_key': 'test_value'}}
+                       'test_int_key': 1, 'test_float_key': 1.0, 'test_bool_key': True,
+                       'test_list_key': [1, 2, 3], 'test_dict_key': {'test_key': 'test_value'}}
 
         config = {}
         config.update(self.config)
 
         # datetime gets added in the saveSessionConfigToJson method:
         self.config['datetime'] = datetime.now().strftime("%d-%m-%Y-%H-%M")
-        
+
         self.smw.getSessionConfig = mock.MagicMock(return_value=config)
 
         os.mkdir("Test Folder")
@@ -462,7 +479,8 @@ class TestSaveSession(unittest.TestCase):
         finally:
             os.chdir("..")
             shutil.rmtree("Test Folder")
-        
+
+
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestRemoveTempMethods(unittest.TestCase):
     '''
@@ -472,10 +490,10 @@ class TestRemoveTempMethods(unittest.TestCase):
     '''
 
     def setUp(self):
-        self.title="title"
-        self.app_name="app_name"
+        self.title = "title"
+        self.app_name = "app_name"
         self.smw = SessionMainWindow(self.title, self.app_name)
-        
+
     def test_removeTemp_when_current_session_folder_exists(self):
         try:
             self.smw.current_session_folder = "Test Session Folder"
@@ -504,7 +522,6 @@ class TestRemoveTempMethods(unittest.TestCase):
         self.smw.removeTemp.assert_called_once()
         self.smw.finishProcess.assert_called_once_with(process_name)
         self.smw.close.assert_called_once()
-
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 from eqt.ui import FormDialog
-from PySide2.QtWidgets import (QCheckBox, QComboBox, QFileDialog, QLabel, QLineEdit, QPushButton, QMessageBox)
+from PySide2.QtWidgets import (
+    QCheckBox, QComboBox, QFileDialog, QLabel, QLineEdit, QPushButton, QMessageBox)
 from PySide2 import QtWidgets
 import os
 
@@ -19,7 +20,7 @@ class SaveSessionDialog(FormDialog):
 
         FormDialog.__init__(self, parent, title)
         self.parent = parent
-        
+
         qlabel = QLabel(self.groupBox)
         qlabel.setText("Save session as:")
         qwidget = QLineEdit(self.groupBox)
@@ -62,13 +63,14 @@ class SessionDirectorySelectionDialog(FormDialog):
             label_text = 'Select a session directory to save and retrieve all Sessions:'
 
         else:
-            label_text =f'Select a session directory to save and retrieve all {app_name} Sessions:'
+            label_text = f'Select a session directory to save and retrieve all {app_name} Sessions:'
 
         self.addSpanningWidget(QLabel(label_text), 'select_session_directory')
 
         browse_button = QPushButton('Browse')
         browse_button.clicked.connect(self.browse_for_dir)
-        self.addWidget(browse_button, QLabel('No directory selected'), 'selected_dir')
+        self.addWidget(browse_button, QLabel(
+            'No directory selected'), 'selected_dir')
 
         self.selected_dir = None
 
@@ -77,10 +79,11 @@ class SessionDirectorySelectionDialog(FormDialog):
 
     def browse_for_dir(self):
         dialog = QFileDialog(self.groupBox)
-        directory = dialog.getExistingDirectory(self, "Select a Directory to Save the Session to")
-        self.getWidget('selected_dir', 'label').setText(os.path.basename(directory))
+        directory = dialog.getExistingDirectory(
+            self, "Select a Directory to Save the Session to")
+        self.getWidget('selected_dir', 'label').setText(
+            os.path.basename(directory))
         self.selected_dir = directory
-
 
 
 class LoadSessionDialog(FormDialog):
@@ -100,15 +103,18 @@ class LoadSessionDialog(FormDialog):
         FormDialog.__init__(self, parent, title)
         self.parent = parent
 
-        select_dir_button = QPushButton('Select Directory for Loading Sessions') 
-        self.buttonBox.addButton(select_dir_button,  QtWidgets.QDialogButtonBox.ActionRole)
+        select_dir_button = QPushButton(
+            'Select Directory for Loading Sessions')
+        self.buttonBox.addButton(
+            select_dir_button,  QtWidgets.QDialogButtonBox.ActionRole)
         self.Select = select_dir_button
 
         self.addSpanningWidget(QLabel('Load a Session'), 'load_title')
 
         location_of_session_files = os.path.abspath(location_of_session_files)
 
-        self.addSpanningWidget(QLabel(f'Currently loading sessions from: {location_of_session_files}'), 'sessions_directory')
+        self.addSpanningWidget(QLabel(
+            f'Currently loading sessions from: {location_of_session_files}'), 'sessions_directory')
 
         combo = QComboBox(self.groupBox)
         self.addWidget(combo, 'Select a session:', 'select_session')
@@ -116,11 +122,12 @@ class LoadSessionDialog(FormDialog):
         self.Ok.setText('Load')
         self.Cancel.setText('New Session')
 
+
 class WarningDialog(QMessageBox):
     def __init__(self, parent=None, window_title=None, message=None, detailed_text=None):
         '''
         A dialog to display a warning message.
-        
+
         Parameters
         ----------
         parent : QWidget
@@ -138,12 +145,13 @@ class WarningDialog(QMessageBox):
         self.setWindowTitle(window_title)
         self.setDetailedText(detailed_text)
 
+
 class ErrorDialog(QMessageBox):
     def __init__(self, parent=None, message=None, window_title=None, detailed_text=None):
         '''
         A dialog to display an error message.
         The icon is a red circle with a white X.
-        
+
         Parameters
         ----------
         parent : QWidget
