@@ -111,13 +111,6 @@ class SessionMainWindow(QMainWindow):
         self.menus: dict
             A dictionary of the menu names and the corresponding QMenu objects
 
-        Returns
-        -------
-        menu_bar: QMenuBar
-            The menu bar
-        menus: dict
-            A dictionary of the menu names and the corresponding QMenu objects
-
         '''
 
         menu_bar = self.menuBar()
