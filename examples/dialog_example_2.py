@@ -48,6 +48,9 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.addWidget(qwidget, qlabel, 'input2')
         dialog.addWidget(QtWidgets.QLabel("Example Vertical Layout Text"), layout="vertical")
 
+        # Example of using 'getWidget':
+        dialog.getWidget('input2').setCurrentIndex(1)
+
         # store a reference
         self.dialog = dialog
         

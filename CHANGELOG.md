@@ -1,5 +1,37 @@
-## v x.x.x
-* Use v2.0.0 of conda build action
+## v0.x.x
+- Use pip install in the conda recipe, instead of setup.py install
+- Adds the following new methods to UIFormWidget, FormWidget, FormDialog and FormDockWidget:
+   - `saveAllWidgetStates` - Saves the state of all widgets in the form. This can be used to restore the state of the widgets using the restoreAllSavedWidgetStates method.
+
+   - `restoreAllSavedWidgetStates` - Restores the state of all widgets in the form to the state saved by the saveAllWidgetStates method. If the saveAllWidgetStates method has not been called, this method will do nothing.
+
+   - `getAllWidgetStates` - Returns a dictionary of the state of all widgets in the form.
+
+   - `getWidgetState` - Returns the state of the widget.
+
+   - `applyWidgetState` - Applies the given state to the widget with the given name.
+
+   - `applyWidgetStates`  - Applies the given state to the widgets in the form given by the keys of the state dictionary.
+
+- Adds an example of a FormDialog: `dialog_save_state_example.py` where all of the widgets are saved and restored if you press "Ok", whereas the previous values of the dialog are restored if you press "Cancel".
+- Adds unit tests to cover: `saveAllWidgetStates`, `restoreAllSavedWidgetStates`, `getAllWidgetStates`, `getWidgetState`, `applyWidgetState`, `applyWidgetStates`
+- setup.py:
+  - Always normalise the version from git describe to pep440
+- Adds `SessionsMainWindow.py` - which is a base class for our apps which create a session folder where any files generated in the app are saved, and provides the ability to permanently save and reload sessions.
+- Adds `SessionsMainWindow_example.py` - an example of using the SessionsMainWindow - you can run this example, change the state of widgets in the form, save the session, reload the session and see the state of the widgets be restored.
+- Adds `SessionsDialogs.py` - the dialogs used by the SessionsMainWindow.py
+- Adds `io.py` - contains method for zipping a directory, used by SessionsMainWindow.py
+- Adds unit tests to cover `SessionsDialogs.py`, `io.py`, and a large proportion of `SessionsMainWindow.py`
+- Use v2.0.0 of conda build action
+
+## v0.5.0
+* Add getWidgets method to FormWidget, FormDockWidget and FormDialog
+* Add setWidgetVisibility method to FormWidget, FormDockWidget and FormDialog 
+
+## v0.4.0
+* Add ReOrderableListWidget and ReOrderableListDockWidget
+* Add example of using the ReOrderableListWidget
+* Add getWidget method to FormWidget, FormDockWidget and FormDialog
 
 ## v0.3.0
 * Add ProgressTimerDialog and example.

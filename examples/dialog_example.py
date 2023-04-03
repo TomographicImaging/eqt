@@ -52,7 +52,7 @@ class MainUI(QtWidgets.QMainWindow):
         fw.addSeparator('separator_1_2')
 
         # add input 2 as QComboBox
-        qlabel = "Input 2: "
+        qlabel = "Input2: "
         qwidget = QtWidgets.QComboBox(fw.groupBox)
         qwidget.addItem("option 1")
         qwidget.addItem("option 2")
@@ -60,6 +60,9 @@ class MainUI(QtWidgets.QMainWindow):
         qwidget.setEnabled(True)
         # finally add to the form widget
         fw.addWidget(qwidget, qlabel, 'input2')
+
+        # Example of using 'getWidget':
+        fw.getWidget('input2', 'label').setText("Input 2: ")
 
         # add the button box to the vertical layout, but outside the
         # form layout
