@@ -16,8 +16,8 @@ class ProgressMainWindow(QMainWindow):
     Properties of Note:
     -------------------
     self.settings
-        This is a QSettings object that is used to save and load the session
-        settings such as the light/dark theme, the session directory, etc.
+        This is a QSettings object that is used for
+        settings such as the light/dark theme.
     self.progress_windows
         This is a dictionary of ProgressTimerDialog objects, where the key is
         the name of the progress window.
