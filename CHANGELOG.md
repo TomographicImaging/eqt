@@ -1,3 +1,6 @@
+## v0.7.0
+- Adds `ProgressMainWindow` a base class for a main window, with a menu bar, and ability to create      ProgressTimerDialogs.
+
 ## v0.6.0
 - Use pip install in the conda recipe, instead of setup.py install
 - Adds the following new methods to UIFormWidget, FormWidget, FormDialog and FormDockWidget:

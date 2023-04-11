@@ -11,7 +11,8 @@ from eqt.ui.SessionDialogs import (AppSettingsDialog)
 
 class ProgressMainWindow(QMainWindow):
     '''
-    A base class for a main window, with a menu bar, and a progress bar.
+    A base class for a main window, with a menu bar, and ability to 
+    create ProgressTimerDialogs.
 
     Properties of Note:
     -------------------
