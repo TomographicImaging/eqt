@@ -175,6 +175,7 @@ class AppSettingsDialog(FormDialog):
     def __init__(self, parent=None):
         super(AppSettingsDialog, self).__init__(parent)
         self.setWindowTitle("App Settings")
+        self.formWidget.addTitle(QLabel("App Settings"), "app_settings_title")
         dark_checkbox = QCheckBox("Dark Mode")
         self.addSpanningWidget(dark_checkbox, 'dark_checkbox')
         self.Ok.setText("Save")
