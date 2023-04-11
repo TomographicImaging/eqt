@@ -3,7 +3,6 @@ import os
 import shutil
 from datetime import datetime
 from functools import partial
-
 from PySide2.QtGui import QCloseEvent, QKeySequence
 from PySide2.QtWidgets import QAction
 
@@ -16,6 +15,7 @@ from eqt.ui.SessionDialogs import (ErrorDialog, LoadSessionDialog,
 
 
 class SessionMainWindow(ProgressMainWindow):
+
     '''
     A base class for a main window that can save and load sessions.
 
@@ -58,6 +58,7 @@ class SessionMainWindow(ProgressMainWindow):
         This is called by the __init__ method, and should not be called by the
         user.
         '''               
+
         # This is the name of the directory where the session folders are saved
         # This will be within a directory that is picked by the user
         # i.e. the location of the session folders will be:
@@ -389,7 +390,6 @@ class SessionMainWindow(ProgressMainWindow):
         '''
         self.process_finished = True
         self.progress_windows[process_name].close()
-
 
     # Handling Closing And Saving Sessions -------------------------------------
 
