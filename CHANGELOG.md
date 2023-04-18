@@ -1,6 +1,7 @@
 
 ## v0.7.0
 - Adds `MainWindowWithProgressDialogs` a base class for a main window, with a menu bar, and ability to create ProgressTimerDialogs.
+- Renames `SessionMainWindow` to `MainWindowWithSessionManagement`
 - Check if session folder loaded from QSettings exists before writing to it.
 
 ## v0.6.0
