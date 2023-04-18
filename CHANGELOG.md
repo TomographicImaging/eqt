@@ -1,5 +1,7 @@
+
 ## v0.7.0
-- Adds `MainWindowWithProgressDialogs` a base class for a main window, with a menu bar, and ability to create      ProgressTimerDialogs.
+- Adds `MainWindowWithProgressDialogs` a base class for a main window, with a menu bar, and ability to create ProgressTimerDialogs.
+- Check if session folder loaded from QSettings exists before writing to it.
 
 ## v0.6.0
 - Use pip install in the conda recipe, instead of setup.py install

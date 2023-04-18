@@ -188,6 +188,18 @@ class TestMainWindowWithSessionManagementSetupSession(unittest.TestCase):
             else:
                 os.rmdir(session_folder_name)
 
+    def test_setupSession_when_sessions_folder_setting_is_not_None_and_session_folder_does_not_exist(self):
+        self.smw.settings = mock.MagicMock()
+        self.smw.createSessionsDirectorySelectionDialog = mock.MagicMock()
+        self.smw.createSessionSelector = mock.MagicMock()
+        session_folder_name = "session_folder_name"
+        self.smw.settings.value = mock.MagicMock(
+            return_value=session_folder_name)
+        self.smw.setupSession()
+        self.smw.createSessionsDirectorySelectionDialog.assert_called_once_with(
+            new_session=True)
+        self.smw.createSessionSelector.assert_not_called()
+
 
 @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
 class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase):
