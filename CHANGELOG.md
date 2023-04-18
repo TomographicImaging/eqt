@@ -1,3 +1,6 @@
+## vx.x.x
+- Check if session folder loaded from QSettings exists before writing to it.
+
 ## v0.6.0
 - Use pip install in the conda recipe, instead of setup.py install
 - Adds the following new methods to UIFormWidget, FormWidget, FormDialog and FormDockWidget:

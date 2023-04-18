@@ -224,8 +224,11 @@ class SessionMainWindow(QMainWindow):
             self.createSessionsDirectorySelectionDialog(new_session=True)
         else:
             session_folder_name = self.settings.value('sessions_folder')
-            self.sessions_directory = session_folder_name
-            self.createSessionSelector()
+            if not os.path.exists(session_folder_name):
+                self.createSessionsDirectorySelectionDialog(new_session=True)
+            else:
+                self.sessions_directory = session_folder_name
+                self.createSessionSelector()
 
     def createSessionSelector(self):
         ''''
