@@ -25,6 +25,7 @@ class ExampleMainWindowWithSessionManagement(MainWindowWithSessionManagement):
         form_widget = FormWidget(self)
         add_every_widget_to_form(form_widget)
         self.setCentralWidget(form_widget)
+        self.addToMenu()
 
     def addToMenu(self):
         ''' Adds an example extra menu.'''

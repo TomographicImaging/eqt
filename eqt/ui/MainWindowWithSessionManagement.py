@@ -24,6 +24,9 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
     - getSessionConfig
     - finishLoadConfig
 
+    In a derived class's __init__ method, the __init__ method of this class
+    should be called first, before any other initialisation.
+
 
     Properties of Note:
     -------------------

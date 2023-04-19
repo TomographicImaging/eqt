@@ -13,6 +13,8 @@ class MainWindowWithProgressDialogs(QMainWindow):
     '''
     A base class for a main window, with a menu bar, and ability to 
     create ProgressTimerDialogs.
+    In a derived class's __init__ method, the __init__ method of this class
+    should be called first, before any other initialisation.
 
     Properties of Note:
     -------------------
@@ -43,7 +45,6 @@ class MainWindowWithProgressDialogs(QMainWindow):
         self.setAppStyle()
 
         self.createMenu()
-        self.addToMenu()
 
         self._progress_windows = {}
   
@@ -97,18 +98,6 @@ class MainWindowWithProgressDialogs(QMainWindow):
 
         self.menu_bar = menu_bar
         self.menus = menus
-
-    def addToMenu(self):
-        '''
-        You may wish to override this in a child class, to add
-        additional menu options.
-
-        The menu bar is available as self.menu_bar, and the menus are
-        available as self.menus, which is a dictionary of the menu names
-        and the corresponding QMenu objects.
-        '''
-
-        pass
 
     # Settings -----------------------------------------------------------------
 
