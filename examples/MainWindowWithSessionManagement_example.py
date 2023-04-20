@@ -3,7 +3,7 @@ import sys
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QApplication
 
-from eqt.ui.SessionMainWindow import SessionMainWindow
+from eqt.ui.MainWindowWithSessionManagement import MainWindowWithSessionManagement
 from eqt.ui.UIFormWidget import FormWidget
 from eqt.ui.UISliderWidget import UISliderWidget
 
@@ -12,10 +12,10 @@ from eqt.version import version
 __version__ = version
 
 
-class ExampleSessionMainWindow(SessionMainWindow):
+class ExampleMainWindowWithSessionManagement(MainWindowWithSessionManagement):
     '''
-    This is an example of a SessionMainWindow.
-    It is used to show how to use the SessionMainWindow class.
+    This is an example of a MainWindowWithSessionManagement.
+    It is used to show how to use the MainWindowWithSessionManagement class.
     
     To test out this example, change the state of the widgets and save the session.
     Then load the session again and check if the state of the widgets is the same as before.
@@ -25,6 +25,7 @@ class ExampleSessionMainWindow(SessionMainWindow):
         form_widget = FormWidget(self)
         add_every_widget_to_form(form_widget)
         self.setCentralWidget(form_widget)
+        self.addToMenu()
 
     def addToMenu(self):
         ''' Adds an example extra menu.'''
@@ -85,7 +86,7 @@ def add_every_widget_to_form(form):
 
 
 def create_main_window():
-    window = ExampleSessionMainWindow(
+    window = ExampleMainWindowWithSessionManagement(
         "Example Session Main Window{}".format(__version__), "Example0", settings_name="Example0")
     
     return window

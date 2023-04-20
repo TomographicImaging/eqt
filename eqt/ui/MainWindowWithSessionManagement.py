@@ -3,23 +3,19 @@ import os
 import shutil
 from datetime import datetime
 from functools import partial
-
-import qdarkstyle
-from PySide2.QtCore import QSettings, QThreadPool
 from PySide2.QtGui import QCloseEvent, QKeySequence
-from PySide2.QtWidgets import QAction, QMainWindow
-from qdarkstyle.dark.palette import DarkPalette
-from qdarkstyle.light.palette import LightPalette
+from PySide2.QtWidgets import QAction
 
 from eqt.io import zip_directory
 from eqt.threading import Worker
-from eqt.ui.ProgressTimerDialog import ProgressTimerDialog
-from eqt.ui.SessionDialogs import (AppSettingsDialog, ErrorDialog,
-                                   LoadSessionDialog, SaveSessionDialog,
+from eqt.ui.MainWindowWithProgressDialogs import MainWindowWithProgressDialogs
+from eqt.ui.SessionDialogs import (ErrorDialog, LoadSessionDialog,
+                                   SaveSessionDialog,
                                    SessionDirectorySelectionDialog)
 
 
-class SessionMainWindow(QMainWindow):
+class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
+
     '''
     A base class for a main window that can save and load sessions.
 
@@ -27,6 +23,9 @@ class SessionMainWindow(QMainWindow):
     the following methods:
     - getSessionConfig
     - finishLoadConfig
+
+    In a derived class's __init__ method, the __init__ method of this class
+    should be called first, before any other initialisation.
 
 
     Properties of Note:
@@ -51,23 +50,17 @@ class SessionMainWindow(QMainWindow):
     def __init__(self, title, app_name, settings_name=None,
                  organisation_name=None, **kwargs):
 
-        super(SessionMainWindow, self).__init__(**kwargs)
+        super(MainWindowWithSessionManagement, self).__init__(title, app_name, settings_name, organisation_name, **kwargs)
 
-        self.setWindowTitle(title)
-        self.app_name = app_name
-        self.threadpool = QThreadPool()
+        self._setupMainWindowWithSessionManagement()
 
-        if settings_name is None:
-            settings_name = app_name
-        if organisation_name is None:
-            organisation_name = app_name
 
-        self.settings = QSettings(organisation_name, settings_name)
-
-        self.setAppStyle()
-
-        self.createMenu()
-        self.addToMenu()
+    def _setupMainWindowWithSessionManagement(self):
+        '''Setup the session main window.
+        
+        This is called by the __init__ method, and should not be called by the
+        user.
+        '''               
 
         # This is the name of the directory where the session folders are saved
         # This will be within a directory that is picked by the user
@@ -81,7 +74,6 @@ class SessionMainWindow(QMainWindow):
 
         self.should_really_close = False
 
-        self.progress_windows = {}
 
     # Create the menu ----------------------------------------------------------
 
@@ -150,57 +142,6 @@ class SessionMainWindow(QMainWindow):
 
         self.menu_bar = menu_bar
         self.menus = menus
-
-    def addToMenu(self):
-        '''
-        You may wish to override this in a child class, to add
-        additional menu options.
-
-        The menu bar is available as self.menu_bar, and the menus are
-        available as self.menus, which is a dictionary of the menu names
-        and the corresponding QMenu objects.
-        '''
-
-        pass
-
-    # Settings -----------------------------------------------------------------
-
-    def setAppStyle(self):
-        '''Sets app stylesheet, based on user's settings '''
-        if self.settings.value("dark_mode") is None:
-            self.settings.setValue("dark_mode", "true")
-        if self.settings.value("dark_mode") == "true":
-            style = qdarkstyle.load_stylesheet(palette=DarkPalette)
-        else:
-            style = qdarkstyle.load_stylesheet(palette=LightPalette)
-        self.setStyleSheet(style)
-
-    def createAppSettingsDialog(self):
-        '''Create a dialog to change the application settings, such as the light/dark theme'''
-        dialog = AppSettingsDialog(self)
-        self.setAppSettingsDialogWidgets(dialog)
-        dialog.Ok.clicked.connect(
-            lambda: self.onAppSettingsDialogAccepted(dialog))
-        dialog.Cancel.clicked.connect(dialog.close)
-        dialog.open()
-
-    def setAppSettingsDialogWidgets(self, dialog):
-        '''Set the widgets on the app settings dialog, based on the
-        current settings of the app'''
-        if self.settings.value("dark_mode") == "true":
-            dialog.widgets['dark_checkbox_field'].setChecked(True)
-        else:
-            dialog.widgets['dark_checkbox_field'].setChecked(False)
-
-    def onAppSettingsDialogAccepted(self, dialog):
-        '''This method is called when the user clicks
-            "Ok" on the app settings dialog'''
-        if dialog.widgets['dark_checkbox_field'].isChecked():
-            self.settings.setValue("dark_mode", "true")
-        else:
-            self.settings.setValue("dark_mode", "false")
-        self.setAppStyle()
-        dialog.close()
 
     # Loading Sessions ---------------------------------------------------------
 
@@ -455,35 +396,6 @@ class SessionMainWindow(QMainWindow):
         '''
         self.process_finished = True
         self.progress_windows[process_name].close()
-
-    # Progress Bar -------------------------------------------------------------
-
-    def createUnknownProgressWindow(self, process_name, title=None, detailed_text=None):
-        '''
-        Creates a progress bar with an unknown duration
-
-        Instead of expecting to receive progress updates, this progress bar counts
-        the number of seconds that have elapsed since it was created.
-
-        This is useful for processes that take a long time, but for which we don't
-        know how long they will take.
-
-        Parameters
-        ----------
-        process_name : str
-            The name of the process to be displayed in the progress bar
-        title : str
-            The title of the progress bar
-        detailed_text : str
-            The detailed text of the progress bar
-        '''
-
-        progress_window = ProgressTimerDialog(process_name, parent=self)
-        self.saveReferenceToProgressWindow(progress_window, process_name)
-        progress_window.show()
-
-    def saveReferenceToProgressWindow(self, progress_window, process_name):
-        self.progress_windows[process_name] = progress_window
 
     # Handling Closing And Saving Sessions -------------------------------------
 
