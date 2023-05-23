@@ -26,7 +26,7 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.Ok.clicked.connect(lambda: self.accepted())
         dialog.Cancel.clicked.connect(lambda: self.rejected())
         
-        ### Example on how to add elements to the 
+        ### Example on how to add elements to the form 
         # add input 1 as QLineEdit
         qlabel = QtWidgets.QLabel(dialog.groupBox)
         qlabel.setText("Input 1: ")

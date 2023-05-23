@@ -43,7 +43,6 @@ class MainUI(QtWidgets.QMainWindow):
         process_name = "My example process, with an error"
         self.create_timer_progress_window(process_name)
         worker = Worker(self.example_process_with_error)
-
         worker.signals.finished.connect(self.progress_windows[process_name].close)
         worker.signals.error.connect(self.process_error_dialog)
         self.threadpool.start(worker)

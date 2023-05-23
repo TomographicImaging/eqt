@@ -31,7 +31,7 @@ class ReOrderableListWidget(QtWidgets.QTableWidget):
         #button in column 0
         button=QtWidgets.QPushButton()
         button.setProperty("name", name + "_delete")
-        pixmapi = getattr(QtWidgets.QStyle, 'SP_DialogCancelButton')
+        pixmapi = getattr(QtWidgets.QStyle, 'SP_TitleBarCloseButton')
         icon = self.style().standardIcon(pixmapi)
         button.setIcon(icon)
         button.clicked.connect(self.onClickDelete)
