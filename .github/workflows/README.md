@@ -1,17 +1,21 @@
 # GitHub Actions
 
-## Building the Conda Package: [conda_build_and_publish.yml](https://github.com/paskino/qt-elements/blob/main/.github/workflows/conda_build_and_publish.yml)
-This github action builds and tests the conda package, by using the [conda-package-publish-action](https://github.com/paskino/conda-package-publish-action)
+Runs automatically on every commit via [test.yml](./test.yml).
 
-When pushing to main *all* variants are built and tested.
+## Testing
 
-When making an [annotated](https://git-scm.com/book/en/v2/Git-Basics-Tagging) tag, *all* variants are built, tested and published to the [paskino conda channel for qt-elements](https://anaconda.org/paskino/eqt/files). This package is noarch.
+Runs `unittest` suite from the `test` directory.
 
-When opening or modifying a pull request to main, a single variant is built and tested, but not published. This variant is `python=3.7` and `numpy=1.18`.
+## Building
 
-## Building the PyPi Package: [test.yml](./test.yml)
-This github action builds the pypi package, by using the [deploy-pypi action](https://github.com/casperdcl/deploy-pypi).
+Runs automatically after tests (above) succeed.
 
-When pushing to main it is built and checked.
+Builds binary (`*.whl`) & source (`*.tar.gz`) distributions.
 
-When making an [annotated](https://git-scm.com/book/en/v2/Git-Basics-Tagging) tag, it is built and published to the [PyPi](https://pypi.org/project/eqt/#description).
+## Releasing
+
+Runs automatically -- when a [tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) is pushed -- after builds (above) succeed.
+
+Publishes to [PyPI](https://pypi.org/project/eqt) and drafts changelog (release notes) at <https://github.com/paskino/qt-elements/releases>.
+
+:warning: The draft notes above need to be manually tidied & approved by a maintainer.
