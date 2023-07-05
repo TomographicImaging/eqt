@@ -1,0 +1,29 @@
+name: Test
+on:
+  push:
+  pull_request:
+jobs:
+  deploy:
+    name: PyPI Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - id: dist
+      uses: casperdcl/deploy-pypi@v2
+      with:
+        build: true
+        password: ${{ secrets.EQT_SECRET_TOKEN }}
+        upload: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+    - if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+      name: Release
+      run: |
+        changelog=$(git log --pretty='format:%d%n- %s%n%b---' $(git tag --sort=v:refname | tail -n2 | head -n1)..HEAD)
+        tag="${GITHUB_REF#refs/tags/}"
+        gh release create --title "Version $tag" --draft --notes "$changelog" "$tag" dist/${{ steps.dist.outputs.whl }} dist/${{ steps.dist.outputs.targz }}
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
