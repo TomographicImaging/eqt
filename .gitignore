@@ -1,1 +1,6 @@
-eqt/version.py
+*.py[cod]
+__pycache__/
+/eqt/_dist_ver.py
+/*.egg*/
+/build/
+/dist/
