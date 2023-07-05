@@ -34,7 +34,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3 :: Only"]
-dependencies = ["pyside2"]
+dependencies = ["pyside2", "qdarkstyle"]
 
 [tool.flake8]
 max_line_length = 99
