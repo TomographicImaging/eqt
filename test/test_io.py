@@ -1,14 +1,11 @@
 from eqt.io import zip_directory
-import os
 import shutil
 from pytest import fixture
 from pytest import mark
 
 @fixture
 def test_file(tmp_path):
-    '''
-    Create a zip file, which contains a session.json file
-    '''
+    """Create a zip file, which contains a session.json file"""
     subfile = tmp_path / "Test Subfolder" / "test_file.txt"
     subfolder = subfile.parent
     subfolder.mkdir(parents=True, exist_ok=True)

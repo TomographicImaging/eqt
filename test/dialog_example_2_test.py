@@ -72,7 +72,6 @@ _instance = None
 
 class DialogTest(unittest.TestCase):
     '''Test the margarita mixer GUI'''
-
     @skip_ci
     def setUp(self):
         '''Create the GUI'''
@@ -108,7 +107,6 @@ class DialogTest(unittest.TestCase):
 
     def stest_defaults(self):
         '''Test the GUI in its default state'''
-
         self.dialog = self.window.dialog
         print("test1")
         self.assertEqual(self.window.dialog.widgets['input1_field'].text(), '')
