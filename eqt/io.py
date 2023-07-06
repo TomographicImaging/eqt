@@ -6,9 +6,12 @@ def zip_directory(directory: str, compress: bool=True):
     """
     Zips a directory, optionally compressing it.
 
-    Args:
-      directory: The directory to be zipped.
-      compress: Whether to compress the directory.
+    Parameters
+    ----------
+    directory
+        The directory to be zipped.
+    compress
+        Whether to compress the directory.
     """
     compress_type = zipfile.ZIP_DEFLATED if compress else zipfile.ZIP_STORED
     with zipfile.ZipFile(f'{directory}.zip', 'a') as zipper:

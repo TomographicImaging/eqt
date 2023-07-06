@@ -17,7 +17,9 @@ changelog = "https://github.com/paskino/qt-elements/releases"
 [project]
 name = "eqt"
 dynamic = ["version"]
-authors = [{name = "Edoardo Pasca", email = "edoardo.pasca@stfc.ac.uk"}]
+authors = [
+    {name = "Edoardo Pasca", email = "edoardo.pasca@stfc.ac.uk"},
+    {name = "Laura Murgatroyd", email = "laura.murgatroyd@stfc.ac.uk"}]
 maintainers = [{name = "Casper da Costa-Luis", email = "casper.dcl@physics.org"}]
 description = "A number of templates and tools to develop Qt GUIs with Python effectively"
 readme = "README.md"
