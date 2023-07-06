@@ -1,37 +1,22 @@
 import json
 import os
 import shutil
-import sys
 import unittest
 from datetime import datetime
 from unittest import mock
 from unittest.mock import patch
 
 from PySide2.QtCore import QSettings, QThreadPool
-from PySide2.QtWidgets import QApplication, QMenu, QMenuBar
+from PySide2.QtWidgets import QMenu, QMenuBar
 
 import eqt
 from eqt.io import zip_directory
 from eqt.ui.MainWindowWithSessionManagement import MainWindowWithSessionManagement
 
-# skip the tests on GitHub actions
-if os.environ.get('CONDA_BUILD', '0') == '1':
-    skip_as_conda_build = True
-else:
-    skip_as_conda_build = False
-
-print("skip_as_conda_build is set to ", skip_as_conda_build)
-
-if not skip_as_conda_build:
-    if not QApplication.instance():
-        app = QApplication(sys.argv)
-    else:
-        app = QApplication.instance()
-else:
-    skip_test = True
+from . import skip_ci
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestMainWindowWithSessionManagementInit(unittest.TestCase):
     '''
     Tests the init method of the MainWindowWithSessionManagement class
@@ -94,7 +79,7 @@ class TestMainWindowWithSessionManagementInit(unittest.TestCase):
         smw.setupSession.assert_called_once()
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestMainWindowWithSessionManagementMenuBar(unittest.TestCase):
     '''
     Tests the expected menu bar is created
@@ -140,7 +125,7 @@ class TestMainWindowWithSessionManagementMenuBar(unittest.TestCase):
                          1].text(), "Set Session Directory")
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestMainWindowWithSessionManagementSetupSession(unittest.TestCase):
     '''
     Tests the setupSession method of the MainWindowWithSessionManagement class
@@ -201,7 +186,7 @@ class TestMainWindowWithSessionManagementSetupSession(unittest.TestCase):
         self.smw.createSessionSelector.assert_not_called()
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase):
     '''
     Tests the createSessionSelector method of the MainWindowWithSessionManagement class
@@ -253,7 +238,7 @@ class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase
         shutil.rmtree("Test Folder")
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestMainWindowWithSessionManagementCreateLoadSessionDialog(unittest.TestCase):
     '''
     Tests the createLoadSessionDialog method of the MainWindowWithSessionManagement class
@@ -299,7 +284,7 @@ class TestMainWindowWithSessionManagementCreateLoadSessionDialog(unittest.TestCa
         self.smw.loadSessionNew.assert_called_once()
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestSelectLoadSessionsDirectorySelectedInSessionSelector(unittest.TestCase):
     '''
     Tests the selectLoadSessionsDirectorySelectedInSessionSelector method of the MainWindowWithSessionManagement class
@@ -324,7 +309,7 @@ class TestSelectLoadSessionsDirectorySelectedInSessionSelector(unittest.TestCase
             new_session=True)
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestCreateSessionFolder(unittest.TestCase):
     '''
     Tests the createSessionFolder method of the MainWindowWithSessionManagement class
@@ -355,7 +340,7 @@ class TestCreateSessionFolder(unittest.TestCase):
         shutil.rmtree("Test Folder")
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestLoadSessionConfig(unittest.TestCase):
     '''
     Tests the loadSessionConfig method of the MainWindowWithSessionManagement class
@@ -402,7 +387,7 @@ class TestLoadSessionConfig(unittest.TestCase):
             shutil.rmtree("Test Folder")
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestSaveSession(unittest.TestCase):
     '''
     Tests:
@@ -493,7 +478,7 @@ class TestSaveSession(unittest.TestCase):
             shutil.rmtree("Test Folder")
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestRemoveTempMethods(unittest.TestCase):
     '''
     Tests:
@@ -534,7 +519,3 @@ class TestRemoveTempMethods(unittest.TestCase):
         self.smw.removeTemp.assert_called_once()
         self.smw.finishProcess.assert_called_once_with(process_name)
         self.smw.close.assert_called_once()
-
-
-if __name__ == "__main__":
-    unittest.main()

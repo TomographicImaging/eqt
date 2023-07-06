@@ -1,28 +1,14 @@
 from eqt.ui.SessionDialogs import WarningDialog, ErrorDialog, SaveSessionDialog, SessionDirectorySelectionDialog, LoadSessionDialog, AppSettingsDialog
 import os
 import unittest
-from PySide2.QtWidgets import QApplication, QFileDialog
-import sys
+from pathlib import Path
+from PySide2.QtWidgets import QFileDialog
 from unittest.mock import patch
-# skip the tests on GitHub actions
-if os.environ.get('CONDA_BUILD', '0') == '1':
-    skip_as_conda_build = True
-else:
-    skip_as_conda_build = False
+
+from . import skip_ci
 
 
-print("skip_as_conda_build is set to ", skip_as_conda_build)
-
-if not skip_as_conda_build:
-    if not QApplication.instance():
-        app = QApplication(sys.argv)
-    else:
-        app = QApplication.instance()
-else:
-    skip_test = True
-
-
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestWarningDialog(unittest.TestCase):
     def test_init(self):
         wd = WarningDialog()
@@ -40,7 +26,7 @@ class TestWarningDialog(unittest.TestCase):
         self.assertEqual(wd.windowTitle(), window_title)
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestErrorDialog(unittest.TestCase):
     def test_init(self):
         ed = ErrorDialog()
@@ -58,7 +44,7 @@ class TestErrorDialog(unittest.TestCase):
         self.assertEqual(ed.windowTitle(), window_title)
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestSaveSessionDialog(unittest.TestCase):
     def test_init(self):
         ssd = SaveSessionDialog()
@@ -70,7 +56,7 @@ class TestSaveSessionDialog(unittest.TestCase):
         self.assertEqual(ssd.windowTitle(), title)
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestSessionDirectorySelectionDialog(unittest.TestCase):
     def test_init(self):
         sdsd = SessionDirectorySelectionDialog()
@@ -120,7 +106,7 @@ class TestSessionDirectorySelectionDialog(unittest.TestCase):
         self.assertEqual(sdsd.selected_dir, example_dir)
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestLoadSessionDialog(unittest.TestCase):
     def test_init(self):
         lsd = LoadSessionDialog()
@@ -132,20 +118,14 @@ class TestLoadSessionDialog(unittest.TestCase):
         self.assertEqual(lsd.windowTitle(), title)
 
     def test_init_with_location_of_session_files_param(self):
-        location_of_session_files = "C:\\Users\\test_user\\Documents\\test_dir"
-        lsd = LoadSessionDialog(
-            location_of_session_files=location_of_session_files)
+        location_of_session_files = Path("~").expanduser() / "some" / "test_dir"
+        lsd = LoadSessionDialog(location_of_session_files=location_of_session_files)
         self.assertEqual(lsd.getWidget("sessions_directory").text(
-        ), "Currently loading sessions from: C:\\Users\\test_user\\Documents\\test_dir")
+        ), f"Currently loading sessions from: {location_of_session_files}")
 
 
-@unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+@skip_ci
 class TestAppSettingsDialog(unittest.TestCase):
-
     def test_init(self):
         asd = AppSettingsDialog()
         assert asd is not None
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -1,31 +1,12 @@
-import os
-import sys
 import unittest
 from unittest import mock
 
 from eqt.ui.FormDialog import FormDialog
 from eqt.ui.UIFormWidget import FormWidget, FormDockWidget
 from PySide2 import QtWidgets
-from PySide2.QtWidgets import QApplication
 from eqt.ui.UISliderWidget import UISliderWidget
 
-
-# skip the tests on GitHub actions
-if os.environ.get('CONDA_BUILD', '0') == '1':
-    skip_test = True
-else:
-    skip_test = False
-
-print("skip_test is set to ", skip_test)
-
-
-if not skip_test:
-    if not QApplication.instance():
-        app = QApplication(sys.argv)
-    else:
-        app = QApplication.instance()
-else:
-    skip_test = True
+from . import skip_ci
 
 
 def add_every_widget_to_form(form):
@@ -70,17 +51,17 @@ def add_two_widgets_to_form(form):
         'test checkbox'), 'CheckBox: ', 'checkBox')
 
 
-@unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+@skip_ci
 class FormDialogStatusTest(unittest.TestCase):
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def setUp(self):
         self.form = FormDialog()
         add_every_widget_to_form(self.form)
         self.simple_form = FormDialog()
         add_two_widgets_to_form(self.simple_form)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_visibility(self):
         # Check that the visibility of the widget is saved to the state
         # Have to use magic mock as we can't set the visibility of the QLabel
@@ -99,7 +80,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('label_field')[
                          'visible'], final_label_visibility)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_enabled_state(self):
         # Check that the enabled state of the widget is saved to the state
 
@@ -116,7 +97,7 @@ class FormDialogStatusTest(unittest.TestCase):
 
     # Test value is saved for all widget types ----------------------------------------------------------------
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QLabel_value(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -131,7 +112,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label_label')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_role_parameter_field(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -146,7 +127,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label', 'field')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_role_parameter_label(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -161,7 +142,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label', 'field')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_default_role_parameter(self):
         # Check that the value of the QLabel is saved to the state
         initial_label_value = 'test label'
@@ -176,7 +157,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QCheckBox_value(self):
         # Check that the value of the QCheckBox is saved to the state
 
@@ -191,7 +172,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'checkBox_field')['value'], final_checkbox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QComboBox_value(self):
         # Check that the value of the QComboBox is saved to the state
 
@@ -209,7 +190,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'comboBox_field')['value'], final_combobox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QDoubleSpinBox_value(self):
         # Check that the value of the QDoubleSpinBox is saved to the state
 
@@ -225,7 +206,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('doubleSpinBox_field')[
                          'value'], final_doubleSpinBox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QSpinBox_value(self):
         # Check that the value of the QSpinBox is saved to the state
 
@@ -240,7 +221,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'spinBox_field')['value'], final_spinBox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QSlider_value(self):
         # Check that the value of the QSlider is saved to the state
 
@@ -255,7 +236,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'slider_field')['value'], final_slider_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_UISliderWidget_value(self):
         # Check that the value of the UISliderWidget is returned in the state
 
@@ -270,7 +251,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'uiSliderWidget_field')['value'], final_slider_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QLineEdit_value(self):
         # Check that the value of the QLineEdit is saved to the state
 
@@ -286,7 +267,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'lineEdit_field')['value'], final_lineEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QTextEdit_value(self):
         # Check that the value of the QTextEdit is saved to the state
 
@@ -302,7 +283,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'textEdit_field')['value'], final_textEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QPlainTextEdit_value(self):
         # Check that the value of the QPlainTextEdit is saved to the state
 
@@ -320,7 +301,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('plainTextEdit_field')[
                          'value'], final_plainTextEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QPushButton_value(self):
         # Check that the value of the QPushButton is saved to the state
 
@@ -336,7 +317,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'button_field')['value'], final_button_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QRadioButton_value(self):
         # Check that the value of the QRadioButton is saved to the state
 
@@ -351,7 +332,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'radioButton_field')['value'], final_radio_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetStates(self):
         state_to_set = {
             'checkBox_field': {'value': True, 'enabled': False, 'visible': False},
@@ -365,14 +346,14 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'label_field'), state_to_set['label_field'])
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState('checkBox_field', state_to_set)
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox_field'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_field(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState(
@@ -380,7 +361,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox', 'field'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_label(self):
         state_to_set = {'value': 'test the checkbox:',
                         'enabled': False, 'visible': False}
@@ -389,14 +370,14 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox', 'label'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_default(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState('checkBox', state_to_set)
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getAllWidgetStates(self):
         # Check that the state of all widgets is returned
 
@@ -409,7 +390,7 @@ class FormDialogStatusTest(unittest.TestCase):
 
         self.assertEqual(self.simple_form.getAllWidgetStates(), expected_state)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_saveAllWidgetStates(self):
         # Check that the state of all widgets is saved to the state variable
 
@@ -425,7 +406,7 @@ class FormDialogStatusTest(unittest.TestCase):
         self.assertEqual(
             self.simple_form.formWidget.widget_states, expected_state)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_restoreAllSavedWidgetStates(self):
         # Check that the state of all widgets is restored from the state variable
 
@@ -466,17 +447,17 @@ class FormDialogStatusTest(unittest.TestCase):
             'label', 'label').isVisible(), state_to_restore['label_label']['visible'])
 
 
-@unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+@skip_ci
 class FormWidgetStateTest(unittest.TestCase):
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def setUp(self):
         self.form = FormWidget()
         add_every_widget_to_form(self.form)
         self.simple_form = FormWidget()
         add_two_widgets_to_form(self.simple_form)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_visibility(self):
         # Check that the visibility of the widget is saved to the state
         # Have to use magic mock as we can't set the visibility of the QLabel
@@ -495,7 +476,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('label_field')[
                          'visible'], final_label_visibility)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_enabled_state(self):
         # Check that the enabled state of the widget is saved to the state
 
@@ -512,7 +493,7 @@ class FormWidgetStateTest(unittest.TestCase):
 
     # Test value is saved for all widget types ----------------------------------------------------------------
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_role_parameter_field(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -527,7 +508,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label', 'field')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_role_parameter_label(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -542,7 +523,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label', 'field')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_default_role_parameter(self):
         # Check that the value of the QLabel is saved to the state
         initial_label_value = 'test label'
@@ -557,7 +538,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QLabel_value(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -572,7 +553,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label_field')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QCheckBox_value(self):
         # Check that the value of the QCheckBox is saved to the state
 
@@ -587,7 +568,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'checkBox_field')['value'], final_checkbox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QComboBox_value(self):
         # Check that the value of the QComboBox is saved to the state
 
@@ -605,7 +586,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'comboBox_field')['value'], final_combobox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QDoubleSpinBox_value(self):
         # Check that the value of the QDoubleSpinBox is saved to the state
 
@@ -621,7 +602,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('doubleSpinBox_field')[
                          'value'], final_doubleSpinBox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QSpinBox_value(self):
         # Check that the value of the QSpinBox is saved to the state
 
@@ -636,7 +617,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'spinBox_field')['value'], final_spinBox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QSlider_value(self):
         # Check that the value of the QSlider is saved to the state
 
@@ -651,7 +632,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'slider_field')['value'], final_slider_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_UISliderWidget_value(self):
         # Check that the value of the UISliderWidget is returned in the state
 
@@ -666,7 +647,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'uiSliderWidget_field')['value'], final_slider_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QLineEdit_value(self):
         # Check that the value of the QLineEdit is saved to the state
 
@@ -682,7 +663,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'lineEdit_field')['value'], final_lineEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QTextEdit_value(self):
         # Check that the value of the QTextEdit is saved to the state
 
@@ -698,7 +679,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'textEdit_field')['value'], final_textEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QPlainTextEdit_value(self):
         # Check that the value of the QPlainTextEdit is saved to the state
 
@@ -716,7 +697,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('plainTextEdit_field')[
                          'value'], final_plainTextEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QPushButton_value(self):
         # Check that the value of the QPushButton is saved to the state
 
@@ -732,7 +713,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'button_field')['value'], final_button_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QRadioButton_value(self):
         # Check that the value of the QRadioButton is saved to the state
 
@@ -747,7 +728,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'radioButton_field')['value'], final_radio_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetStates(self):
         state_to_set = {
             'checkBox_field': {'value': True, 'enabled': False, 'visible': False},
@@ -761,14 +742,14 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'label_field'), state_to_set['label_field'])
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState('checkBox_field', state_to_set)
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox_field'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_field(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState(
@@ -776,7 +757,7 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox', 'field'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_label(self):
         state_to_set = {'value': 'test the checkbox:',
                         'enabled': False, 'visible': False}
@@ -785,14 +766,14 @@ class FormWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox', 'label'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_default(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState('checkBox', state_to_set)
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getAllWidgetStates(self):
         # Check that the state of all widgets is returned
 
@@ -805,7 +786,7 @@ class FormWidgetStateTest(unittest.TestCase):
 
         self.assertEqual(self.simple_form.getAllWidgetStates(), expected_state)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_saveAllWidgetStates(self):
         # Check that the state of all widgets is saved to the state variable
 
@@ -820,7 +801,7 @@ class FormWidgetStateTest(unittest.TestCase):
 
         self.assertEqual(self.simple_form.widget_states, expected_state)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_restoreAllSavedWidgetStates(self):
         # Check that the state of all widgets is restored from the state variable
 
@@ -861,17 +842,17 @@ class FormWidgetStateTest(unittest.TestCase):
             'label', 'label').isVisible(), state_to_restore['label_label']['visible'])
 
 
-@unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+@skip_ci
 class FormDockWidgetStateTest(unittest.TestCase):
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def setUp(self):
         self.form = FormDockWidget()
         add_every_widget_to_form(self.form)
         self.simple_form = FormDockWidget()
         add_two_widgets_to_form(self.simple_form)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_visibility(self):
         # Check that the visibility of the widget is saved to the state
         # Have to use magic mock as we can't set the visibility of the QLabel
@@ -890,7 +871,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('label_field')[
                          'visible'], final_label_visibility)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_enabled_state(self):
         # Check that the enabled state of the widget is saved to the state
 
@@ -905,7 +886,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('label_field')[
                          'enabled'], final_label_enabled_state)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_role_parameter_field(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -920,7 +901,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label', 'field')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_role_parameter_label(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -935,7 +916,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label', 'field')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_value_using_default_role_parameter(self):
         # Check that the value of the QLabel is saved to the state
         initial_label_value = 'test label'
@@ -952,7 +933,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
 
     # Test value is saved for all widget types ----------------------------------------------------------------
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QLabel_value(self):
         # Check that the value of the QLabel is saved to the state
 
@@ -967,7 +948,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'label_field')['value'], final_label_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QCheckBox_value(self):
         # Check that the value of the QCheckBox is saved to the state
 
@@ -982,7 +963,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'checkBox_field')['value'], final_checkbox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QComboBox_value(self):
         # Check that the value of the QComboBox is saved to the state
 
@@ -1000,7 +981,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'comboBox_field')['value'], final_combobox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QDoubleSpinBox_value(self):
         # Check that the value of the QDoubleSpinBox is saved to the state
 
@@ -1016,7 +997,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('doubleSpinBox_field')[
                          'value'], final_doubleSpinBox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QSpinBox_value(self):
         # Check that the value of the QSpinBox is saved to the state
 
@@ -1031,7 +1012,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'spinBox_field')['value'], final_spinBox_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QSlider_value(self):
         # Check that the value of the QSlider is saved to the state
 
@@ -1046,7 +1027,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'slider_field')['value'], final_slider_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_UISliderWidget_value(self):
         # Check that the value of the UISliderWidget is returned in the state
 
@@ -1061,7 +1042,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'uiSliderWidget_field')['value'], final_slider_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QLineEdit_value(self):
         # Check that the value of the QLineEdit is saved to the state
 
@@ -1077,7 +1058,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'lineEdit_field')['value'], final_lineEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QTextEdit_value(self):
         # Check that the value of the QTextEdit is saved to the state
 
@@ -1093,7 +1074,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'textEdit_field')['value'], final_textEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QPlainTextEdit_value(self):
         # Check that the value of the QPlainTextEdit is saved to the state
 
@@ -1111,7 +1092,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState('plainTextEdit_field')[
                          'value'], final_plainTextEdit_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QPushButton_value(self):
         # Check that the value of the QPushButton is saved to the state
 
@@ -1127,7 +1108,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'button_field')['value'], final_button_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getWidgetState_returns_QRadioButton_value(self):
         # Check that the value of the QRadioButton is saved to the state
 
@@ -1142,7 +1123,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.form.getWidgetState(
             'radioButton_field')['value'], final_radio_value)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetStates(self):
         state_to_set = {
             'checkBox_field': {'value': True, 'enabled': False, 'visible': False},
@@ -1156,14 +1137,14 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'label_field'), state_to_set['label_field'])
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState('checkBox_field', state_to_set)
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox_field'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_field(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState(
@@ -1171,7 +1152,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox', 'field'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_label(self):
         state_to_set = {'value': 'test the checkbox:',
                         'enabled': False, 'visible': False}
@@ -1180,14 +1161,14 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox', 'label'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_applyWidgetState_using_role_parameter_default(self):
         state_to_set = {'value': True, 'enabled': False, 'visible': False}
         self.simple_form.applyWidgetState('checkBox', state_to_set)
         self.assertEqual(self.simple_form.getWidgetState(
             'checkBox'), state_to_set)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_getAllWidgetStates(self):
         # Check that the state of all widgets is returned
 
@@ -1200,7 +1181,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
 
         self.assertEqual(self.simple_form.getAllWidgetStates(), expected_state)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_saveAllWidgetStates(self):
         # Check that the state of all widgets is saved to the state variable
 
@@ -1216,7 +1197,7 @@ class FormDockWidgetStateTest(unittest.TestCase):
         self.assertEqual(
             self.simple_form.widget().widget_states, expected_state)
 
-    @unittest.skipIf(skip_test, "Can't test interfaces if we can't connect to the display")
+    @skip_ci
     def test_restoreAllSavedWidgetStates(self):
         # Check that the state of all widgets is restored from the state variable
 
@@ -1255,7 +1236,3 @@ class FormDockWidgetStateTest(unittest.TestCase):
             'label', 'label').isEnabled(), state_to_restore['label_label']['enabled'])
         self.assertEqual(self.simple_form.getWidget(
             'label', 'label').isVisible(), state_to_restore['label_label']['visible'])
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -4,7 +4,7 @@ Runs automatically on every commit via [test.yml](./test.yml).
 
 ## Testing
 
-Runs `unittest` suite from the `test` directory.
+Runs `pytest`.
 
 ## Building
 

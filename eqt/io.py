@@ -6,7 +6,7 @@ import zipfile
 def zip_directory(directory, compress=True, **kwargs):
         '''
         Zips a directory, optionally compressing it.
-        
+
         Parameters
         ----------
         directory : str
@@ -14,8 +14,8 @@ def zip_directory(directory, compress=True, **kwargs):
         compress : bool
             Whether to compress the directory.
         '''
-        
-        zipper = zipfile.ZipFile(directory + '.zip', 'a')
+
+        zipper = zipfile.ZipFile(f'{directory}.zip', 'a')
 
         if compress:
             compress_type = zipfile.ZIP_DEFLATED
@@ -27,4 +27,4 @@ def zip_directory(directory, compress=True, **kwargs):
                 filepath = os.path.join(r, _file)
                 arcname = os.path.relpath(filepath, directory)
                 zipper.write(filepath, arcname, compress_type=compress_type)
-        zipper.close() 
+        zipper.close()
