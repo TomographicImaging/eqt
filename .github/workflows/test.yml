@@ -3,7 +3,24 @@ on:
   push:
   pull_request:
 jobs:
+  test:
+    if: github.event_name != 'pull_request' || !contains('OWNER,MEMBER,COLLABORATOR', github.event.pull_request.author_association)
+    name: py${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.7, 3.11]
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python }}
+    - run: pip install -U .[dev]
+    - run: pytest
   deploy:
+    needs: [test]
     name: PyPI Deploy
     runs-on: ubuntu-latest
     steps:

@@ -36,6 +36,9 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only"]
 dependencies = ["pyside2", "qdarkstyle"]
 
+[project.optional-dependencies]
+dev = ["pytest>=6", "pytest-cov", "pytest-timeout"]
+
 [tool.flake8]
 max_line_length = 99
 exclude = [".git", "__pycache__", "build", "dist", ".eggs"]
@@ -57,3 +60,10 @@ profile = "black"
 line_length = 99
 multi_line_output = 4
 known_first_party = ["eqt", "test"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+timeout = 30
+log_level = "INFO"
+testpaths = ["test"]
+addopts = "-v --tb=short -rxs -W=error --durations=0 --durations-min=1 --cov=eqt --cov-report=term-missing --cov-report=xml"
