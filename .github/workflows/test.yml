@@ -58,6 +58,7 @@ jobs:
         build: true
         password: ${{ secrets.EQT_SECRET_TOKEN }}
         upload: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+        skip_existing: true  # allow for annotated tag amendments
     - if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
       name: Release
       run: >
