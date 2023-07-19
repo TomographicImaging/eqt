@@ -1,8 +1,6 @@
-import glob
-import os
 import sys
 
-from PySide2 import QtCore, QtWidgets
+from PySide2 import QtWidgets
 
 from eqt.ui import UIFormFactory
 
@@ -37,7 +35,7 @@ class MainUI(QtWidgets.QMainWindow):
         # create a form layout widget
         fw = UIFormFactory.getQWidget(parent=self)
 
-        ### Example on how to add elements to the form
+        # ## Example on how to add elements to the form
 
         # add title
         qlabel = QtWidgets.QLabel(fw.groupBox)

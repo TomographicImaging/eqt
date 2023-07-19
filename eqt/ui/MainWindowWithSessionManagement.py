@@ -7,10 +7,10 @@ from functools import partial
 from PySide2.QtGui import QCloseEvent, QKeySequence
 from PySide2.QtWidgets import QAction
 
-from eqt.io import zip_directory
-from eqt.threading import Worker
-from eqt.ui.MainWindowWithProgressDialogs import MainWindowWithProgressDialogs
-from eqt.ui.SessionDialogs import (
+from ..io import zip_directory
+from ..threading import Worker
+from .MainWindowWithProgressDialogs import MainWindowWithProgressDialogs
+from .SessionDialogs import (
     ErrorDialog,
     LoadSessionDialog,
     SaveSessionDialog,
@@ -304,21 +304,15 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         self.sessions_directory = sessions_directory
 
     def loadSessionNew(self):
-        '''
-        Loads a new session
-        '''
+        '''Loads a new session'''
         self.createSessionFolder()
         if hasattr(self, 'SessionSelectionWindow'):
             self.SessionSelectionWindow.close()
 
     def loadSessionLoad(self):
-        '''
-        Loads a session from a zip file
-        '''
-
+        '''Loads a session from a zip file'''
         folder_name = self.SessionSelectionWindow.widgets['select_session_field'].currentText()
-
-        process_name = "Loading Session: {}".format(folder_name)
+        process_name = f"Loading Session: {folder_name}"
 
         # Create progress bar which just has an increasing timer:
         self.process_finished = False
@@ -334,7 +328,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         <app_name>-<date>-<time>
         '''
         date_time = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-        session_folder_name = '{}-{}'.format(self.app_name, date_time)
+        session_folder_name = f'{self.app_name}-{date_time}'
         session_folder_path = os.path.join(self.sessions_directory, session_folder_name)
         os.mkdir(session_folder_path)
         self.current_session_folder = os.path.abspath(session_folder_path)

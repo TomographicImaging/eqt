@@ -98,7 +98,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         """Check that the value of the QLabel is saved to the state"""
         initial_label_value = 'test label'
 
-        # In getWidgetState we do not specify if we want the 'field' or 'label' role, so it should default to 'field':
+        # `getWidgetState` doesn't specify 'field' or 'label' role, so default to 'field'
         self.assertEqual(self.form.getWidgetState('label')['value'], initial_label_value)
 
         final_label_value = 'final test label'

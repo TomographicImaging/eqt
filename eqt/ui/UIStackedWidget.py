@@ -2,7 +2,7 @@ from PySide2 import QtWidgets
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QHBoxLayout, QListWidget, QStackedWidget, QVBoxLayout, QWidget
 
-from eqt.ui.UIFormWidget import UIFormFactory
+from .UIFormWidget import UIFormFactory
 
 
 class UIStackedWidget(object):
@@ -107,9 +107,9 @@ class UIStackedWidget(object):
         if title is None:
             if number_title:
                 title_num = len(self.tabs) + 1
-                title = "{} - {}".format(str(title_num), label)
+                title = f"{title_num} - {label}"
             else:
-                raise Exception('''The title of the tab has not been set.
+                raise ValueError('''The title of the tab has not been set.
                     Please set title - this must be a string, or set number_title to True.''')
         self.stack_list.addItem(title)
 

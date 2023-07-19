@@ -1,6 +1,6 @@
 from PySide2 import QtWidgets
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QFrame, QGroupBox, QHBoxLayout, QPushButton
+from PySide2.QtWidgets import QGroupBox, QHBoxLayout, QPushButton
 
 
 class UIMultiStepWidget(object):

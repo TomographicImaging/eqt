@@ -11,7 +11,7 @@ from PySide2.QtWidgets import (
     QPushButton,
 )
 
-from eqt.ui import FormDialog
+from . import FormDialog
 
 
 class SaveSessionDialog(FormDialog):

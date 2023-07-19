@@ -1,9 +1,6 @@
-import glob
-import os
 import sys
-from typing import MutableMapping
 
-from PySide2 import QtCore, QtWidgets
+from PySide2 import QtWidgets
 
 from eqt.ui import UIFormFactory, UIMultiStepFactory
 
@@ -44,7 +41,7 @@ class MainUI(QtWidgets.QMainWindow):
         # create a form layout widget
         fw1 = UIFormFactory.getQWidget(parent=self)
 
-        ### Example on how to add elements to the form
+        # ## Example on how to add elements to the form
 
         # add title
         qlabel = QtWidgets.QLabel(fw1.groupBox)
@@ -75,7 +72,7 @@ class MainUI(QtWidgets.QMainWindow):
         # create a 2nd form layout widget
         fw2 = UIFormFactory.getQWidget(parent=self)
 
-        ### Example on how to add elements to the form
+        # ## Example on how to add elements to the form
 
         # add title
         qlabel = QtWidgets.QLabel(fw2.groupBox)

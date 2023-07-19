@@ -5,8 +5,8 @@ from PySide2.QtWidgets import QAction, QMainWindow
 from qdarkstyle.dark.palette import DarkPalette
 from qdarkstyle.light.palette import LightPalette
 
-from eqt.ui.ProgressTimerDialog import ProgressTimerDialog
-from eqt.ui.SessionDialogs import AppSettingsDialog
+from .ProgressTimerDialog import ProgressTimerDialog
+from .SessionDialogs import AppSettingsDialog
 
 
 class MainWindowWithProgressDialogs(QMainWindow):

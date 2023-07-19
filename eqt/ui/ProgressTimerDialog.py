@@ -5,20 +5,20 @@ from PySide2 import QtCore
 from PySide2.QtCore import Qt, QThreadPool
 from PySide2.QtWidgets import QProgressDialog
 
-from eqt.threading import Worker
+from ..threading import Worker
 
 
 class ProgressTimerDialog(QProgressDialog):
-    def __init__(self, process_name, cancelText="Cancel", parent=None, flags=Qt.WindowFlags(),
+    def __init__(self, process_name, cancelText="Cancel", parent=None, flags=None,
                  cancel_method=None):
-
-        labelText = "Running {}".format(process_name)
-
+        if flags is None: # TODO: check
+            flags = Qt.WindowFlags()
+        labelText = f"Running {process_name}"
         QProgressDialog.__init__(self, labelText, cancelText, 0, 0, parent, flags)
 
         self.setWindowTitle(process_name)
         self.setMinimumDuration(0)
-        #This means the other windows can't be used while this is open:
+        # This means the other windows can't be used while this is open:
         self.setWindowModality(QtCore.Qt.ApplicationModal)
         self.setWindowFlag(QtCore.Qt.WindowCloseButtonHint, False)
         self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
@@ -33,7 +33,7 @@ class ProgressTimerDialog(QProgressDialog):
         self.run_cancelled = False
 
     def update_progress_bar(self, value):
-        self.setLabelText("Running {} ... {}s".format(self.process_name, value, 2))
+        self.setLabelText(f"Running {self.process_name} ... {value}s")
 
     def show(self):
         QProgressDialog.show(self)

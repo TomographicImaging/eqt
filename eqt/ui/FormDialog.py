@@ -1,8 +1,6 @@
-# Author: Edoardo Pasca, Laura Murgatroyd
+from PySide2 import QtWidgets
 
-from PySide2 import QtCore, QtGui, QtWidgets
-
-from eqt.ui import UIFormFactory
+from . import UIFormFactory
 
 
 class FormDialog(QtWidgets.QDialog):
@@ -53,10 +51,8 @@ class FormDialog(QtWidgets.QDialog):
         '''
 
         if layout == 'vertical':
-            if [name, qlabel] != [None, None]:
-                raise ValueError(
-                    'qlabel {} and name {} have been passed but would be discarded with layout=vertical. If this is unexpected, have a look at your code.'
-                )
+            if name is not None or qlabel is not None:
+                raise ValueError('`qlabel` and `name` are unsupported when `layout=vertical`')
             self.formWidget.uiElements['verticalLayout'].addWidget(qwidget)
         elif layout == 'form':
             if name is None:
@@ -65,8 +61,7 @@ class FormDialog(QtWidgets.QDialog):
                 raise ValueError('To add the widget to the form, please set label.')
             self.formWidget.addWidget(qwidget, qlabel, name)
         else:
-            raise ValueError(
-                "layout {} is not recognised, must be set to 'form' or 'vertical'.".format(layout))
+            raise ValueError(f"layout '{layout}' unrecognised: expected 'form' or 'vertical'")
 
     def addSpanningWidget(self, qwidget, name=None, layout='form'):
         '''
@@ -77,17 +72,15 @@ class FormDialog(QtWidgets.QDialog):
         '''
         if layout == 'vertical':
             if name is not None:
-                raise ValueError(
-                    'name {} has been passed but would be discarded with layout=vertical. If this is unexpected, have a look at your code.'
-                )
+                raise ValueError(f"`name='{name}'` cannot be given if `layout='{layout}'`")
             self.formWidget.uiElements['verticalLayout'].addWidget(qwidget)
         elif layout == 'form':
             if name is None:
-                raise ValueError('To add the widget to the form, please set name.')
+                raise ValueError('To add the widget to the form, please set name')
             self.formWidget.addSpanningWidget(qwidget, name)
         else:
             raise ValueError(
-                "layout {} is not recognised, must be set to 'form' or 'vertical'.".format(layout))
+                f"layout {layout} is not recognised, must be set to 'form' or 'vertical'")
 
     def insertWidget(self, index, qwidget):
         '''inserts a widget to the vertical layout at the specific index'''

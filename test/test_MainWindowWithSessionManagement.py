@@ -168,8 +168,7 @@ class TestMainWindowWithSessionManagementSetupSession(unittest.TestCase):
             else:
                 os.rmdir(session_folder_name)
 
-    def test_setupSession_when_sessions_folder_setting_is_not_None_and_session_folder_does_not_exist(
-            self):
+    def test_setupSession_when_given_nonexistent_sessions_folder(self):
         self.smw.settings = mock.MagicMock()
         self.smw.createSessionsDirectorySelectionDialog = mock.MagicMock()
         self.smw.createSessionSelector = mock.MagicMock()
@@ -218,10 +217,10 @@ class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase
         self.smw.createSessionSelector()
         self.smw.loadSessionNew.assert_not_called()
 
-        # We do not know which order the zip files will be returned in, so we need to check both orders:
         try:
             self.smw.createLoadSessionDialog.assert_called_once_with(zip_folders)
         except AssertionError:
+            # zip files could be returned in reverse order
             self.smw.createLoadSessionDialog.assert_called_once_with(zip_folders[::-1])
 
     def tearDown(self):
@@ -276,10 +275,11 @@ class TestMainWindowWithSessionManagementCreateLoadSessionDialog(unittest.TestCa
 @skip_ci
 class TestSelectLoadSessionsDirectorySelectedInSessionSelector(unittest.TestCase):
     '''
-    Tests the selectLoadSessionsDirectorySelectedInSessionSelector method of the MainWindowWithSessionManagement class
+    Tests the `selectLoadSessionsDirectorySelectedInSessionSelector` method of the
+    `MainWindowWithSessionManagement` class
 
-    This method sould close the passed dialog, and call the createSessionsDirectorySelectionDialog method
-    with the new_session parameter set to True
+    This method sould close the passed dialog, and call
+    `createSessionsDirectorySelectionDialog(new_session=True)`
     '''
     def setUp(self):
         self.title = "title"
@@ -328,10 +328,10 @@ class TestCreateSessionFolder(unittest.TestCase):
 @skip_ci
 class TestLoadSessionConfig(unittest.TestCase):
     '''
-    Tests the loadSessionConfig method of the MainWindowWithSessionManagement class
+    Tests the loadSessionConfig method of the `MainWindowWithSessionManagement` class.
 
-    This method is responsible for unzipping a session folder and saving the contents of the .json session file to
-    MainWindowWithSessionManagement.config.
+    This method is responsible for unzipping a session folder and saving the contents
+    of the `.json` session file to `MainWindowWithSessionManagement.config`.
     '''
     def setUp(self):
         '''

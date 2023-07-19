@@ -1,7 +1,7 @@
 import sys
 import unittest
 
-from PySide2 import QtCore, QtTest, QtWidgets
+from PySide2 import QtWidgets
 from PySide2.QtCore import Qt
 from PySide2.QtTest import QTest
 

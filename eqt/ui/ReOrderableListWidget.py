@@ -12,7 +12,7 @@ class ReOrderableListWidget(QtWidgets.QTableWidget):
         self.resizeColumnsToContents()
 
     def addItem(self, name):
-        #new row
+        # new row
         row = self.rowCount()
         self.insertRow(row)
 
@@ -28,10 +28,10 @@ class ReOrderableListWidget(QtWidgets.QTableWidget):
         # Add elements to layout
         verticalLayout.addWidget(groupBox)
 
-        #button in column 0
+        # button in column 0
         button = QtWidgets.QPushButton()
         button.setProperty("name", name + "_delete")
-        pixmapi = getattr(QtWidgets.QStyle, 'SP_DialogCancelButton')
+        pixmapi = QtWidgets.QStyle.SP_DialogCancelButton
         icon = self.style().standardIcon(pixmapi)
         button.setIcon(icon)
         button.clicked.connect(self.onClickDelete)
@@ -44,7 +44,7 @@ class ReOrderableListWidget(QtWidgets.QTableWidget):
         # Up and down buttons:
         button_up = QtWidgets.QPushButton()
         button_up.setProperty("name", name + "_up")
-        pixmapi = getattr(QtWidgets.QStyle, 'SP_ArrowUp')
+        pixmapi = QtWidgets.QStyle.SP_ArrowUp
         icon = self.style().standardIcon(pixmapi)
         button_up.setIcon(icon)
         button_up.clicked.connect(self.onClickUp)
@@ -52,7 +52,7 @@ class ReOrderableListWidget(QtWidgets.QTableWidget):
 
         button_down = QtWidgets.QPushButton()
         button_down.setProperty("name", name + "_down")
-        pixmapi = getattr(QtWidgets.QStyle, 'SP_ArrowDown')
+        pixmapi = QtWidgets.QStyle.SP_ArrowDown
         icon = self.style().standardIcon(pixmapi)
         button_down.setIcon(icon)
         button_down.clicked.connect(self.onClickDown)
@@ -65,7 +65,7 @@ class ReOrderableListWidget(QtWidgets.QTableWidget):
         self.setCellWidget(row, 0, form_widget)
 
         item = QtWidgets.QTableWidgetItem(name)
-        #text in column 1
+        # text in column 1
         self.setItem(row, 0, item)
 
     def addItems(self, names):

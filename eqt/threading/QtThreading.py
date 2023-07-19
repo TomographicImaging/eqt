@@ -1,14 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 Basic classes for Threading a Qt application
 Created on Wed Feb  6 11:10:36 2019
-
-@author: ofn77899
 """
-
 import sys
 
-#https://www.geeksforgeeks.org/migrate-pyqt5-app-to-pyside2/
+# https://www.geeksforgeeks.org/migrate-pyqt5-app-to-pyside2
 import traceback
 
 from PySide2 import QtCore
@@ -50,7 +46,7 @@ class Worker(QtCore.QRunnable):
         """
         try:
             result = self.fn(*self.args, **self.kwargs)
-        except:
+        except Exception: # TODO: check
             traceback.print_exc()
             exctype, value = sys.exc_info()[:2]
             self.signals.error.emit((exctype, value, traceback.format_exc()))

@@ -1,5 +1,3 @@
-# Author: Laura Murgatroyd
-
 import sys
 
 from PySide2 import QtWidgets
@@ -28,7 +26,7 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.Ok.clicked.connect(lambda: self.accepted())
         dialog.Cancel.clicked.connect(lambda: self.rejected())
 
-        ### Example on how to add elements to the
+        # ## Example on how to add elements to the
         dialog.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         dialog.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
         combobox = QtWidgets.QComboBox()

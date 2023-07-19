@@ -1,8 +1,6 @@
-# Author: Edoardo Pasca, Laura Murgatroyd, Samuel Stock
-
 from PySide2 import QtWidgets
 
-from eqt.ui.UISliderWidget import UISliderWidget
+from .UISliderWidget import UISliderWidget
 
 
 class UIFormWidget(object):
@@ -65,10 +63,10 @@ class UIFormWidget(object):
 
         Raises ValueError if the role is not field or label.
         '''
-        allowed_roles = ['field', 'label']
+        allowed_roles = 'field', 'label'
         if role in allowed_roles:
-            return self.widgets['{}_{}'.format(name, role)]
-        raise ValueError('Unexpected role: expected any of {}, got {}'.format(allowed_roles, role))
+            return self.widgets[f'{name}_{role}']
+        raise ValueError(f'Unexpected role: expected any of {allowed_roles}, got {role}')
 
     def setWidgetVisible(self, name, visible):
         '''
@@ -85,7 +83,7 @@ class UIFormWidget(object):
         for role in allowed_roles:
             try:
                 self.getWidget(name, role).setVisible(visible)
-            except:
+            except Exception:
                 # We may not have a label for the widget
                 pass
 
@@ -116,12 +114,12 @@ class UIFormWidget(object):
         widgetno = self.num_widgets
 
         # add the field
-        field = '{}_field'.format(name)
+        field = f'{name}_field'
         self.widgets[field] = qwidget
 
         if qlabel is not None:
             # add the label
-            label = '{}_label'.format(name)
+            label = f'{name}_label'
             if isinstance(qlabel, str):
                 txt = qlabel
                 qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])

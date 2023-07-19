@@ -1,10 +1,8 @@
-import glob
-import os
 import sys
 
-from PySide2 import QtCore, QtWidgets
+from PySide2 import QtWidgets
 
-from eqt.ui import FormDialog, UIFormFactory
+from eqt.ui import FormDialog
 
 
 class MainUI(QtWidgets.QMainWindow):
@@ -25,12 +23,11 @@ class MainUI(QtWidgets.QMainWindow):
         self.show()
 
     def openFormDialog(self):
-
         dialog = FormDialog(parent=self, title='Example')
         dialog.Ok.clicked.connect(lambda: self.accepted())
         dialog.Cancel.clicked.connect(lambda: self.rejected())
 
-        ### Example on how to add elements to the
+        # ## Example on how to add elements to the
         # add input 1 as QLineEdit
         qlabel = QtWidgets.QLabel(dialog.groupBox)
         qlabel.setText("Input 1: ")
