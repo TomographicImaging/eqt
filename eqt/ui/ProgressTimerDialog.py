@@ -1,14 +1,16 @@
 import time
 from time import sleep
 
-from eqt.threading import Worker
 from PySide2 import QtCore
 from PySide2.QtCore import Qt, QThreadPool
 from PySide2.QtWidgets import QProgressDialog
 
+from eqt.threading import Worker
+
 
 class ProgressTimerDialog(QProgressDialog):
-    def __init__(self, process_name, cancelText="Cancel",  parent=None, flags=Qt.WindowFlags(), cancel_method=None):
+    def __init__(self, process_name, cancelText="Cancel", parent=None, flags=Qt.WindowFlags(),
+                 cancel_method=None):
 
         labelText = "Running {}".format(process_name)
 
@@ -17,7 +19,7 @@ class ProgressTimerDialog(QProgressDialog):
         self.setWindowTitle(process_name)
         self.setMinimumDuration(0)
         #This means the other windows can't be used while this is open:
-        self.setWindowModality(QtCore.Qt.ApplicationModal) 
+        self.setWindowModality(QtCore.Qt.ApplicationModal)
         self.setWindowFlag(QtCore.Qt.WindowCloseButtonHint, False)
         self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
         self.setWindowFlag(QtCore.Qt.WindowMinimizeButtonHint, False)
@@ -44,15 +46,14 @@ class ProgressTimerDialog(QProgressDialog):
         progress_callback = kwargs.get('progress_callback')
         t0 = time.time()
         while not self.run_cancelled:
-            progress_callback.emit(round(time.time()-t0))
+            progress_callback.emit(round(time.time() - t0))
             sleep(1)
 
     def close(self):
         # If we don't cause timing_process to stop
-        # running then it continues forever, 
+        # running then it continues forever,
         # even after the progress window closes.
         self.run_cancelled = True
         # need to wait for the thread to finish:
         self.threadpool.waitForDone()
         QProgressDialog.close(self)
-

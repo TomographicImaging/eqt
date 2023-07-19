@@ -21,7 +21,6 @@ class TestMainWindowWithSessionManagementInit(unittest.TestCase):
     '''
     Tests the init method of the MainWindowWithSessionManagement class
     '''
-
     def setUp(self):
         # Testing the init method, so don't call init in the setUp
         self.title = "title"
@@ -58,7 +57,8 @@ class TestMainWindowWithSessionManagementInit(unittest.TestCase):
         smw = MainWindowWithSessionManagement(self.title, self.app_name)
         smw.setAppStyle.assert_called_once()
 
-    @patch('eqt.ui.MainWindowWithSessionManagement.MainWindowWithSessionManagement.createMenu', return_value=(1, {}))
+    @patch('eqt.ui.MainWindowWithSessionManagement.MainWindowWithSessionManagement.createMenu',
+           return_value=(1, {}))
     def test_init_calls_createMenu(self, mock_menu_bar):
         smw = MainWindowWithSessionManagement(self.title, self.app_name)
         smw.createMenu.assert_called_once()
@@ -84,7 +84,6 @@ class TestMainWindowWithSessionManagementMenuBar(unittest.TestCase):
     '''
     Tests the expected menu bar is created
     '''
-
     def setUp(self):
         self.title = "title"
         self.app_name = "app_name"
@@ -121,8 +120,7 @@ class TestMainWindowWithSessionManagementMenuBar(unittest.TestCase):
         menus = self.smw.menu_bar.findChildren(QMenu)
         settings_menu = menus[1]
         self.assertEqual(settings_menu.actions()[0].text(), "App Settings")
-        self.assertEqual(settings_menu.actions()[
-                         1].text(), "Set Session Directory")
+        self.assertEqual(settings_menu.actions()[1].text(), "Set Session Directory")
 
 
 @skip_ci
@@ -132,7 +130,6 @@ class TestMainWindowWithSessionManagementSetupSession(unittest.TestCase):
 
     This method is responsible for setting up the session directory and session selector
     '''
-
     def setUp(self):
         self.title = "title"
         self.app_name = "app_name"
@@ -144,8 +141,7 @@ class TestMainWindowWithSessionManagementSetupSession(unittest.TestCase):
         self.smw.createSessionSelector = mock.MagicMock()
         self.smw.settings.value = mock.MagicMock(return_value=None)
         self.smw.setupSession()
-        self.smw.createSessionsDirectorySelectionDialog.assert_called_once_with(
-            new_session=True)
+        self.smw.createSessionsDirectorySelectionDialog.assert_called_once_with(new_session=True)
         self.smw.createSessionSelector.assert_not_called()
 
     def test_setupSession_when_sessions_folder_setting_is_not_None(self):
@@ -155,8 +151,7 @@ class TestMainWindowWithSessionManagementSetupSession(unittest.TestCase):
         session_folder_name = "session_folder_name"
         os.mkdir(session_folder_name)
         try:
-            self.smw.settings.value = mock.MagicMock(
-                return_value=session_folder_name)
+            self.smw.settings.value = mock.MagicMock(return_value=session_folder_name)
             self.smw.setupSession()
             self.smw.createSessionsDirectorySelectionDialog.assert_not_called()
             self.smw.createSessionSelector.assert_called_once()
@@ -173,16 +168,15 @@ class TestMainWindowWithSessionManagementSetupSession(unittest.TestCase):
             else:
                 os.rmdir(session_folder_name)
 
-    def test_setupSession_when_sessions_folder_setting_is_not_None_and_session_folder_does_not_exist(self):
+    def test_setupSession_when_sessions_folder_setting_is_not_None_and_session_folder_does_not_exist(
+            self):
         self.smw.settings = mock.MagicMock()
         self.smw.createSessionsDirectorySelectionDialog = mock.MagicMock()
         self.smw.createSessionSelector = mock.MagicMock()
         session_folder_name = "session_folder_name"
-        self.smw.settings.value = mock.MagicMock(
-            return_value=session_folder_name)
+        self.smw.settings.value = mock.MagicMock(return_value=session_folder_name)
         self.smw.setupSession()
-        self.smw.createSessionsDirectorySelectionDialog.assert_called_once_with(
-            new_session=True)
+        self.smw.createSessionsDirectorySelectionDialog.assert_called_once_with(new_session=True)
         self.smw.createSessionSelector.assert_not_called()
 
 
@@ -194,7 +188,6 @@ class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase
     This method is responsible for creating the session selector if any sessions exist,
     or calling a method to create a new session if no sessions exist
     '''
-
     def setUp(self):
         self.title = "title"
         self.app_name = "app_name"
@@ -227,11 +220,9 @@ class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase
 
         # We do not know which order the zip files will be returned in, so we need to check both orders:
         try:
-            self.smw.createLoadSessionDialog.assert_called_once_with(
-                zip_folders)
+            self.smw.createLoadSessionDialog.assert_called_once_with(zip_folders)
         except AssertionError:
-            self.smw.createLoadSessionDialog.assert_called_once_with(
-                zip_folders[::-1])
+            self.smw.createLoadSessionDialog.assert_called_once_with(zip_folders[::-1])
 
     def tearDown(self):
         os.chdir("..")
@@ -246,7 +237,6 @@ class TestMainWindowWithSessionManagementCreateLoadSessionDialog(unittest.TestCa
     This method is responsible for creating the load session dialog
     and populating it with the available sessions
     '''
-
     def setUp(self):
         self.title = "title"
         self.app_name = "app_name"
@@ -260,8 +250,8 @@ class TestMainWindowWithSessionManagementCreateLoadSessionDialog(unittest.TestCa
         assert isinstance(dialog, eqt.ui.SessionDialogs.LoadSessionDialog)
         select_session_combo = dialog.getWidget('select_session')
         assert select_session_combo is not None
-        items_in_combo = [select_session_combo.itemText(
-            i) for i in range(select_session_combo.count())]
+        items_in_combo = [
+            select_session_combo.itemText(i) for i in range(select_session_combo.count())]
         assert items_in_combo == self.zip_folders
 
     def test_createLoadSessionDialog_connections(self):
@@ -277,8 +267,7 @@ class TestMainWindowWithSessionManagementCreateLoadSessionDialog(unittest.TestCa
         self.smw.loadSessionLoad.assert_called_once()
 
         dialog.Select.click()
-        self.smw.selectLoadSessionsDirectorySelectedInSessionSelector.assert_called_with(
-            dialog)
+        self.smw.selectLoadSessionsDirectorySelectedInSessionSelector.assert_called_with(dialog)
 
         dialog.Cancel.click()
         self.smw.loadSessionNew.assert_called_once()
@@ -292,7 +281,6 @@ class TestSelectLoadSessionsDirectorySelectedInSessionSelector(unittest.TestCase
     This method sould close the passed dialog, and call the createSessionsDirectorySelectionDialog method
     with the new_session parameter set to True
     '''
-
     def setUp(self):
         self.title = "title"
         self.app_name = "app_name"
@@ -302,11 +290,9 @@ class TestSelectLoadSessionsDirectorySelectedInSessionSelector(unittest.TestCase
         self.smw.createSessionsDirectorySelectionDialog = mock.MagicMock()
 
     def test_selectLoadSessionsDirectorySelectedInSessionSelector(self):
-        self.smw.selectLoadSessionsDirectorySelectedInSessionSelector(
-            self.load_session_dialog)
+        self.smw.selectLoadSessionsDirectorySelectedInSessionSelector(self.load_session_dialog)
         assert self.load_session_dialog.close.called_once()
-        assert self.smw.createSessionsDirectorySelectionDialog.called_once_with(
-            new_session=True)
+        assert self.smw.createSessionsDirectorySelectionDialog.called_once_with(new_session=True)
 
 
 @skip_ci
@@ -316,7 +302,6 @@ class TestCreateSessionFolder(unittest.TestCase):
 
     This method is responsible for creating a folder for the session and moving into it
     '''
-
     def setUp(self):
         self.title = "title"
         self.app_name = "app_name"
@@ -348,7 +333,6 @@ class TestLoadSessionConfig(unittest.TestCase):
     This method is responsible for unzipping a session folder and saving the contents of the .json session file to
     MainWindowWithSessionManagement.config.
     '''
-
     def setUp(self):
         '''
         Create a session zip file, which contains a session.json file'''
@@ -359,12 +343,13 @@ class TestLoadSessionConfig(unittest.TestCase):
         self.app_name = "app_name"
         self.smw = MainWindowWithSessionManagement(self.title, self.app_name)
         self.smw.sessions_directory = "Sessions Folder"
-        self.session_folder = os.path.join(
-            self.smw.sessions_directory, "app name 01-01-2020-00-00-00")
+        self.session_folder = os.path.join(self.smw.sessions_directory,
+                                           "app name 01-01-2020-00-00-00")
 
-        self.config = {'test_key': 'test_value', 'test_key2': 'test_value2',
-                       'test_int_key': 1, 'test_float_key': 1.0, 'test_bool_key': True,
-                       'test_list_key': [1, 2, 3], 'test_dict_key': {'test_key': 'test_value'}}
+        self.config = {
+            'test_key': 'test_value', 'test_key2': 'test_value2', 'test_int_key': 1,
+            'test_float_key': 1.0, 'test_bool_key': True, 'test_list_key': [1, 2, 3],
+            'test_dict_key': {'test_key': 'test_value'}}
 
         os.mkdir(self.smw.sessions_directory)
         os.mkdir(self.session_folder)
@@ -396,7 +381,6 @@ class TestSaveSession(unittest.TestCase):
     - saveSessionConfigToJson method of the MainWindowWithSessionManagement class
 
     '''
-
     def setUp(self):
         self.title = "title"
         self.app_name = "app_name"
@@ -411,8 +395,7 @@ class TestSaveSession(unittest.TestCase):
         self.smw.saveSession(self.session_name, compress=False)
         self.smw.moveSessionFolder.assert_called_once_with(self.session_name)
         self.smw.saveSessionConfigToJson.assert_called_once()
-        mock_zip_directory.assert_called_once_with(
-            self.smw.current_session_folder, False)
+        mock_zip_directory.assert_called_once_with(self.smw.current_session_folder, False)
 
     def test_moveSessionFolder(self):
         os.mkdir("Test Folder")
@@ -422,8 +405,8 @@ class TestSaveSession(unittest.TestCase):
         # Make the current session folder, with a test file inside it:
 
         self.smw.sessions_directory = os.path.abspath("Test Folder")
-        current_session_folder = os.path.join(
-            self.smw.sessions_directory, "Current Session Folder")
+        current_session_folder = os.path.join(self.smw.sessions_directory,
+                                              "Current Session Folder")
         os.mkdir(current_session_folder)
         # Write file inside the folder:
         with open(os.path.join(current_session_folder, "test_file.txt"), "w+") as f:
@@ -433,14 +416,13 @@ class TestSaveSession(unittest.TestCase):
 
         try:
             self.smw.moveSessionFolder(self.session_name)
-            self.assertEqual(os.path.abspath(
-                self.smw.current_session_folder), os.path.abspath(new_folder_to_save_to))
+            self.assertEqual(os.path.abspath(self.smw.current_session_folder),
+                             os.path.abspath(new_folder_to_save_to))
             self.assertTrue(os.path.exists(new_folder_to_save_to))
-            self.assertTrue(os.path.exists(os.path.join(
-                new_folder_to_save_to, "test_file.txt")))
+            self.assertTrue(os.path.exists(os.path.join(new_folder_to_save_to, "test_file.txt")))
             self.assertFalse(os.path.exists("Current Session Folder"))
-            self.assertFalse(os.path.exists(os.path.join(
-                "Current Session Folder", "test_file.txt")))
+            self.assertFalse(
+                os.path.exists(os.path.join("Current Session Folder", "test_file.txt")))
 
         except Exception as e:
             raise e
@@ -450,9 +432,10 @@ class TestSaveSession(unittest.TestCase):
 
     def test_saveSessionConfigToJson(self):
 
-        self.config = {'test_key': 'test_value', 'test_key2': 'test_value2',
-                       'test_int_key': 1, 'test_float_key': 1.0, 'test_bool_key': True,
-                       'test_list_key': [1, 2, 3], 'test_dict_key': {'test_key': 'test_value'}}
+        self.config = {
+            'test_key': 'test_value', 'test_key2': 'test_value2', 'test_int_key': 1,
+            'test_float_key': 1.0, 'test_bool_key': True, 'test_list_key': [1, 2, 3],
+            'test_dict_key': {'test_key': 'test_value'}}
 
         config = {}
         config.update(self.config)
@@ -485,7 +468,6 @@ class TestRemoveTempMethods(unittest.TestCase):
     - removeTempAndClose method of the MainWindowWithSessionManagement class
     - removeTemp method of the MainWindowWithSessionManagement class
     '''
-
     def setUp(self):
         self.title = "title"
         self.app_name = "app_name"

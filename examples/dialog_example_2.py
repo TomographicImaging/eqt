@@ -1,16 +1,20 @@
+import glob
+import os
+import sys
+
 from PySide2 import QtCore, QtWidgets
-import glob, sys, os
-from eqt.ui import UIFormFactory, FormDialog
+
+from eqt.ui import FormDialog, UIFormFactory
+
 
 class MainUI(QtWidgets.QMainWindow):
-
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
-        
+
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Dialog with form layout")
         pb.clicked.connect(lambda: self.openFormDialog())
-        
+
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
         widg = QtWidgets.QWidget()
@@ -19,14 +23,14 @@ class MainUI(QtWidgets.QMainWindow):
         self.setCentralWidget(widg)
 
         self.show()
-    
+
     def openFormDialog(self):
-        
+
         dialog = FormDialog(parent=self, title='Example')
         dialog.Ok.clicked.connect(lambda: self.accepted())
         dialog.Cancel.clicked.connect(lambda: self.rejected())
-        
-        ### Example on how to add elements to the 
+
+        ### Example on how to add elements to the
         # add input 1 as QLineEdit
         qlabel = QtWidgets.QLabel(dialog.groupBox)
         qlabel.setText("Input 1: ")
@@ -53,22 +57,24 @@ class MainUI(QtWidgets.QMainWindow):
 
         # store a reference
         self.dialog = dialog
-        
+
         dialog.exec()
-        
+
     def accepted(self):
-        print ("accepted")
-        print (self.dialog.widgets['input1_field'].text())
-        print (self.dialog.widgets['input2_field'].currentText())
-        
+        print("accepted")
+        print(self.dialog.widgets['input1_field'].text())
+        print(self.dialog.widgets['input2_field'].currentText())
+
         self.dialog.close()
+
     def rejected(self):
-        print ("rejected")
+        print("rejected")
         self.dialog.close()
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    
+
     window = MainUI()
-    
+
     sys.exit(app.exec_())

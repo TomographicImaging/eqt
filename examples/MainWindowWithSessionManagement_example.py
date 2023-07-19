@@ -3,10 +3,10 @@ import sys
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QApplication
 
+from eqt import __version__
 from eqt.ui.MainWindowWithSessionManagement import MainWindowWithSessionManagement
 from eqt.ui.UIFormWidget import FormWidget
 from eqt.ui.UISliderWidget import UISliderWidget
-from eqt import __version__
 
 
 class ExampleMainWindowWithSessionManagement(MainWindowWithSessionManagement):
@@ -83,8 +83,8 @@ def add_every_widget_to_form(form):
 
 
 def create_main_window():
-    window = ExampleMainWindowWithSessionManagement(
-        f"Example Session Main Window{__version__}", "Example0", settings_name="Example0")
+    window = ExampleMainWindowWithSessionManagement(f"Example Session Main Window{__version__}",
+                                                    "Example0", settings_name="Example0")
 
     return window
 
@@ -95,7 +95,6 @@ def main():
     window = create_main_window()
     window.show()
     app.exec_()
-
 
 
 if __name__ == "__main__":

@@ -1,9 +1,12 @@
-from PySide2 import QtCore, QtWidgets, QtTest
-from PySide2.QtTest import QTest
-from PySide2.QtCore import Qt
 import sys
-from eqt.ui import FormDialog
 import unittest
+
+from PySide2 import QtCore, QtTest, QtWidgets
+from PySide2.QtCore import Qt
+from PySide2.QtTest import QTest
+
+from eqt.ui import FormDialog
+
 from . import skip_ci
 
 
@@ -111,8 +114,7 @@ class DialogTest(unittest.TestCase):
         print("test1")
         self.assertEqual(self.window.dialog.widgets['input1_field'].text(), '')
         print("test2")
-        self.assertEqual(
-            self.window.dialog.widgets['input2_field'].currentIndex(), 0)
+        self.assertEqual(self.window.dialog.widgets['input2_field'].currentIndex(), 0)
         print("click")
         print(self.window.dialog.Ok, self.window.dialog.Cancel)
         QTest.mouseClick(self.window.push_button, Qt.LeftButton)

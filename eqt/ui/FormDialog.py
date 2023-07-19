@@ -1,16 +1,18 @@
 # Author: Edoardo Pasca, Laura Murgatroyd
 
 from PySide2 import QtCore, QtGui, QtWidgets
+
 from eqt.ui import UIFormFactory
 
+
 class FormDialog(QtWidgets.QDialog):
-    def __init__(self, parent = None, title=None):
-        
+    def __init__(self, parent=None, title=None):
+
         QtWidgets.QDialog.__init__(self, parent)
-        
+
         # button box
         bb = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok
-                                     | QtWidgets.QDialogButtonBox.Cancel)
+                                        | QtWidgets.QDialogButtonBox.Cancel)
         self.buttonBox = bb
 
         formWidget = UIFormFactory.getQWidget(parent=self)
@@ -18,7 +20,7 @@ class FormDialog(QtWidgets.QDialog):
 
         # set the layout of the dialog
         self.setLayout(formWidget.uiElements['verticalLayout'])
-        
+
         if title is not None:
             self.setWindowTitle(title)
         # add button box to the UI
@@ -28,6 +30,7 @@ class FormDialog(QtWidgets.QDialog):
     def Ok(self):
         '''returns a reference to the Dialog Ok button to connect its signals'''
         return self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
+
     @property
     def Cancel(self):
         '''returns a reference to the Dialog Cancel button to connect its signals'''
@@ -36,6 +39,7 @@ class FormDialog(QtWidgets.QDialog):
     @property
     def widgets(self):
         return self.formWidget.widgets
+
     @property
     def groupBox(self):
         return self.formWidget.groupBox
@@ -47,10 +51,12 @@ class FormDialog(QtWidgets.QDialog):
         layout = 'vertical' - adds to the Vertical layout below the form.
         To add to the form layout, qlabel and name must be passed.
         '''
-        
+
         if layout == 'vertical':
             if [name, qlabel] != [None, None]:
-                raise ValueError('qlabel {} and name {} have been passed but would be discarded with layout=vertical. If this is unexpected, have a look at your code.') 
+                raise ValueError(
+                    'qlabel {} and name {} have been passed but would be discarded with layout=vertical. If this is unexpected, have a look at your code.'
+                )
             self.formWidget.uiElements['verticalLayout'].addWidget(qwidget)
         elif layout == 'form':
             if name is None:
@@ -59,7 +65,8 @@ class FormDialog(QtWidgets.QDialog):
                 raise ValueError('To add the widget to the form, please set label.')
             self.formWidget.addWidget(qwidget, qlabel, name)
         else:
-           raise ValueError("layout {} is not recognised, must be set to 'form' or 'vertical'.".format(layout))  
+            raise ValueError(
+                "layout {} is not recognised, must be set to 'form' or 'vertical'.".format(layout))
 
     def addSpanningWidget(self, qwidget, name=None, layout='form'):
         '''
@@ -70,25 +77,28 @@ class FormDialog(QtWidgets.QDialog):
         '''
         if layout == 'vertical':
             if name is not None:
-                raise ValueError('name {} has been passed but would be discarded with layout=vertical. If this is unexpected, have a look at your code.') 
+                raise ValueError(
+                    'name {} has been passed but would be discarded with layout=vertical. If this is unexpected, have a look at your code.'
+                )
             self.formWidget.uiElements['verticalLayout'].addWidget(qwidget)
         elif layout == 'form':
             if name is None:
                 raise ValueError('To add the widget to the form, please set name.')
             self.formWidget.addSpanningWidget(qwidget, name)
         else:
-            raise ValueError("layout {} is not recognised, must be set to 'form' or 'vertical'.".format(layout))
-    
+            raise ValueError(
+                "layout {} is not recognised, must be set to 'form' or 'vertical'.".format(layout))
+
     def insertWidget(self, index, qwidget):
         '''inserts a widget to the vertical layout at the specific index'''
         self.formWidget.uiElements['verticalLayout'].insertWidget(index, qwidget)
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
-        
-        By default it returns the widget that is the field in the form. 
+
+        By default it returns the widget that is the field in the form.
         The user can get the label by specifying the role to be label
-        
+
         Raises ValueError if the role is not field or label.
         '''
         return self.formWidget.getWidget(name, role)
@@ -96,7 +106,7 @@ class FormDialog(QtWidgets.QDialog):
     def getWidgets(self):
         '''returns a dictionary of all the widgets in the form'''
         return self.formWidget.getWidgets()
-    
+
     def setWidgetVisible(self, name, visible):
         '''
         Sets the visibility of the widget and associated label with the given name.
@@ -151,7 +161,7 @@ class FormDialog(QtWidgets.QDialog):
             If this fails, and the role is not given, the state will be returned for the widget with name: widget_field.
             If given, the state will be returned for the widget with name: widget_role.
 
-        
+
         Returns
         -------
         dict
@@ -197,4 +207,3 @@ class FormDialog(QtWidgets.QDialog):
             E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
         '''
         return self.formWidget.applyWidgetStates(state)
-        

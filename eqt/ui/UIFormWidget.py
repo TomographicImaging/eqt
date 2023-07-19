@@ -1,6 +1,7 @@
 # Author: Edoardo Pasca, Laura Murgatroyd, Samuel Stock
 
 from PySide2 import QtWidgets
+
 from eqt.ui.UISliderWidget import UISliderWidget
 
 
@@ -22,7 +23,6 @@ class UIFormWidget(object):
     |                                                          |
     +----------------------------------------------------------+
     '''
-
     def createForm(self):
         # Add vertical layout to dock contents
         verticalLayout = QtWidgets.QVBoxLayout(self)
@@ -43,8 +43,7 @@ class UIFormWidget(object):
 
         self.num_widgets = 0
         self.uiElements = {
-            'verticalLayout': verticalLayout,
-            'groupBox': groupBox,
+            'verticalLayout': verticalLayout, 'groupBox': groupBox,
             'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
 
@@ -60,10 +59,10 @@ class UIFormWidget(object):
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
-        
-        By default it returns the widget that is the field in the form. 
+
+        By default it returns the widget that is the field in the form.
         The user can get the label by specifying the role to be label
-        
+
         Raises ValueError if the role is not field or label.
         '''
         allowed_roles = ['field', 'label']
@@ -89,7 +88,7 @@ class UIFormWidget(object):
             except:
                 # We may not have a label for the widget
                 pass
-    
+
     def getWidgets(self):
         '''returns a dictionary of all the widgets in the form'''
         return self.widgets
@@ -127,8 +126,7 @@ class UIFormWidget(object):
                 txt = qlabel
                 qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
                 qlabel.setText(txt)
-            formLayout.setWidget(
-                widgetno, QtWidgets.QFormLayout.LabelRole, qlabel)
+            formLayout.setWidget(widgetno, QtWidgets.QFormLayout.LabelRole, qlabel)
 
             # save a reference to label widgets in the dictionary
             self.widgets[label] = qlabel
@@ -142,14 +140,13 @@ class UIFormWidget(object):
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
 
-
     def getAllWidgetStates(self):
         '''
         Returns the state of all widgets in the form.
         Returns
         -------
         dict
-            A dictionary of the states of all widgets in the form, keyed by the name of the widget, 
+            A dictionary of the states of all widgets in the form, keyed by the name of the widget,
             and the value being a dictionary with the state of the widget. The dictionary
             containing the state of the widget has the keys 'visible', 'value' and 'enabled', and the values
 
@@ -175,7 +172,7 @@ class UIFormWidget(object):
             If this fails, and the role is not given, the state will be returned for the widget with name: widget_field.
             If given, the state will be returned for the widget with name: widget_role.
 
-        
+
         Returns
         -------
         dict
@@ -203,7 +200,7 @@ class UIFormWidget(object):
                     try:
                         widget = self.widgets[name + '_field']
                     except KeyError:
-                            raise KeyError('No widget with name: ' + name + ' or ' + name + '_field')
+                        raise KeyError('No widget with name: ' + name + ' or ' + name + '_field')
                 else:
                     raise KeyError('No widget with name: ' + name)
 
@@ -229,7 +226,6 @@ class UIFormWidget(object):
             widget_state['value'] = widget.toPlainText()
 
         return widget_state
-
 
     def applyWidgetState(self, name, state, role=None):
         '''
@@ -261,10 +257,10 @@ class UIFormWidget(object):
                 try:
                     widget = self.widgets[name + '_field']
                 except KeyError:
-                        raise KeyError('No widget with name: ' + name + ' or ' + name + '_field')
+                    raise KeyError('No widget with name: ' + name + ' or ' + name + '_field')
             else:
                 raise KeyError('No widget with name: ' + name)
-        
+
         for key, value in state.items():
             if key == 'enabled':
                 widget.setEnabled(value)
@@ -290,7 +286,6 @@ class UIFormWidget(object):
                 elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
 
-
     def applyWidgetStates(self, state):
         '''
         Applies the given state to the widgets in the form.
@@ -313,7 +308,7 @@ class UIFormWidget(object):
         This can be used to restore the state of the widgets using the restoreAllSavedWidgetStates method.
         '''
         self.widget_states = self.getAllWidgetStates()
-    
+
     def restoreAllSavedWidgetStates(self):
         '''
         Restores the state of all widgets in the form to the state saved by the saveAllWidgetStates method.
@@ -321,6 +316,7 @@ class UIFormWidget(object):
         '''
         if hasattr(self, 'widget_states'):
             self.applyWidgetStates(self.widget_states)
+
 
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
     def __init__(self, parent=None):
@@ -343,18 +339,18 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
-        
-        By default it returns the widget that is the field in the form. 
+
+        By default it returns the widget that is the field in the form.
         The user can get the label by specifying the role to be label
-        
+
         Raises ValueError if the role is not field or label.
         '''
         return self.widget().getWidget(name, role)
-    
+
     def getWidgets(self):
         '''returns a dictionary of all the widgets in the form'''
         return self.widget().getWidgets()
-    
+
     def setWidgetVisible(self, name, visible):
         '''
         Sets the visibility of the widget and associated label with the given name.
@@ -410,7 +406,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
             If this fails, and the role is not given, the state will be returned for the widget with name: widget_field.
             If given, the state will be returned for the widget with name: widget_role.
 
-        
+
         Returns
         -------
         dict
@@ -456,8 +452,6 @@ class FormDockWidget(QtWidgets.QDockWidget):
             E.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True}, 'widget2': {'value': 2, 'enabled': False, 'visible': False}}
         '''
         return self.widget().applyWidgetStates(state)
-
-    
 
 
 class UIFormFactory(QtWidgets.QWidget):

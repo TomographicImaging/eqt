@@ -6,22 +6,24 @@ Created on Wed Feb  6 11:10:36 2019
 @author: ofn77899
 """
 
+import sys
+
 #https://www.geeksforgeeks.org/migrate-pyqt5-app-to-pyside2/
 import traceback
-import sys
+
 from PySide2 import QtCore
 from PySide2.QtCore import Slot
 
+
 class Worker(QtCore.QRunnable):
     """Worker: defines a QRunnable to execute a function asynchronously. It handles worker thread setup, signals and wrapup."""
-    
     def __init__(self, fn, *args, **kwargs):
         '''Worker creator
-        
-        :param fn: The function to be run by this Worker in a different thread. 
+
+        :param fn: The function to be run by this Worker in a different thread.
         :param args: positional arguments to pass to the function
         :param kwargs: keyword arguments to pass to the function
-        
+
         The creator will add progress_callback, message_callback and status_callback to the kwargs.
         '''
         super(Worker, self).__init__()
@@ -57,6 +59,7 @@ class Worker(QtCore.QRunnable):
         finally:
             self.signals.finished.emit()
 
+
 class WorkerSignals(QtCore.QObject):
     """
     Defines signals available when running a worker thread
@@ -72,17 +75,17 @@ class WorkerSignals(QtCore.QObject):
 
     progress
         `int` indicating % progress
-    
+
     message
         `string` with some text
     status
-        `tuple` 
+        `tuple`
     """
 
     finished = QtCore.Signal()
     error = QtCore.Signal(tuple)
     result = QtCore.Signal(object)
-    
+
     progress = QtCore.Signal(int)
     message = QtCore.Signal(str)
     status = QtCore.Signal(tuple)

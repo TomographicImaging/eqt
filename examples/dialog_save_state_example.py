@@ -1,19 +1,21 @@
 # Author: Laura Murgatroyd
 
-from PySide2 import QtWidgets
 import sys
+
+from PySide2 import QtWidgets
+
 from eqt.ui import FormDialog
 from eqt.ui.UISliderWidget import UISliderWidget
 
-class MainUI(QtWidgets.QMainWindow):
 
-    def __init__(self, parent = None):
+class MainUI(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
-        
+
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Dialog with form layout")
         pb.clicked.connect(lambda: self.openFormDialog())
-        
+
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
         widg = QtWidgets.QWidget()
@@ -25,8 +27,8 @@ class MainUI(QtWidgets.QMainWindow):
         dialog = FormDialog(parent=self, title='Example')
         dialog.Ok.clicked.connect(lambda: self.accepted())
         dialog.Cancel.clicked.connect(lambda: self.rejected())
-        
-        ### Example on how to add elements to the 
+
+        ### Example on how to add elements to the
         dialog.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         dialog.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
         combobox = QtWidgets.QComboBox()
@@ -49,11 +51,11 @@ class MainUI(QtWidgets.QMainWindow):
         self.dialog = dialog
 
         self.show()
-    
+
     def openFormDialog(self):
         self.dialog.restoreAllSavedWidgetStates()
         self.dialog.exec()
-        
+
     def accepted(self):
         self.dialog.saveAllWidgetStates()
         self.dialog.close()
@@ -61,9 +63,10 @@ class MainUI(QtWidgets.QMainWindow):
     def rejected(self):
         self.dialog.close()
 
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    
+
     window = MainUI()
-    
+
     sys.exit(app.exec_())

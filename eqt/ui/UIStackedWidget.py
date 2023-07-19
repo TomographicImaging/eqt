@@ -1,7 +1,8 @@
-from eqt.ui.UIFormWidget import UIFormFactory
 from PySide2 import QtWidgets
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QHBoxLayout, QVBoxLayout, QListWidget, QStackedWidget, QWidget
+from PySide2.QtWidgets import QHBoxLayout, QListWidget, QStackedWidget, QVBoxLayout, QWidget
+
+from eqt.ui.UIFormWidget import UIFormFactory
 
 
 class UIStackedWidget(object):
@@ -47,7 +48,6 @@ class UIStackedWidget(object):
 
 
     '''
-
     def createStack(self, layout='vertical'):
         self.stack_list = QListWidget()
         self.list_margin_size = 11
@@ -59,14 +59,12 @@ class UIStackedWidget(object):
             box = QHBoxLayout(self)
             self.list_margin_size = 18
             self.stack_list.setStyleSheet(
-                "margin-top: {size}px"
-                .format(size=self.list_margin_size))
+                "margin-top: {size}px".format(size=self.list_margin_size))
         else:
             box = QVBoxLayout(self)
             self.stack_list.setStyleSheet(
-                "margin-left : {size}px; margin-right : {size2}px"
-                .format(size=self.list_margin_size,
-                        size2=self.list_margin_size+1))
+                "margin-left : {size}px; margin-right : {size2}px".format(
+                    size=self.list_margin_size, size2=self.list_margin_size + 1))
 
         box.addWidget(self.stack_list)
         box.addWidget(self.Stack)
@@ -88,7 +86,7 @@ class UIStackedWidget(object):
 
     def addTab(self, label, widget='form', title=None, number_title=True):
         ''' Adds a tab to the StackedWidget.
-        
+
         Parameters
         ----------
         label: str
@@ -96,7 +94,7 @@ class UIStackedWidget(object):
         title: str
             The name the tab will be listed as in the QListWidget.
         number_title: bool, default True
-            Determines whether the title of the tab is generated 
+            Determines whether the title of the tab is generated
             by adding a number in front of the label. E.g. if the
             label is "FBP" and this is the first tab that has been
             added then the title will be "1 - FBP" if number_title
@@ -125,13 +123,10 @@ class UIStackedWidget(object):
         if self.layout_type != 'vertical':
             height_multiplier += 1
             self.stack_list.setMaximumWidth(
-                self.stack_list.sizeHintForColumn(0)*1.2
-                + self.list_margin_size*2)
+                self.stack_list.sizeHintForColumn(0) * 1.2 + self.list_margin_size * 2)
             self.stack_list.setMaximumHeight(
-                self.stack_list.sizeHintForRow(0)*height_multiplier
-                + self.list_margin_size*2)
-        self.stack_list.setMaximumHeight(
-            self.stack_list.sizeHintForRow(0)*height_multiplier)
+                self.stack_list.sizeHintForRow(0) * height_multiplier + self.list_margin_size * 2)
+        self.stack_list.setMaximumHeight(self.stack_list.sizeHintForRow(0) * height_multiplier)
 
     def addTabs(self, labels):
         '''
@@ -158,7 +153,6 @@ class UIStackedWidget(object):
     def getTabs(self):
         ''' return the dict of tabs'''
         return self.tabs
-
 
 
 class StackedWidget(QWidget, UIStackedWidget):
@@ -198,7 +192,6 @@ class StackedWidgetFactory(QWidget):
     The returned dockWidget must be added with
     main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, dockWidget)
     '''
-
     def getQDockWidget(parent=None, title=None, layout='vertical'):
         return StackedDockWidget(parent, title, layout)
 

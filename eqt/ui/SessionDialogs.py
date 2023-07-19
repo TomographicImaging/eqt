@@ -1,8 +1,17 @@
-from eqt.ui import FormDialog
-from PySide2.QtWidgets import (
-    QCheckBox, QComboBox, QFileDialog, QLabel, QLineEdit, QPushButton, QMessageBox)
-from PySide2 import QtWidgets
 import os
+
+from PySide2 import QtWidgets
+from PySide2.QtWidgets import (
+    QCheckBox,
+    QComboBox,
+    QFileDialog,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
+    QPushButton,
+)
+
+from eqt.ui import FormDialog
 
 
 class SaveSessionDialog(FormDialog):
@@ -69,8 +78,7 @@ class SessionDirectorySelectionDialog(FormDialog):
 
         browse_button = QPushButton('Browse')
         browse_button.clicked.connect(self.browse_for_dir)
-        self.addWidget(browse_button, QLabel(
-            'No directory selected'), 'selected_dir')
+        self.addWidget(browse_button, QLabel('No directory selected'), 'selected_dir')
 
         self.selected_dir = None
 
@@ -79,10 +87,8 @@ class SessionDirectorySelectionDialog(FormDialog):
 
     def browse_for_dir(self):
         dialog = QFileDialog(self.groupBox)
-        directory = dialog.getExistingDirectory(
-            self, "Select a Directory to Save the Session to")
-        self.getWidget('selected_dir', 'label').setText(
-            os.path.basename(directory))
+        directory = dialog.getExistingDirectory(self, "Select a Directory to Save the Session to")
+        self.getWidget('selected_dir', 'label').setText(os.path.basename(directory))
         self.selected_dir = directory
 
 
@@ -103,18 +109,17 @@ class LoadSessionDialog(FormDialog):
         FormDialog.__init__(self, parent, title)
         self.parent = parent
 
-        select_dir_button = QPushButton(
-            'Select Directory for Loading Sessions')
-        self.buttonBox.addButton(
-            select_dir_button,  QtWidgets.QDialogButtonBox.ActionRole)
+        select_dir_button = QPushButton('Select Directory for Loading Sessions')
+        self.buttonBox.addButton(select_dir_button, QtWidgets.QDialogButtonBox.ActionRole)
         self.Select = select_dir_button
 
         self.addSpanningWidget(QLabel('Load a Session'), 'load_title')
 
         location_of_session_files = os.path.abspath(location_of_session_files)
 
-        self.addSpanningWidget(QLabel(
-            f'Currently loading sessions from: {location_of_session_files}'), 'sessions_directory')
+        self.addSpanningWidget(
+            QLabel(f'Currently loading sessions from: {location_of_session_files}'),
+            'sessions_directory')
 
         combo = QComboBox(self.groupBox)
         self.addWidget(combo, 'Select a session:', 'select_session')
@@ -171,7 +176,6 @@ class ErrorDialog(QMessageBox):
 
 
 class AppSettingsDialog(FormDialog):
-
     def __init__(self, parent=None):
         super(AppSettingsDialog, self).__init__(parent)
         self.setWindowTitle("App Settings")
