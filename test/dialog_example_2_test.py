@@ -1,22 +1,13 @@
 from PySide2 import QtCore, QtWidgets, QtTest
 from PySide2.QtTest import QTest
 from PySide2.QtCore import Qt
-import glob
 import sys
-import os
-from eqt.ui import UIFormFactory, FormDialog
+from eqt.ui import FormDialog
 import unittest
+from . import skip_ci
 
-# skip the tests on GitHub actions
-if os.environ.get('CONDA_BUILD', '0') == '1':
-    skip_as_conda_build = True
-else:
-    skip_as_conda_build = False
-
-print ("skip_as_conda_build is set to ", skip_as_conda_build)
 
 class MainUI(QtWidgets.QMainWindow):
-
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
 
@@ -35,7 +26,6 @@ class MainUI(QtWidgets.QMainWindow):
         self.show()
 
     def openFormDialog(self):
-
         dialog = FormDialog(parent=self, title='Example')
         dialog.Ok.clicked.connect(lambda: self.accepted())
         dialog.Cancel.clicked.connect(lambda: self.rejected())
@@ -82,8 +72,7 @@ _instance = None
 
 class DialogTest(unittest.TestCase):
     '''Test the margarita mixer GUI'''
-
-    @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+    @skip_ci
     def setUp(self):
         '''Create the GUI'''
         super(DialogTest, self).setUp()
@@ -99,27 +88,25 @@ class DialogTest(unittest.TestCase):
         # QTest.mouseClick(self.window.push_button, Qt.LeftButton)
         # self.dialog = window.dialog
 
-    @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+    @skip_ci
     def tearDown(self):
         del self.app
         super(DialogTest, self).tearDown()
 
-    @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+    @skip_ci
     def test_close(self):
         self.window.close()
         self.assertTrue(True)
 
-    @unittest.skipIf(skip_as_conda_build, "On conda builds do not do any test with interfaces")
+    @skip_ci
     def test_openclose_dialog(self):
         QTest.mouseClick(self.window.push_button, Qt.LeftButton)
         dialog = self.window.dialog
         print(dialog)
         dialog.close()
 
-    @unittest.skipUnless(skip_as_conda_build, "On conda builds do not do any test with interfaces")
     def stest_defaults(self):
         '''Test the GUI in its default state'''
-
         self.dialog = self.window.dialog
         print("test1")
         self.assertEqual(self.window.dialog.widgets['input1_field'].text(), '')

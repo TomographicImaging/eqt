@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=42", "setuptools_scm[toml]>=3.4"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "eqt/_dist_ver.py"
+write_to_template = "__version__ = '{version}'\n"
+
+[tool.setuptools.packages.find]
+exclude = ["test"]
+
+[project.urls]
+documentation = "https://github.com/TomographicImaging/eqt#readme"
+repository = "https://github.com/TomographicImaging/eqt"
+changelog = "https://github.com/TomographicImaging/eqt/releases"
+
+[project]
+name = "eqt"
+dynamic = ["version"]
+authors = [
+    {name = "Edoardo Pasca", email = "edoardo.pasca@stfc.ac.uk"},
+    {name = "Laura Murgatroyd", email = "laura.murgatroyd@stfc.ac.uk"}]
+maintainers = [{name = "Casper da Costa-Luis", email = "casper.dcl@physics.org"}]
+description = "A number of templates and tools to develop Qt GUIs with Python effectively"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "Apache-2.0"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only"]
+dependencies = ["pyside2", "qdarkstyle"]
+
+[project.optional-dependencies]
+dev = ["pytest>=6", "pytest-cov", "pytest-timeout"]
+
+[tool.flake8]
+max_line_length = 99
+exclude = [".git", "__pycache__", "build", "dist", ".eggs"]
+
+[tool.yapf]
+spaces_before_comment = [15, 20]
+arithmetic_precedence_indication = true
+allow_split_before_dict_value = false
+coalesce_brackets = true
+column_limit = 99
+each_dict_entry_on_separate_line = false
+space_between_ending_comma_and_closing_bracket = false
+split_before_named_assigns = false
+split_before_closing_bracket = false
+blank_line_before_nested_class_or_def = false
+
+[tool.isort]
+profile = "black"
+line_length = 99
+multi_line_output = 4
+known_first_party = ["eqt", "test"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+timeout = 30
+log_level = "INFO"
+testpaths = ["test"]
+addopts = "-v --tb=short -rxs -W=error --durations=0 --durations-min=1 --cov=eqt --cov-report=term-missing --cov-report=xml"
