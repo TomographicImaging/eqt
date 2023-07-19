@@ -24,6 +24,7 @@ maintainers = [{name = "Casper da Costa-Luis", email = "casper.dcl@physics.org"}
 description = "A number of templates and tools to develop Qt GUIs with Python effectively"
 readme = "README.md"
 requires-python = ">=3.7"
+keywords = ["Qt"]
 license = {text = "Apache-2.0"}
 classifiers = [
     "Development Status :: 4 - Beta",
