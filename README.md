@@ -25,7 +25,7 @@ conda install eqt -c paskino
 ```
 
 ### Example
-In the `example` directory there is an example on how to launch a `QDialog` with a form inside using `eqt`'s [`QWidget`](https://github.com/paskino/qt-elements/blob/main/examples/dialog_example.py) or [`FormDialog`](https://github.com/paskino/qt-elements/blob/main/examples/dialog_example_2.py).
+In the `example` directory there is an example on how to launch a `QDialog` with a form inside using `eqt`'s [`QWidget`](https://github.com/TomographicImaging/eqt/blob/main/examples/dialog_example.py) or [`FormDialog`](https://github.com/TomographicImaging/eqt/blob/main/examples/dialog_example_2.py).
 
 ### Running asynchronous tasks
 To run a function in a separate thread we use a `Worker` which is a subclass of a `QRunnable`.
@@ -35,7 +35,7 @@ For the `Worker` to work one needs to define:
 1. the function that does what you need
 2. Optional callback methods to get the status of the thread by means of `QtCore.QSignal`s
 
-On [initialisation](https://github.com/paskino/qt-elements/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L32-L38) of the `Worker` the user needs to pass the function that has to run in the thread, i.e. `fn` below, and additional optional positional and keyword arguments, which will be passed on to the actual function that is run in the `QRunnable`.
+On [initialisation](https://github.com/TomographicImaging/eqt/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L32-L38) of the `Worker` the user needs to pass the function that has to run in the thread, i.e. `fn` below, and additional optional positional and keyword arguments, which will be passed on to the actual function that is run in the `QRunnable`.
 
 ```python
 class Worker(QtCore.QRunnable):
@@ -46,13 +46,13 @@ class Worker(QtCore.QRunnable):
         self.signals = WorkerSignals()
 ```
 
-In practice the user will need to pass to the `Worker` as many parameters as there are listed in the [function](https://github.com/paskino/qt-elements/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L56) to be run.
+In practice the user will need to pass to the `Worker` as many parameters as there are listed in the [function](https://github.com/TomographicImaging/eqt/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L56) to be run.
 
 ```python
 result = self.fn(*self.args, **self.kwargs)
 ```
 
-But `Worker` will [add](https://github.com/paskino/qt-elements/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L41-L43) to the `**kwargs` the following `QSignal`.
+But `Worker` will [add](https://github.com/TomographicImaging/eqt/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L41-L43) to the `**kwargs` the following `QSignal`.
 
 ```python
         # Add progress callback to kwargs
@@ -87,7 +87,7 @@ worker.signals.progress.connect(handle_progress)
 So, each time `fn` comes to `progress_callback.emit( i )` the function `handle_progress` will be called with the parameter `i` of its `for` loop.
 
 #### What are the available signals?
-The signals that are available in the `Worker` class are defined in [`WorkerSignal`](https://github.com/paskino/qt-elements/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L66) and are the following. Below you can also see the type of data that each signal can emit.
+The signals that are available in the `Worker` class are defined in [`WorkerSignal`](https://github.com/TomographicImaging/eqt/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L66) and are the following. Below you can also see the type of data that each signal can emit.
 ```python
     finished = QtCore.Signal()
     error = QtCore.Signal(tuple)

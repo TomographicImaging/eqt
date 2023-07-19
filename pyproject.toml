@@ -10,9 +10,9 @@ write_to_template = "__version__ = '{version}'\n"
 exclude = ["test"]
 
 [project.urls]
-documentation = "https://github.com/paskino/qt-elements#readme"
-repository = "https://github.com/paskino/qt-elements"
-changelog = "https://github.com/paskino/qt-elements/releases"
+documentation = "https://github.com/TomographicImaging/eqt#readme"
+repository = "https://github.com/TomographicImaging/eqt"
+changelog = "https://github.com/TomographicImaging/eqt/releases"
 
 [project]
 name = "eqt"

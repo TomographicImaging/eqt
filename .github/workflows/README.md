@@ -34,7 +34,7 @@ The `<body>` will be used in the changelog (below).
 
 ### Changelog
 
-See <https://github.com/paskino/qt-elements/releases>, or offline:
+See <https://github.com/TomographicImaging/eqt/releases>, or offline:
 
 ```bash
 git config --global alias.changelog 'for-each-ref --sort=-*authordate --format="# %(contents:subject)%0a%(contents:body)" refs/tags'

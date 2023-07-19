@@ -46,7 +46,7 @@ jobs:
           cat <<EOF >> "$GITHUB_STEP_SUMMARY"
         # Missing tag annotation
         ## Fix
-        See <https://github.com/paskino/qt-elements/tree/main/.github/workflows#releasing>.
+        See <https://github.com/TomographicImaging/eqt/tree/main/.github/workflows#releasing>.
         ## Suggested body
         $changelog
         EOF
