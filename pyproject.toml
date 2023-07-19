@@ -44,6 +44,7 @@ dev = ["pytest>=6", "pytest-cov", "pytest-timeout"]
 
 [tool.flake8]
 max_line_length = 99
+extend_ignore = ["E261"]
 exclude = [".git", "__pycache__", "build", "dist", ".eggs"]
 
 [tool.yapf]
@@ -61,7 +62,6 @@ blank_line_before_nested_class_or_def = false
 [tool.isort]
 profile = "black"
 line_length = 99
-multi_line_output = 4
 known_first_party = ["eqt", "test"]
 
 [tool.pytest.ini_options]
