@@ -17,7 +17,8 @@ from . import FormDialog
 class SaveSessionDialog(FormDialog):
     def __init__(self, parent=None, title="Save Session"):
         '''
-        A dialog to save a session. Prompts the user for a name for the session, and whether to compress the files.
+        A dialog to save a session.
+        Prompts the user for a name for the session, and whether to compress the files.
 
         Parameters
         ----------
@@ -68,11 +69,8 @@ class SessionDirectorySelectionDialog(FormDialog):
 
         self.app_name = app_name
 
-        if app_name is None:
-            label_text = 'Select a session directory to save and retrieve all Sessions:'
-
-        else:
-            label_text = f'Select a session directory to save and retrieve all {app_name} Sessions:'
+        label_text = ("Select a session directory to save and retrieve all"
+                      f" {app_name or ''} Sessions:")
 
         self.addSpanningWidget(QLabel(label_text), 'select_session_directory')
 
@@ -95,7 +93,8 @@ class SessionDirectorySelectionDialog(FormDialog):
 class LoadSessionDialog(FormDialog):
     def __init__(self, parent=None, title="Load a Session", location_of_session_files="."):
         '''
-        A dialog to load a session. Prompts the user to select a session from a list of available sessions.
+        A dialog to load a session.
+        Prompts the user to select a session from a list of available sessions.
 
         Parameters
         ----------

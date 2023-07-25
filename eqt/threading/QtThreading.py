@@ -12,7 +12,7 @@ from PySide2.QtCore import Slot
 
 
 class Worker(QtCore.QRunnable):
-    """Worker: defines a QRunnable to execute a function asynchronously. It handles worker thread setup, signals and wrapup."""
+    """Executes a function asynchronously. Handles worker thread setup, signals, and wrapup."""
     def __init__(self, fn, *args, **kwargs):
         '''Worker creator
 
@@ -38,11 +38,12 @@ class Worker(QtCore.QRunnable):
     def run(self):
         """
         Run the worker. Emits signals based on run state.
-        Signals:
-            - Error: Emitted when an exception is thrown in the workers function.
-            - Result: Emitted if function completes successfully. Contains the return value of the function.
-            - Finished: Emitted on completion of the worker thread.
 
+        Signals
+        -------
+        - Error: An exception is thrown in the workers function.
+        - Result: Contains the return value of a function that has just completed successfully.
+        - Finished: Worker thread has completed.
         """
         try:
             result = self.fn(*self.args, **self.kwargs)
