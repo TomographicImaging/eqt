@@ -11,7 +11,7 @@ from ..threading import Worker
 class ProgressTimerDialog(QProgressDialog):
     def __init__(self, process_name, cancelText="Cancel", parent=None, flags=None,
                  cancel_method=None):
-        if flags is None: # TODO: check
+        if flags is None:
             flags = Qt.WindowFlags()
         labelText = f"Running {process_name}"
         QProgressDialog.__init__(self, labelText, cancelText, 0, 0, parent, flags)
