@@ -1,7 +1,9 @@
-from eqt.io import zip_directory
 import shutil
-from pytest import fixture
-from pytest import mark
+
+from pytest import fixture, mark
+
+from eqt.io import zip_directory
+
 
 @fixture
 def test_file(tmp_path):

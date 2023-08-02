@@ -1,9 +1,18 @@
-from eqt.ui.SessionDialogs import WarningDialog, ErrorDialog, SaveSessionDialog, SessionDirectorySelectionDialog, LoadSessionDialog, AppSettingsDialog
 import os
 import unittest
 from pathlib import Path
-from PySide2.QtWidgets import QFileDialog
 from unittest.mock import patch
+
+from PySide2.QtWidgets import QFileDialog
+
+from eqt.ui.SessionDialogs import (
+    AppSettingsDialog,
+    ErrorDialog,
+    LoadSessionDialog,
+    SaveSessionDialog,
+    SessionDirectorySelectionDialog,
+    WarningDialog,
+)
 
 from . import skip_ci
 
@@ -19,8 +28,7 @@ class TestWarningDialog(unittest.TestCase):
         window_title = "Test Warning Dialog Title"
         detailed_text = "This is a test detailed text"
 
-        wd = WarningDialog(
-            message=message, window_title=window_title, detailed_text=detailed_text)
+        wd = WarningDialog(message=message, window_title=window_title, detailed_text=detailed_text)
         self.assertEqual(wd.detailedText(), detailed_text)
         self.assertEqual(wd.text(), message)
         self.assertEqual(wd.windowTitle(), window_title)
@@ -37,8 +45,7 @@ class TestErrorDialog(unittest.TestCase):
         window_title = "Test Error Dialog Title"
         detailed_text = "This is a test detailed text"
 
-        ed = ErrorDialog(
-            message=message, window_title=window_title, detailed_text=detailed_text)
+        ed = ErrorDialog(message=message, window_title=window_title, detailed_text=detailed_text)
         self.assertEqual(ed.detailedText(), detailed_text)
         self.assertEqual(ed.text(), message)
         self.assertEqual(ed.windowTitle(), window_title)
@@ -65,14 +72,16 @@ class TestSessionDirectorySelectionDialog(unittest.TestCase):
     def test_select_session_directory_label_when_app_name_not_set(self):
         sdsd = SessionDirectorySelectionDialog()
 
-        self.assertEqual(sdsd.getWidget("select_session_directory").text(
-        ), "Select a session directory to save and retrieve all Sessions:")
+        self.assertEqual(
+            sdsd.getWidget("select_session_directory").text(),
+            "Select a session directory to save and retrieve all Sessions:")
 
     def test_select_session_directory_label_when_app_name_set(self):
         sdsd = SessionDirectorySelectionDialog(app_name="Test App")
 
-        self.assertEqual(sdsd.getWidget("select_session_directory").text(
-        ), "Select a session directory to save and retrieve all Test App Sessions:")
+        self.assertEqual(
+            sdsd.getWidget("select_session_directory").text(),
+            "Select a session directory to save and retrieve all Test App Sessions:")
 
     @patch("PySide2.QtWidgets.QFileDialog.getExistingDirectory")
     def test_browse_for_dir_button_makes_file_dialog_for_getting_dir(self, mock_dialog_call):
@@ -94,8 +103,8 @@ class TestSessionDirectorySelectionDialog(unittest.TestCase):
         QFileDialog.getExistingDirectory = unittest.mock.Mock()
         QFileDialog.getExistingDirectory.return_value = example_dir
         sdsd.browse_for_dir()
-        self.assertEqual(sdsd.getWidget(
-            "selected_dir", "label").text(), os.path.basename(example_dir))
+        self.assertEqual(
+            sdsd.getWidget("selected_dir", "label").text(), os.path.basename(example_dir))
 
     def test_browse_dialog_updates_selected_dir_attribute(self):
         example_dir = "C:\\Users\\test_user\\Documents\\test_dir"
@@ -120,8 +129,9 @@ class TestLoadSessionDialog(unittest.TestCase):
     def test_init_with_location_of_session_files_param(self):
         location_of_session_files = Path("~").expanduser() / "some" / "test_dir"
         lsd = LoadSessionDialog(location_of_session_files=location_of_session_files)
-        self.assertEqual(lsd.getWidget("sessions_directory").text(
-        ), f"Currently loading sessions from: {location_of_session_files}")
+        self.assertEqual(
+            lsd.getWidget("sessions_directory").text(),
+            f"Currently loading sessions from: {location_of_session_files}")
 
 
 @skip_ci

@@ -1,12 +1,14 @@
-from eqt.ui.ReOrderableListWidget import ReOrderableListWidget
-from PySide2 import QtWidgets
 import sys
+
 import qdarkstyle
+from PySide2 import QtWidgets
 from qdarkstyle.dark.palette import DarkPalette
 
-class MainUI(QtWidgets.QMainWindow):
+from eqt.ui.ReOrderableListWidget import ReOrderableListWidget
 
-    def __init__(self, parent = None, title=None):
+
+class MainUI(QtWidgets.QMainWindow):
+    def __init__(self, parent=None, title=None):
         QtWidgets.QMainWindow.__init__(self, parent)
 
         self.setWindowTitle(title)

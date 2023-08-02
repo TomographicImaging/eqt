@@ -1,2 +1,3 @@
-from .QtThreading import Worker
-from .QtThreading import WorkerSignals
+from .QtThreading import Worker, WorkerSignals
+
+__all__ = ['Worker', 'WorkerSignals']

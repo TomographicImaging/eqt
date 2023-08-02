@@ -1,26 +1,29 @@
 import os
 
+from PySide2 import QtWidgets
 from pytest import skip
 
-from eqt.ui import UIFormFactory, FormDialog
-from PySide2 import QtWidgets
+from eqt.ui import FormDialog
 
 if any(os.getenv(var, '0').lower() in ('1', 'true') for var in ('CONDA_BUILD', 'CI')):
+
     def skip_ci(_):
         def inner(*_, **__):
             skip("Running in CI (no GUI)")
+
         return inner
 else:
+
     def skip_ci(fn):
         return fn
 
+
 @skip_ci
 def test_import():
-    from dialog_example_2_test import MainUI, DialogTest
+    from dialog_example_2_test import DialogTest, MainUI # NOQA:F401 isort:skip
 
 
 class MainUI(QtWidgets.QMainWindow):
-
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
 
