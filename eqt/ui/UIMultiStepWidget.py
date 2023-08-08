@@ -92,7 +92,7 @@ class UIMultiStepWidget(object):
             self.addStepWidget(qwidget, name)
 
     def showHideWidgets(self, widgets, show=True):
-        if type(widgets) != list:
+        if not isinstance(widgets, (list, tuple)):
             widgets = [widgets]
         for widget in widgets:
             widget.setVisible(show)
