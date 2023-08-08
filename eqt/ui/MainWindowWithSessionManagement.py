@@ -499,7 +499,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         self.createUnknownProgressWindow(process_name, "Saving", "Saving Session")
 
         saveSession_worker = Worker(self.saveSession, session_name, compress)
-        if type(event) == QCloseEvent:
+        if isinstance(event, QCloseEvent):
             saveSession_worker.signals.finished.connect(
                 lambda: self.removeTempAndClose(process_name))
         else:
