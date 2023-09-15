@@ -1,6 +1,6 @@
 # eqt: Qt Elements
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/TomographicImaging/eqt/test.yml?branch=main&label=Tests&logo=GitHub)](https://github.com/casperdcl/cdcl/actions)
+[![Tests](https://img.shields.io/github/actions/workflow/status/TomographicImaging/eqt/test.yml?branch=main&label=Tests&logo=GitHub)](https://github.com/TomographicImaging/eqt/actions?query=branch%3Amain) [![PyPI](https://img.shields.io/pypi/v/eqt.svg?logo=pypi&logoColor=white)](https://pypi.org/project/eqt) [![Conda](https://img.shields.io/conda/v/conda-forge/eqt.svg?label=conda-forge&logo=conda-forge)](https://anaconda.org/conda-forge/eqt)
 
 A number of templates and tools to develop Qt GUI's with Python effectively.
 
@@ -17,13 +17,11 @@ This little package tries to address both recurring requirements.
 
 ## Installation
 
-You may install via `pip` or `conda`
+Via `pip`/`conda`/`mamba`, i.e. any of the following:
 
-```bash
-python -m pip install eqt
-# or
-conda install eqt -c paskino
-```
+- `python -m pip install eqt`
+- `conda install -c conda-forge eqt`
+- `mamba install -c conda-forge eqt`
 
 ## Examples
 
