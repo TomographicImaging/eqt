@@ -1,33 +1,26 @@
 # eqt: Qt Elements
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/TomographicImaging/eqt/test.yml?branch=main&label=Tests&logo=GitHub)](https://github.com/casperdcl/cdcl/actions)
+[![Tests](https://img.shields.io/github/actions/workflow/status/TomographicImaging/eqt/test.yml?branch=main&label=Tests&logo=GitHub)](https://github.com/TomographicImaging/eqt/actions?query=branch%3Amain) [![PyPI](https://img.shields.io/pypi/v/eqt.svg?logo=pypi&logoColor=white)](https://pypi.org/project/eqt) [![Conda](https://img.shields.io/conda/v/conda-forge/eqt.svg?label=conda-forge&logo=conda-forge)](https://anaconda.org/conda-forge/eqt)
 
-A number of templates and tools to develop Qt GUI's with Python effectively.
+Templates & tools to develop Qt GUIs in Python.
 
-Developing GUIs I often find myself creating forms to pass some input and also
-running some task asynchronously so that the interface is still responsive.
+One use case is accepting user input while running another task asynchronously (so that the UI is still responsive).
 
-This little package tries to address both recurring requirements.
-
-1. `UIFormWidget`, a class to help creating Qt forms
-   programmatically, useable in `QDockWidgets` and `QWidget`
-2. `FormDialog`, a `QDialog` with a form inside with OK and Cancel button
-3. `Worker`, a class that defines a `QRunnable` to
-   handle worker thread setup, signals and wrap up
+1. `UIFormWidget`: a class to help creating Qt forms programmatically, useable in `QDockWidgets` and `QWidget`
+2. `FormDialog`: a `QDialog` with a form inside with <kbd>OK</kbd> and <kbd>Cancel</kbd> buttons
+3. `Worker`: a class that defines a `QRunnable` to handle worker thread setup, signals and wrap up
 
 ## Installation
 
-You may install via `pip` or `conda`
+Via `pip`/`conda`/`mamba`, i.e. any of the following:
 
-```bash
-python -m pip install eqt
-# or
-conda install eqt -c paskino
-```
+- `python -m pip install eqt`
+- `conda install -c conda-forge eqt`
+- `mamba install -c conda-forge eqt`
 
 ## Examples
 
-In the `example` directory there is an example on how to launch a `QDialog` with a form inside using `eqt`'s [`QWidget`](examples/dialog_example.py) or [`FormDialog`](examples/dialog_example_2.py).
+See the [`examples`](examples) directory, e.g. how to launch a `QDialog` with a form inside using `eqt`'s [`QWidget`](examples/dialog_example.py) or [`FormDialog`](examples/dialog_example_2.py).
 
 ### Running asynchronous tasks
 
@@ -104,4 +97,4 @@ message = QtCore.Signal(str)
 status = QtCore.Signal(tuple)
 ```
 
-Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html) and on how to use them in [pyside2](https://wiki.qt.io/Qt_for_Python_Signals_and_Slots).
+Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html) and on how to use them in [PySide2](https://wiki.qt.io/Qt_for_Python_Signals_and_Slots).
