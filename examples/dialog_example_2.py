@@ -24,7 +24,7 @@ class MainUI(QtWidgets.QMainWindow):
         
         dialog = FormDialog(parent=self, title='Example')
         dialog.Ok.clicked.connect(lambda: self.accepted())
-        dialog.Cancel.clicked.connect(lambda: self.rejected())
+        
         
         ### Example on how to add elements to the 
         # add input 1 as QLineEdit
@@ -53,18 +53,18 @@ class MainUI(QtWidgets.QMainWindow):
 
         # store a reference
         self.dialog = dialog
-        
+        self.dialog.onCancel = self.rejected
         dialog.exec()
         
     def accepted(self):
         print ("accepted")
         print (self.dialog.widgets['input1_field'].text())
         print (self.dialog.widgets['input2_field'].currentText())
-        
         self.dialog.close()
+
     def rejected(self):
-        print ("rejected")
-        self.dialog.close()
+        print ("I am user defined")
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
