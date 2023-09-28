@@ -35,10 +35,12 @@ class FormDialog(QtWidgets.QDialog):
         return self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel)
 
     def _onCancel(self):
+        '''calls onCancel and closes the FormDialog'''
         self.onCancel()
         self.close()
 
     def onCancel(self):
+        '''can be redifined by the user'''
         pass
 
     @property
