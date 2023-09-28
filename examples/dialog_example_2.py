@@ -63,7 +63,7 @@ class MainUI(QtWidgets.QMainWindow):
         self.dialog.close()
 
     def rejected(self):
-        print ("I am user defined")
+        print ("rejected")
 
 
 if __name__ == "__main__":

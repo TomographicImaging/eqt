@@ -35,7 +35,6 @@ class FormDialog(QtWidgets.QDialog):
         return self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel)
 
     def _onCancel(self):
-        print ("I am onCancel")
         self.onCancel()
         self.close()
 
