@@ -41,7 +41,8 @@ class FormDialog(QtWidgets.QDialog):
         self.close()
 
     def onCancel(self):
-        '''can be redifined by the user'''
+        '''Called when the dialog's "Cancel" button is clicked.
+          Can be redefined to add additional functionality on "Cancel"'''
         pass
 
     @property
