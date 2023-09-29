@@ -25,8 +25,8 @@ class MainUI(QtWidgets.QMainWindow):
     def openFormDialog(self):
         dialog = FormDialog(parent=self, title='Example')
         dialog.Ok.clicked.connect(lambda: self.accepted())
-        
-        ### Example on how to add elements to the 
+
+        ### Example on how to add elements to the
         # add input 1 as QLineEdit
         qlabel = QtWidgets.QLabel(dialog.groupBox)
         qlabel.setText("Input 1: ")
@@ -57,13 +57,13 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.exec()
 
     def accepted(self):
-        print ("accepted")
-        print (self.dialog.widgets['input1_field'].text())
-        print (self.dialog.widgets['input2_field'].currentText())
+        print("accepted")
+        print(self.dialog.widgets['input1_field'].text())
+        print(self.dialog.widgets['input2_field'].currentText())
         self.dialog.close()
 
     def rejected(self):
-        print ("rejected")
+        print("rejected")
 
 
 if __name__ == "__main__":
