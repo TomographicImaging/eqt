@@ -2,7 +2,7 @@ import os
 import zipfile
 
 
-def zip_directory(directory: str, compress: bool=True):
+def zip_directory(directory: str, compress: bool = True):
     """
     Zips a directory, optionally compressing it.
 

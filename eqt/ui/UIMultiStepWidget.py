@@ -1,6 +1,6 @@
 from PySide2 import QtWidgets
-from PySide2.QtWidgets import (QPushButton, QFrame, QHBoxLayout, QGroupBox)
 from PySide2.QtCore import Qt
+from PySide2.QtWidgets import QGroupBox, QHBoxLayout, QPushButton
 
 
 class UIMultiStepWidget(object):
@@ -18,7 +18,6 @@ class UIMultiStepWidget(object):
     |      | Previous Step |             | Next Step   |       |
     +----------------------------------------------------------+
     '''
-
     def createWidget(self):
         # Add vertical layout to dock contents
         verticalLayout = QtWidgets.QVBoxLayout(self)
@@ -30,7 +29,7 @@ class UIMultiStepWidget(object):
 
         # Add the next and previous buttons:
         horizontalGroupBox = QGroupBox()
-        horizontalGroupBox.setContentsMargins(0,0,0,0)
+        horizontalGroupBox.setContentsMargins(0, 0, 0, 0)
         horizontalLayout = QHBoxLayout()
         horizontalGroupBox.setLayout(horizontalLayout)
         horizontalGroupBox.setFlat(True)
@@ -48,10 +47,7 @@ class UIMultiStepWidget(object):
 
         self.current_step = -1
 
-        self.uiElements = {
-            'verticalLayout': verticalLayout,
-            'buttonGroupBox': horizontalGroupBox,
-            }
+        self.uiElements = {'verticalLayout': verticalLayout, 'buttonGroupBox': horizontalGroupBox}
         self.widgets = {}
 
     def updateStep(self, go_to="next"):
@@ -62,11 +58,11 @@ class UIMultiStepWidget(object):
         if go_to == 'next':
             self.prev_button.setEnabled(True)
             next_index = current_step_index + 1
-            if next_index == len(steps)-1:
+            if next_index == len(steps) - 1:
                 self.next_button.setEnabled(False)
             else:
                 self.next_button.setEnabled(True)
-            
+
         if go_to == 'prev':
             self.next_button.setEnabled(True)
             next_index = current_step_index - 1
@@ -96,7 +92,7 @@ class UIMultiStepWidget(object):
             self.addStepWidget(qwidget, name)
 
     def showHideWidgets(self, widgets, show=True):
-        if type(widgets) != list:
+        if not isinstance(widgets, (list, tuple)):
             widgets = [widgets]
         for widget in widgets:
             widget.setVisible(show)
@@ -131,7 +127,7 @@ class UIMultiStepFactory(QtWidgets.QWidget):
     buttons at the bottom of the layout.
 
     you can add a widget to the vertical layout, using addStepWidget.
-    The first step added will be shown to begin with, and the other steps 
+    The first step added will be shown to begin with, and the other steps
     can be navigated between, using the next and previous buttons.
 
     The returned dockWidget must be added with

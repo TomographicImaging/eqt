@@ -1,16 +1,18 @@
-from PySide2 import QtCore, QtWidgets
-import glob, sys, os
+import sys
+
+from PySide2 import QtWidgets
+
 from eqt.ui import UIFormFactory
 
-class MainUI(QtWidgets.QMainWindow):
 
-    def __init__(self, parent = None):
+class MainUI(QtWidgets.QMainWindow):
+    def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
-        
+
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Dialog with form layout")
         pb.clicked.connect(lambda: self.openFormDialog())
-        
+
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
         widg = QtWidgets.QWidget()
@@ -19,12 +21,12 @@ class MainUI(QtWidgets.QMainWindow):
         self.setCentralWidget(widg)
 
         self.show()
-    
+
     def openFormDialog(self):
-        
+
         dialog = QtWidgets.QDialog(parent=self)
         bb = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok
-                                     | QtWidgets.QDialogButtonBox.Cancel)
+                                        | QtWidgets.QDialogButtonBox.Cancel)
 
         bb.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(lambda: self.accepted())
         bb.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(lambda: self.rejected())
@@ -32,8 +34,8 @@ class MainUI(QtWidgets.QMainWindow):
 
         # create a form layout widget
         fw = UIFormFactory.getQWidget(parent=self)
-        
-        ### Example on how to add elements to the form
+
+        # ## Example on how to add elements to the form
 
         # add title
         qlabel = QtWidgets.QLabel(fw.groupBox)
@@ -72,22 +74,24 @@ class MainUI(QtWidgets.QMainWindow):
         # store a reference
         self.fw = fw
         self.dialog = dialog
-        
+
         dialog.exec()
-        
+
     def accepted(self):
-        print ("accepted")
-        print (self.fw.widgets['input1_field'].text())
-        print (self.fw.widgets['input2_field'].currentText())
-        
+        print("accepted")
+        print(self.fw.widgets['input1_field'].text())
+        print(self.fw.widgets['input2_field'].currentText())
+
         self.dialog.close()
+
     def rejected(self):
-        print ("rejected")
+        print("rejected")
         self.dialog.close()
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    
+
     window = MainUI()
-    
+
     sys.exit(app.exec_())

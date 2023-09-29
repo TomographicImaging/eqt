@@ -5,13 +5,13 @@ from PySide2.QtWidgets import QAction, QMainWindow
 from qdarkstyle.dark.palette import DarkPalette
 from qdarkstyle.light.palette import LightPalette
 
-from eqt.ui.ProgressTimerDialog import ProgressTimerDialog
-from eqt.ui.SessionDialogs import (AppSettingsDialog)
+from .ProgressTimerDialog import ProgressTimerDialog
+from .SessionDialogs import AppSettingsDialog
 
 
 class MainWindowWithProgressDialogs(QMainWindow):
     '''
-    A base class for a main window, with a menu bar, and ability to 
+    A base class for a main window, with a menu bar, and ability to
     create ProgressTimerDialogs.
     In a derived class's __init__ method, the __init__ method of this class
     should be called first, before any other initialisation.
@@ -25,9 +25,7 @@ class MainWindowWithProgressDialogs(QMainWindow):
         This is a dictionary of ProgressTimerDialog objects, where the key is
         the name of the progress window.
     '''
-
-    def __init__(self, title, app_name, settings_name=None,
-                 organisation_name=None, **kwargs):
+    def __init__(self, title, app_name, settings_name=None, organisation_name=None, **kwargs):
 
         super(MainWindowWithProgressDialogs, self).__init__(**kwargs)
 
@@ -47,10 +45,10 @@ class MainWindowWithProgressDialogs(QMainWindow):
         self.createMenu()
 
         self._progress_windows = {}
-  
+
     @property
     def progress_windows(self):
-        return self._progress_windows 
+        return self._progress_windows
 
     # Create the menu ----------------------------------------------------------
 
@@ -91,10 +89,7 @@ class MainWindowWithProgressDialogs(QMainWindow):
         app_settings_action.triggered.connect(self.createAppSettingsDialog)
         settings_menu.addAction(app_settings_action)
 
-        menus = {
-            "File": file_menu,
-            "Settings": settings_menu
-        }
+        menus = {"File": file_menu, "Settings": settings_menu}
 
         self.menu_bar = menu_bar
         self.menus = menus
@@ -115,8 +110,7 @@ class MainWindowWithProgressDialogs(QMainWindow):
         '''Create a dialog to change the application settings, such as the light/dark theme'''
         dialog = AppSettingsDialog(self)
         self.setAppSettingsDialogWidgets(dialog)
-        dialog.Ok.clicked.connect(
-            lambda: self.onAppSettingsDialogAccepted(dialog))
+        dialog.Ok.clicked.connect(lambda: self.onAppSettingsDialogAccepted(dialog))
         dialog.Cancel.clicked.connect(dialog.close)
         dialog.open()
 
@@ -174,9 +168,3 @@ class MainWindowWithProgressDialogs(QMainWindow):
         '''
         self.process_finished = True
         self.progress_windows[process_name].close()
-
-
-
-
- 
-

@@ -1,16 +1,18 @@
-from PySide2 import QtCore, QtWidgets
-import glob, sys, os
-from eqt.ui import UIFormFactory, FormDialog
+import sys
+
+from PySide2 import QtWidgets
+
+from eqt.ui import FormDialog
+
 
 class MainUI(QtWidgets.QMainWindow):
-
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
-        
+
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Dialog with form layout")
         pb.clicked.connect(lambda: self.openFormDialog())
-        
+
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
         widg = QtWidgets.QWidget()
@@ -19,9 +21,8 @@ class MainUI(QtWidgets.QMainWindow):
         self.setCentralWidget(widg)
 
         self.show()
-    
+
     def openFormDialog(self):
-        
         dialog = FormDialog(parent=self, title='Example')
         dialog.Ok.clicked.connect(lambda: self.accepted())
         
@@ -54,7 +55,7 @@ class MainUI(QtWidgets.QMainWindow):
         self.dialog = dialog
         self.dialog.onCancel = self.rejected
         dialog.exec()
-        
+
     def accepted(self):
         print ("accepted")
         print (self.dialog.widgets['input1_field'].text())
@@ -67,7 +68,7 @@ class MainUI(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    
+
     window = MainUI()
-    
+
     sys.exit(app.exec_())

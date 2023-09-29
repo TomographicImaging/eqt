@@ -1,33 +1,29 @@
-## Qt Elements eqt
+# eqt: Qt Elements
 
-A number of templates and tools to develop Qt GUI's with Python effectively.
+[![Tests](https://img.shields.io/github/actions/workflow/status/TomographicImaging/eqt/test.yml?branch=main&label=Tests&logo=GitHub)](https://github.com/TomographicImaging/eqt/actions?query=branch%3Amain) [![PyPI](https://img.shields.io/pypi/v/eqt.svg?logo=pypi&logoColor=white)](https://pypi.org/project/eqt) [![Conda](https://img.shields.io/conda/v/conda-forge/eqt.svg?label=conda-forge&logo=conda-forge)](https://anaconda.org/conda-forge/eqt)
 
-Developing GUIs I often find myself creating forms to pass some input and also
-running some task asynchronously so that the interface is still responsive.
+Templates & tools to develop Qt GUIs in Python.
 
-This little package tries to address both recurring requirements.
+One use case is accepting user input while running another task asynchronously (so that the UI is still responsive).
 
+1. `UIFormWidget`: a class to help creating Qt forms programmatically, useable in `QDockWidgets` and `QWidget`
+2. `FormDialog`: a `QDialog` with a form inside with <kbd>OK</kbd> and <kbd>Cancel</kbd> buttons
+3. `Worker`: a class that defines a `QRunnable` to handle worker thread setup, signals and wrap up
 
-1. `UIFormWidget`, a class to help creating Qt forms
-  programmatically, useable in `QDockWidgets` and `QWidget`
-1. `FormDialog`, a `QDialog` with a form inside with OK and Cancel button
-1. `Worker`, a class that defines a `QRunnable` to
-   handle worker thread setup, signals and wrap up
+## Installation
 
-### Installation
+Via `pip`/`conda`/`mamba`, i.e. any of the following:
 
-You may install via `pip` or `conda`
+- `python -m pip install eqt`
+- `conda install -c conda-forge eqt`
+- `mamba install -c conda-forge eqt`
 
-```bash
-python -m pip install eqt
-# or
-conda install eqt -c paskino
-```
+## Examples
 
-### Example
-In the `example` directory there is an example on how to launch a `QDialog` with a form inside using `eqt`'s [`QWidget`](https://github.com/TomographicImaging/eqt/blob/main/examples/dialog_example.py) or [`FormDialog`](https://github.com/TomographicImaging/eqt/blob/main/examples/dialog_example_2.py).
+See the [`examples`](examples) directory, e.g. how to launch a `QDialog` with a form inside using `eqt`'s [`QWidget`](examples/dialog_example.py) or [`FormDialog`](examples/dialog_example_2.py).
 
 ### Running asynchronous tasks
+
 To run a function in a separate thread we use a `Worker` which is a subclass of a `QRunnable`.
 
 For the `Worker` to work one needs to define:
@@ -72,7 +68,8 @@ def fn(num_iter, **kwargs):
             progress_callback.emit( i )
 ```
 
-#### But how are the signal passed to the Worker anyway?
+### Passing a signal to a Worker
+
 This is done just after one has defined the `Worker`:
 
 ```python
@@ -86,16 +83,18 @@ worker.signals.progress.connect(handle_progress)
 
 So, each time `fn` comes to `progress_callback.emit( i )` the function `handle_progress` will be called with the parameter `i` of its `for` loop.
 
-#### What are the available signals?
-The signals that are available in the `Worker` class are defined in [`WorkerSignal`](https://github.com/TomographicImaging/eqt/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L66) and are the following. Below you can also see the type of data that each signal can emit.
-```python
-    finished = QtCore.Signal()
-    error = QtCore.Signal(tuple)
-    result = QtCore.Signal(object)
+### Signals available
 
-    progress = QtCore.Signal(int)
-    message = QtCore.Signal(str)
-    status = QtCore.Signal(tuple)
+The signals that are available in the `Worker` class are defined in [`WorkerSignal`](https://github.com/TomographicImaging/eqt/blob/535e487d09d928713d7d6aa1123657597627c4b0/eqt/threading/QtThreading.py#L66) and are the following. Below you can also see the type of data that each signal can emit.
+
+```python
+finished = QtCore.Signal()
+error = QtCore.Signal(tuple)
+result = QtCore.Signal(object)
+
+progress = QtCore.Signal(int)
+message = QtCore.Signal(str)
+status = QtCore.Signal(tuple)
 ```
 
-Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html) and on how to use them in [pyside2](https://wiki.qt.io/Qt_for_Python_Signals_and_Slots).
+Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html) and on how to use them in [PySide2](https://wiki.qt.io/Qt_for_Python_Signals_and_Slots).

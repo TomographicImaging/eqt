@@ -3,19 +3,22 @@ import os
 import shutil
 from datetime import datetime
 from functools import partial
+
 from PySide2.QtGui import QCloseEvent, QKeySequence
 from PySide2.QtWidgets import QAction
 
-from eqt.io import zip_directory
-from eqt.threading import Worker
-from eqt.ui.MainWindowWithProgressDialogs import MainWindowWithProgressDialogs
-from eqt.ui.SessionDialogs import (ErrorDialog, LoadSessionDialog,
-                                   SaveSessionDialog,
-                                   SessionDirectorySelectionDialog)
+from ..io import zip_directory
+from ..threading import Worker
+from .MainWindowWithProgressDialogs import MainWindowWithProgressDialogs
+from .SessionDialogs import (
+    ErrorDialog,
+    LoadSessionDialog,
+    SaveSessionDialog,
+    SessionDirectorySelectionDialog,
+)
 
 
 class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
-
     '''
     A base class for a main window that can save and load sessions.
 
@@ -46,34 +49,30 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         So self.sessions_directory will be:
         <user selected directory>/<self.sessions_directory_name>
     '''
+    def __init__(self, title, app_name, settings_name=None, organisation_name=None, **kwargs):
 
-    def __init__(self, title, app_name, settings_name=None,
-                 organisation_name=None, **kwargs):
-
-        super(MainWindowWithSessionManagement, self).__init__(title, app_name, settings_name, organisation_name, **kwargs)
+        super(MainWindowWithSessionManagement, self).__init__(title, app_name, settings_name,
+                                                              organisation_name, **kwargs)
 
         self._setupMainWindowWithSessionManagement()
 
-
     def _setupMainWindowWithSessionManagement(self):
         '''Setup the session main window.
-        
+
         This is called by the __init__ method, and should not be called by the
         user.
-        '''               
+        '''
 
         # This is the name of the directory where the session folders are saved
         # This will be within a directory that is picked by the user
         # i.e. the location of the session folders will be:
         # <user selected directory>/<self.sessions_directory_name>
-        self.sessions_directory_name = self.app_name.replace(
-            " ", "-") + "-Sessions"
+        self.sessions_directory_name = self.app_name.replace(" ", "-") + "-Sessions"
         self.sessions_directory = None
 
         self.setupSession()
 
         self.should_really_close = False
-
 
     # Create the menu ----------------------------------------------------------
 
@@ -111,8 +110,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         file_menu = menu_bar.addMenu("File")
 
         save_action = QAction("Save", self)
-        save_action.triggered.connect(
-            partial(self.createSaveWindow, event="SaveEvent"))
+        save_action.triggered.connect(partial(self.createSaveWindow, event="SaveEvent"))
         file_menu.addAction(save_action)
 
         save_exit_action = QAction("Save + Exit", self)
@@ -135,10 +133,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
             lambda: self.createSessionsDirectorySelectionDialog(new_session=False))
         settings_menu.addAction(session_folder_action)
 
-        menus = {
-            "File": file_menu,
-            "Settings": settings_menu
-        }
+        menus = {"File": file_menu, "Settings": settings_menu}
 
         self.menu_bar = menu_bar
         self.menus = menus
@@ -149,19 +144,21 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         '''
         Loads the appropriate dialogs to allow users to make selections about loading sessions:
 
-        If this is the first time they open the application, they will be asked to select a directory
-        to store the sessions in. This directory will be stored in the settings, and will be used
-        as the default directory for future sessions. Then, if any sessions exist already in that directory,
-        they will be asked if they want to load one of those sessions, if not, a new session will be created.
+        If this is the first time they open the application, they will be asked to select
+        a directory to store the sessions in. This directory will be stored in the settings,
+        and will be used as the default directory for future sessions.
+        Then, if any sessions exist already in that directory, they will be asked if they want
+        to load one of those sessions, if not, a new session will be created.
 
-        If this is not the first time they open the application, they will be asked to select a session
-        to load, if any sessions are present in the directory saved in the settings. If they select a session,
-        it will be loaded. If they select "New Session", a new session will be created.
+        If this is not the first time they open the application, they will be asked to select
+        a session to load, if any sessions are present in the directory saved in the settings.
+        If they select a session, it will be loaded. If they select "New Session",
+        a new session will be created.
         '''
 
         if self.settings.value('sessions_folder') is None:
-            # get user to select directory, then within that directory we create a folder called session_folder_name,
-            # which will then contain all of the session folders.
+            # get user to select directory, then within that directory we create a folder called
+            # session_folder_name, which will then contain all of the session folders.
             self.createSessionsDirectorySelectionDialog(new_session=True)
         else:
             session_folder_name = self.settings.value('sessions_folder')
@@ -185,23 +182,20 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
                     array = _file.split("_")
                     if (len(array) > 1):
                         date = _file.split("_")[-1]
-                        name = _file.replace(
-                            "_" + date, "") + " " + date.strip(".zip")
+                        name = _file.replace("_" + date, "") + " " + date.strip(".zip")
                         zip_folders.append(name)
 
         if len(zip_folders) == 0:
             self.loadSessionNew()
         else:
-            self.SessionSelectionWindow = self.createLoadSessionDialog(
-                zip_folders)
+            self.SessionSelectionWindow = self.createLoadSessionDialog(zip_folders)
 
     def createLoadSessionDialog(self, zip_folders):
         '''
         Create a LoadSessionDialog, populated with the names of the sessions
         saved in the current working directory.
         '''
-        dialog = LoadSessionDialog(
-            parent=self, location_of_session_files=self.sessions_directory)
+        dialog = LoadSessionDialog(parent=self, location_of_session_files=self.sessions_directory)
         dialog.widgets['select_session_field'].addItems(zip_folders)
         dialog.Ok.clicked.connect(self.loadSessionLoad)
         dialog.Select.clicked.connect(
@@ -213,9 +207,10 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
 
     def selectLoadSessionsDirectorySelectedInSessionSelector(self, load_session_dialog):
         '''
-        When the user selects the "Select Directory for Loading Sessions" button in the LoadSessionDialog, this method
-        will be called. It will close the LoadSessionDialog, and open a SessionDirectorySelectionDialog
-        to allow the user to select a directory in which the list of sessions will be loaded from.
+        Called when the user selects the "Select Directory for Loading Sessions" button
+        in the LoadSessionDialog. It will close the LoadSessionDialog and
+        open a SessionDirectorySelectionDialog to allow the user to
+        select a directory in which the list of sessions will be loaded from.
         '''
         load_session_dialog.close()
         self.createSessionsDirectorySelectionDialog(new_session=True)
@@ -238,12 +233,15 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         if new_session:
             # Move on to creating directory and loading session names
             session_folder_selection_dialog.Ok.clicked.connect(
-                lambda: self.onSessionDirectorySelectionDialogOkNewSession(session_folder_selection_dialog))
+                lambda: self.onSessionDirectorySelectionDialogOkNewSession(
+                    session_folder_selection_dialog))
         else:
-            # Splitting the path and the folder name, means that we only display the folder name that the user has selected
+            # Splitting the path and the folder name,
+            # means that we only display the folder name that the user has selected
             # and not the full path including the self.sessions_directory_name:
             session_folder_selection_dialog.Ok.clicked.connect(
-                lambda: self.onSessionDirectorySelectionDialogOkInSession(session_folder_selection_dialog))
+                lambda: self.onSessionDirectorySelectionDialogOkInSession(
+                    session_folder_selection_dialog))
             session_folder_selection_dialog.Cancel.setEnabled(True)
             session_folder_selection_dialog.Cancel.clicked.connect(
                 session_folder_selection_dialog.close)
@@ -260,7 +258,8 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
 
     def onSessionDirectorySelectionDialogOkNewSession(self, session_folder_selection_dialog):
         '''
-        Runs if the user selects Ok on the SessionDirectorySelectionDialog when creating a new session
+        Runs if the user selects Ok on the `SessionDirectorySelectionDialog`
+        when creating a new session
         '''
         if session_folder_selection_dialog.selected_dir is not None:
             self.createSessionsDirectoryAndMakeSessionSelector(
@@ -272,8 +271,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         Runs if the user selects Ok on the SessionDirectorySelectionDialog when in a session
         '''
         if session_folder_selection_dialog.selected_dir is not None:
-            self.createSessionsDirectory(
-                session_folder_selection_dialog.selected_dir)
+            self.createSessionsDirectory(session_folder_selection_dialog.selected_dir)
         session_folder_selection_dialog.close()
 
     def createSessionsDirectoryAndMakeSessionSelector(self, user_chosen_directory):
@@ -285,16 +283,18 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
 
     def createSessionsDirectory(self, user_selected_directory):
         '''
-        If the directory selected by the user does not exist, create it, and then create a folder
-        called sessions_directory_name within it.
-        Move into the sessions_directory_name folder, and store the path to that folder in the settings.
+        If the directory selected by the user does not exist, create it,
+        and then create a folder called sessions_directory_name within it.
+        Move into the sessions_directory_name folder,
+        and store the path to that folder in the settings.
         Also stores the path to self.sessions_directory_name
         '''
-        # If the user has selected the sessions_directory_name folder, we want to move up a directory
-        # before looking for the sessions_directory_name folder within that directory.
-        # This is necessary because if the sessions_directory_name folder already exists and contains
-        # sessions, we don't want to create another sessions_directory_name folder within it, as then the
-        # existing sessions won't be available for loading.
+        # If the user has selected the sessions_directory_name folder,
+        # we want to move up a directory before looking for the
+        # sessions_directory_name folder within that directory.
+        # This is necessary because if the sessions_directory_name folder already exists
+        # and contains sessions, we don't want to create another sessions_directory_name folder
+        # within it, as then the existing sessions won't be available for loading.
 
         if os.path.basename(user_selected_directory) == self.sessions_directory_name:
             user_selected_directory = os.path.dirname(user_selected_directory)
@@ -302,8 +302,8 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
             if not os.path.isdir(user_selected_directory):
                 os.mkdir(user_selected_directory)
 
-        sessions_directory = os.path.abspath(os.path.join(
-            user_selected_directory, self.sessions_directory_name))
+        sessions_directory = os.path.abspath(
+            os.path.join(user_selected_directory, self.sessions_directory_name))
 
         if not os.path.isdir(sessions_directory):
             os.mkdir(sessions_directory)
@@ -311,29 +311,21 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         self.sessions_directory = sessions_directory
 
     def loadSessionNew(self):
-        '''
-        Loads a new session
-        '''
+        '''Loads a new session'''
         self.createSessionFolder()
         if hasattr(self, 'SessionSelectionWindow'):
             self.SessionSelectionWindow.close()
 
     def loadSessionLoad(self):
-        '''
-        Loads a session from a zip file
-        '''
-
-        folder_name = self.SessionSelectionWindow.widgets['select_session_field'].currentText(
-        )
-
-        process_name = "Loading Session: {}".format(folder_name)
+        '''Loads a session from a zip file'''
+        folder_name = self.SessionSelectionWindow.widgets['select_session_field'].currentText()
+        process_name = f"Loading Session: {folder_name}"
 
         # Create progress bar which just has an increasing timer:
         self.process_finished = False
         self.createUnknownProgressWindow(process_name)
         config_worker = Worker(self.loadSessionConfig, folder=folder_name)
-        config_worker.signals.finished.connect(
-            lambda: self.finishLoadConfig(process_name))
+        config_worker.signals.finished.connect(lambda: self.finishLoadConfig(process_name))
         self.threadpool.start(config_worker)
         self.SessionSelectionWindow.close()
 
@@ -343,9 +335,8 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         <app_name>-<date>-<time>
         '''
         date_time = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-        session_folder_name = '{}-{}'.format(self.app_name, date_time)
-        session_folder_path = os.path.join(
-            self.sessions_directory, session_folder_name)
+        session_folder_name = f'{self.app_name}-{date_time}'
+        session_folder_path = os.path.join(self.sessions_directory, session_folder_name)
         os.mkdir(session_folder_path)
         self.current_session_folder = os.path.abspath(session_folder_path)
 
@@ -368,16 +359,14 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         for _, _, f in os.walk(self.sessions_directory):
             for _file in f:
                 if date_and_time + '.zip' in _file:
-                    selected_folder = os.path.join(
-                        self.sessions_directory, _file)
+                    selected_folder = os.path.join(self.sessions_directory, _file)
                     break
 
         shutil.unpack_archive(selected_folder, selected_folder[:-4])
         loaded_folder = selected_folder[:-4]
         self.current_session_folder = loaded_folder
 
-        json_filename = os.path.join(
-            self.current_session_folder, "session.json")
+        json_filename = os.path.join(self.current_session_folder, "session.json")
 
         with open(json_filename) as tmp:
             self.config = json.load(tmp)
@@ -403,7 +392,8 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         '''
         Overwrites the default closeEvent to prompt the user to save the session before closing.
 
-        This method occurs when we call self.close() or when the user clicks the X button on the window.
+        This method occurs when we call `self.close()`
+        or when the user clicks the `X` button on the window.
         '''
 
         # Need to check that we are not inside the current session folder, as this will either be
@@ -429,7 +419,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
 
         Parameters
         ----------
-        event: 
+        event:
             The event which triggered the dialog.
         '''
         self.should_really_close = False
@@ -440,16 +430,13 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         if isinstance(event, QCloseEvent):
             # This is the case where we are quitting the app and the window asks if we
             # would like to save
-            dialog.Cancel.clicked.connect(
-                lambda: self.saveQuitDialogRejected(dialog))
-            dialog.Ok.clicked.connect(
-                lambda: self.saveQuitDialogAccepted(dialog))
+            dialog.Cancel.clicked.connect(lambda: self.saveQuitDialogRejected(dialog))
+            dialog.Ok.clicked.connect(lambda: self.saveQuitDialogAccepted(dialog))
             dialog.Cancel.setText('Quit without saving')
         else:
             # This is the case where we are just choosing to 'Save' in the file menu
             # so we never quit the app.
-            dialog.Cancel.clicked.connect(
-                lambda: self.saveDialogRejected(dialog))
+            dialog.Cancel.clicked.connect(lambda: self.saveDialogRejected(dialog))
             dialog.Ok.clicked.connect(lambda: self.saveDialogAccepted(dialog))
             dialog.Cancel.setText('Cancel')
 
@@ -488,7 +475,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         Called when the user clicks 'Quit without saving' in the save and quit dialog.
         This closes the app.
         '''
-        self.removeTemp()  # remove tempdir for this session.
+        self.removeTemp() # remove tempdir for this session.
         dialog.close()
         self.should_really_close = True
         self.close()
@@ -509,16 +496,14 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         process_name = 'Save Session'
 
         self.process_finished = False
-        self.createUnknownProgressWindow(
-            process_name, "Saving", "Saving Session")
+        self.createUnknownProgressWindow(process_name, "Saving", "Saving Session")
 
         saveSession_worker = Worker(self.saveSession, session_name, compress)
-        if type(event) == QCloseEvent:
+        if isinstance(event, QCloseEvent):
             saveSession_worker.signals.finished.connect(
                 lambda: self.removeTempAndClose(process_name))
         else:
-            saveSession_worker.signals.finished.connect(
-                lambda: self.closeSaveWindow(process_name))
+            saveSession_worker.signals.finished.connect(lambda: self.closeSaveWindow(process_name))
         self.threadpool.start(saveSession_worker)
 
     def saveSession(self, session_name, compress, **kwargs):
@@ -549,8 +534,8 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         '''
 
         now_string = datetime.now().strftime("%d-%m-%Y-%H-%M")
-        new_folder_to_save_to = os.path.join(
-            self.sessions_directory, session_name + "_" + now_string)
+        new_folder_to_save_to = os.path.join(self.sessions_directory,
+                                             session_name + "_" + now_string)
         shutil.move(self.current_session_folder, new_folder_to_save_to)
         self.current_session_folder = new_folder_to_save_to
 
@@ -558,16 +543,15 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         '''
         Saves the session config to a json file in the session folder: self.current_session_folder
         '''
-        session_file = os.path.join(
-            self.current_session_folder, "session.json")
+        session_file = os.path.join(self.current_session_folder, "session.json")
 
         self.config = self.getSessionConfig()
 
         self.config['datetime'] = datetime.now().strftime("%d-%m-%Y-%H-%M")
 
         # Session file will always have the same name.
-        # If a session has been reloaded, and saved again, this will overwrite the old session file.
-
+        # If a session has been reloaded & saved again,
+        # this will overwrite the old session file.
         with open(session_file, "w+") as f:
             json.dump(self.config, f)
 

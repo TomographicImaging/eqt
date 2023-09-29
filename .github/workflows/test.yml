@@ -34,12 +34,16 @@ jobs:
       id: changes
       name: Check annotated tag
       run: |
+        git fetch --tags -f
         title=$(git for-each-ref --format="%(contents:subject)" ${GITHUB_REF})
         body=$(git for-each-ref --format="%(contents:body)" ${GITHUB_REF})
         tag="${GITHUB_REF#refs/tags/}"
         if test "$title" = "Version ${tag#v}" -a -n "$body"; then
           echo "title=$title" >> "$GITHUB_OUTPUT"
-          echo "body=$body" >> "$GITHUB_OUTPUT"
+          DELIM=$(openssl rand -hex 8)
+          echo "body<<$DELIM" >> "$GITHUB_OUTPUT"
+          echo "$body" >> "$GITHUB_OUTPUT"
+          echo "$DELIM" >> "$GITHUB_OUTPUT"
         else
           echo "::error title=Missing tag annotation::$tag"
           changelog=$(git log --pretty='format:%d%n- %s%n%b---' $(git tag --sort=v:refname | tail -n2 | head -n1)..HEAD)
