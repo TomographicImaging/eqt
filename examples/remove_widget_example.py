@@ -41,9 +41,9 @@ class MainUI(QtWidgets.QMainWindow):
 
         # add a button to remove widget
         # button box
-        buttonremove = QtWidgets.QPushButton(self)
+        buttonremove = QtWidgets.QPushButton(dialog.groupBox)
         buttonremove.setText("remove Widget")
-        buttonremove.clicked.connect(lambda: self.remove(qwidget,qlabel))
+        buttonremove.clicked.connect(lambda: self.remove('input1'))
         # add button box to the UI
         buttonBox = buttonremove
         dialog.formWidget.uiElements['verticalLayout'].addWidget(buttonremove)
@@ -72,9 +72,9 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.exec()
 
 
-    def remove(self,qwidget, qlabel=None):
+    def remove(self,name):
         print("Remove")
-        self.dialog.removeWidget(qwidget, qlabel)
+        self.dialog.removeWidget(name)
 
     def accepted(self):
         print("accepted")
