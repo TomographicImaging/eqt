@@ -24,66 +24,67 @@ class MainUI(QtWidgets.QMainWindow):
 
 
     def openFormDialog(self):
-        dialog = FormDialog(parent=self, title='Example')
+        dialog = FormDialog(parent=self, title='Example remove widget')
         
         # Example on how to add elements to the FormDialog
         
-        # add input 1 as QLineEdit
+        # add widget 1 as QLineEdit
         qlabel = QtWidgets.QLabel(dialog.groupBox)
-        qlabel.setText("Input 1: ")
+        qlabel.setText("Widget 1: ")
         qwidget = QtWidgets.QLineEdit(dialog.groupBox)
         qwidget.setClearButtonEnabled(True)
-        # finally add to the form widget
-        dialog.addSpanningWidget(QtWidgets.QLabel("Input Values: "), 'input_title')
-        dialog.addWidget(qwidget, qlabel, 'input1')
-        dialog.Ok.clicked.connect(lambda: self.accepted())
+        dialog.addWidget(qwidget, qlabel, 'Widget 1')
 
-
-        # add a button to remove widget
-        # button box
-        buttonremove = QtWidgets.QPushButton(dialog.groupBox)
-        buttonremove.setText("remove Widget")
-        buttonremove.clicked.connect(lambda: self.remove('input1'))
-        # add button box to the UI
-        buttonBox = buttonremove
-        dialog.formWidget.uiElements['verticalLayout'].addWidget(buttonremove)
-        #dialog.removeWidget(qwidget, qlabel)
-        #qwidget.show()
-        #qlabel.show()
-        # add input 2 as QComboBox
+        # add widget 2 as QLineEdit
         qlabel = QtWidgets.QLabel(dialog.groupBox)
-        qlabel.setText("Input 2: ")
+        qlabel.setText("Widget 2: ")
+        qwidget = QtWidgets.QLineEdit(dialog.groupBox)
+        qwidget.setClearButtonEnabled(True)
+        dialog.addWidget(qwidget, qlabel, 'Widget 2')
+
+        # add widget 3 as QLineEdit
+        qlabel = QtWidgets.QLabel(dialog.groupBox)
+        qlabel.setText("Widget 3: ")
+        qwidget = QtWidgets.QLineEdit(dialog.groupBox)
+        qwidget.setClearButtonEnabled(True)
+        dialog.addWidget(qwidget, qlabel, 'Widget 3')
+
+        # add input as QComboBox
+        dialog.addSpanningWidget(QtWidgets.QLabel("Pick the widget you want to remove then press ok: "), 'input_title')
+        qlabel = QtWidgets.QLabel(dialog.groupBox)
+        qlabel.setText("User input: ")
         qwidget = QtWidgets.QComboBox(dialog.groupBox)
-        qwidget.addItem("option 1")
-        qwidget.addItem("option 2")
+        qwidget.addItem("Widget 2")
+        qwidget.addItem("Widget 3")
         qwidget.setCurrentIndex(0)
         qwidget.setEnabled(True)
-        # finally add to the form widget
-        dialog.addWidget(qwidget, qlabel, 'input2')
-        dialog.addWidget(QtWidgets.QLabel("Example Vertical Layout Text"), layout="vertical")
+        dialog.addWidget(qwidget, qlabel, 'userinput')
+        
 
-        # Example of using 'getWidget':
-        dialog.getWidget('input2').setCurrentIndex(1)
+        dialog.Ok.clicked.connect(lambda: self.remove())
+        # add a button to remove widget 1
+        buttonremove = QtWidgets.QPushButton(dialog.groupBox)
+        buttonremove.setText("Remove widget 1")
+        dialog.addSpanningWidget(buttonremove,'Button Remove')
+        buttonremove.clicked.connect(lambda: self.remove(True))
 
-        buttonremove.deleteLater()
         # store a reference
         self.dialog = dialog
         self.dialog.onCancel = self.rejected
         dialog.exec()
 
 
-    def remove(self,name):
-        print("Remove")
-        self.dialog.removeWidget(name)
 
-    def accepted(self):
-        print("accepted")
-        print(self.dialog.widgets['input1_field'].text())
-        print(self.dialog.widgets['input2_field'].currentText())
-        self.dialog.close()
+    def remove(self,buttonpress=False):
+        if buttonpress ==True:
+           userselection = 'Widget 1'
+        else:
+            userselection=self.dialog.getWidget('userinput').currentText()
+        print("Remove "+userselection)
+        self.dialog.removeWidget(userselection)
 
     def rejected(self):
-        print("rejected")
+        print("Close the dialog")
 
 
 if __name__ == "__main__":
