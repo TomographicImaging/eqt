@@ -39,11 +39,11 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.Ok.clicked.connect(lambda: self.accepted())
 
 
-# add a button to remove widget
+        # add a button to remove widget
         # button box
         buttonremove = QtWidgets.QPushButton(self)
-        buttonremove.setText("remove Ridget")
-        buttonremove.clicked.connect(lambda: self.remove(qwidget, qlabel))
+        buttonremove.setText("remove Widget")
+        buttonremove.clicked.connect(lambda: self.remove(qwidget,qlabel))
         # add button box to the UI
         buttonBox = buttonremove
         dialog.formWidget.uiElements['verticalLayout'].addWidget(buttonremove)
@@ -65,17 +65,16 @@ class MainUI(QtWidgets.QMainWindow):
         # Example of using 'getWidget':
         dialog.getWidget('input2').setCurrentIndex(1)
 
+        buttonremove.deleteLater()
         # store a reference
         self.dialog = dialog
         self.dialog.onCancel = self.rejected
         dialog.exec()
 
-    def remove(self,qwidget, qlabel):
-       print("widget removed")
-       self.dialog.removeWidget(qwidget, qlabel)
-       #print(self.dialog.getWidgets)
-       #print(self.dialog.widgets)
 
+    def remove(self,qwidget, qlabel=None):
+        print("Remove")
+        self.dialog.removeWidget(qwidget, qlabel)
 
     def accepted(self):
         print("accepted")

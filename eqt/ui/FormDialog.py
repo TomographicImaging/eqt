@@ -75,15 +75,14 @@ class FormDialog(QtWidgets.QDialog):
             raise ValueError(f"layout '{layout}' unrecognised: expected 'form' or 'vertical'")
 
     def removeWidget(self, qwidget, qlabel=None):
-            '''
-            Removes a widget and its label from the layout.
-            '''
-            qwidget.hide()
-            qlabel.hide()
-        #     self.removeWidget(qwidget)
-        #     #self.removeWidget(qlabel)
-        #     #self.qwidget.deleteLater()
-        #     #self.qlabel.deleteLater()
+         '''
+         Removes a widget and its label from the layout.
+         '''
+         qwidget.setParent(None) 
+         qwidget.deleteLater()
+         #if not qlabel == None:
+         qlabel.setParent(None) 
+         qlabel.deleteLater()
 
     def addSpanningWidget(self, qwidget, name=None, layout='form'):
         '''
