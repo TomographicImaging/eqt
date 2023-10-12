@@ -7,7 +7,7 @@ write_to = "eqt/_dist_ver.py"
 write_to_template = "__version__ = '{version}'\n"
 
 [tool.setuptools.packages.find]
-exclude = ["test", "examples"]
+include = ["eqt", "eqt.*"]
 
 [project.urls]
 documentation = "https://github.com/TomographicImaging/eqt#readme"
