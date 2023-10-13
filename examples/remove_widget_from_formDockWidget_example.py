@@ -8,8 +8,8 @@ from eqt.ui import UIFormWidget
 class MainUI(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
-        dock=UIFormWidget.FormDockWidget(parent=self, title='Example remove widget')
-        
+        dock=UIFormWidget.FormDockWidget(parent=self)
+        dock.setWindowTitle('Example remove widget')
         # add widget 1 as QLineEdit
         qlabel = QtWidgets.QLabel(dock)
         qlabel.setText("Widget 1: ")
