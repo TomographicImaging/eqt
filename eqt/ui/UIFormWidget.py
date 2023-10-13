@@ -2,6 +2,7 @@ from PySide2 import QtWidgets
 
 from .UISliderWidget import UISliderWidget
 
+import logging
 
 class UIFormWidget:
     '''
@@ -57,15 +58,20 @@ class UIFormWidget:
 
     def removeWidget(self, name):
         '''
-        Removes a widget and its label from the layout
+        Removes a widget (and its label if present) from the layout
         '''
         qwidget=self.getWidget(name, role='field') #retrieves the widget from its name
-        qlabel=self.getWidget(name, role='label') #retrieves the label by the widget's name
         qwidget.setParent(None)  #removes the widget from its parent
         qwidget.deleteLater() #frees the memory 
-        qlabel.setParent(None) 
-        qlabel.deleteLater()
-
+        self.getWidgets().pop(name+'_field')
+        try:
+            qlabel=self.getWidget(name, role='label') #retrieves the label by the widget's name
+            qlabel.setParent(None) 
+            qlabel.deleteLater()
+            self.getWidgets().pop(name+'_label')
+        except KeyError:
+            logging.info('Widget '+name+' does not have a label.')
+            
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
 
@@ -335,14 +341,9 @@ class FormDockWidget(QtWidgets.QDockWidget):
     
     def removeWidget(self, name):
         '''
-        Removes a widget and its label from the form
+        Removes a widget (and its label) from the layout by invoking formWidget.removeWidget
         '''
-        qwidget=self.getWidget(name, role='field') #retrieves the widget from its name
-        qlabel=self.getWidget(name, role='label') #retrieves the label by the widget's name
-        qwidget.setParent(None)  #removes the widget from its parent
-        qwidget.deleteLater() #frees the memory 
-        qlabel.setParent(None) 
-        qlabel.deleteLater()
+        self.widget().removeWidget(name)
         
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added

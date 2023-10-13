@@ -76,18 +76,9 @@ class FormDialog(QtWidgets.QDialog):
 
     def removeWidget(self, name):
         '''
-        Removes a widget and its label from the layout
+        Removes a widget (and its label) from the layout by invoking formWidget.removeWidget
         '''
-        qwidget=self.getWidget(name, role='field') #retrieves the widget from its name
-        qwidget.setParent(None)  #removes the widget from its parent
-        qwidget.deleteLater() #frees the memory 
-        try:
-            qlabel=self.getWidget(name, role='label') #retrieves the label by the widget's name
-        except:
-            pass
-        else:
-            qlabel.setParent(None) 
-            qlabel.deleteLater()
+        self.formWidget.removeWidget(name)
 
     def addSpanningWidget(self, qwidget, name=None, layout='form'):
         '''

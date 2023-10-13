@@ -26,7 +26,7 @@ class MainUI(QtWidgets.QMainWindow):
     def openFormDialog(self):
         dialog = FormDialog(parent=self, title='Example remove widget')
         
-        # Example on how to add elements to the FormDialog
+        dialog.Ok.clicked.connect(lambda: self.remove())
         
         # add widget 1 as QLineEdit
         qlabel = QtWidgets.QLabel(dialog.groupBox)
@@ -60,9 +60,6 @@ class MainUI(QtWidgets.QMainWindow):
         qwidget.setEnabled(True)
         dialog.addWidget(qwidget, qlabel, 'userinput')
         
-
-        dialog.Ok.clicked.connect(lambda: self.remove())
-
         # add a button to remove widget 1
         buttonremove = QtWidgets.QPushButton(dialog.groupBox)
         buttonremove.setText("Remove widget 1")
@@ -74,22 +71,24 @@ class MainUI(QtWidgets.QMainWindow):
         buttonremove.setText("Remove spanning widget")
         dialog.addSpanningWidget(buttonremove,'Button Remove Spanning')
         buttonremove.clicked.connect(lambda: self.remove('input_title'))
+        
         # store a reference
         self.dialog = dialog
         self.dialog.onCancel = self.rejected
+
+        #print dictionary of all widgets
+        print("Dictionary of widgets:\n" +str(self.dialog.getWidgets()))
         dialog.exec()
-
-
 
     def remove(self,userselection=False):
         if userselection ==False:
             userselection=self.dialog.getWidget('userinput').currentText()
         print("Remove "+userselection)
         self.dialog.removeWidget(userselection)
+        print("Dictionary of widgets after deletion of "+userselection+":\n" +str(self.dialog.getWidgets()))
 
     def rejected(self):
         print("Close the dialog")
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
