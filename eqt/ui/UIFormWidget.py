@@ -60,14 +60,17 @@ class UIFormWidget:
         '''
         Removes a widget (and its label if present) from the layout
         '''
+        formLayout = self.uiElements['groupBoxFormLayout']
         qwidget=self.getWidget(name, role='field') #retrieves the widget from its name
-        qwidget.setParent(None)  #removes the widget from its parent
-        qwidget.deleteLater() #frees the memory 
+        #row, role = formLayout.getWidgetPosition(qwidget)
+        #qwidget.setParent(None)  #removes the widget from its parent
+        #qwidget.deleteLater() #frees the memory 
+        formLayout.removeRow(qwidget)
         self.getWidgets().pop(name+'_field')
         try:
-            qlabel=self.getWidget(name, role='label') #retrieves the label by the widget's name
-            qlabel.setParent(None) 
-            qlabel.deleteLater()
+            #qlabel=self.getWidget(name, role='label') #retrieves the label by the widget's name
+            #qlabel.setParent(None) 
+            #qlabel.deleteLater()
             self.getWidgets().pop(name+'_label')
         except KeyError:
             logging.info('Widget '+name+' does not have a label.')
