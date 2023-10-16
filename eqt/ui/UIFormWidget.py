@@ -62,7 +62,6 @@ class UIFormWidget:
         '''
         formLayout = self.uiElements['groupBoxFormLayout']
         qwidget=self.getWidget(name, role='field') #retrieves the widget from its name
-        #row, role = formLayout.getWidgetPosition(qwidget)
         #qwidget.setParent(None)  #removes the widget from its parent
         #qwidget.deleteLater() #frees the memory 
         formLayout.removeRow(qwidget)

@@ -39,55 +39,26 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
-    def remove_every_widget(self):
-        """Remove every widget from `self.form`"""
-        form = self.form
-        form.removeWidget('label')
-        form.removeWidget('checkBox')
-        form.removeWidget('comboBox')
-        form.removeWidget('doubleSpinBox')
-        form.removeWidget('spinBox')
-        form.removeWidget('slider')
-        form.removeWidget('uiSliderWidget')
-        form.removeWidget('radioButton')
-        form.removeWidget('textEdit')
-        form.removeWidget('plainTextEdit')
-        form.removeWidget('lineEdit')
-        form.removeWidget('button')
-
-    def removeWidget(self,formLayout,name):
-            """Remove widget"""
-            # form.removeWidget('label')
-            # form.removeWidget('checkBox')
-            # form.removeWidget('comboBox')
-            # form.removeWidget('doubleSpinBox')
-            # form.removeWidget('spinBox')
-            # form.removeWidget('slider')
-            # form.removeWidget('uiSliderWidget')
-            # form.removeWidget('radioButton')
-            # form.removeWidget('textEdit')
-            # form.removeWidget('plainTextEdit')
-            # form.removeWidget('lineEdit')
-            # form.removeWidget('button')
-
-            #formLayout = self.form.uiElements['groupBoxFormLayout']
-            #name='label'
-
+    def remove_one_widget(self,formLayout,name):
+            """
+            Remove one widget
+            formLayout: the formDialog layout is stored differently from the other forms
+            name: name of the widget in the dictionary
+            """
             qwidget=self.form.getWidget(name, role='field') #retrieves the widget from its name
-            rowpre, role = formLayout.getWidgetPosition(qwidget)
-            predeletion=self.form.getWidgets().copy()
-            self.form.removeWidget(name)
-            #postdeletion=self.form.getWidgets()
-            #self.assertEqual(predeletion,postdeletion)
-            #self.assertEqual(predeletion,self.form.getWidgets())
-            #self.remove_every_widget()
-            postdeletion=self.form.getWidgets()
-            rowpost, role = formLayout.getWidgetPosition(qwidget)
-            self.assertNotEqual(predeletion,postdeletion)
-            self.assertNotEqual(rowpre,rowpost)
-            #self.assertEqual(predeletion,self.form.getWidgets)
-            #assert False
-
+            rowpre, role = formLayout.getWidgetPosition(qwidget) #check the widget exists
+            predictionary=self.form.getWidgets().copy() #extracts the dictionary
+            self.form.removeWidget(name) #removes the widget
+            postdictionary=self.form.getWidgets() 
+            self.assertNotEqual(predictionary,postdictionary) #checks the dictionary before and after deletion of a widget
+            with self.assertRaises(RuntimeError): #if the widget is not deleted correctly there will be no error
+                rowpost, role = formLayout.getWidgetPosition(qwidget)
+            
+    def remove_every_widget(self,formLayout):
+        """Remove every widget from `self.form`"""
+        list_widgets=['label','checkBox','comboBox','doubleSpinBox','spinBox','slider','uiSliderWidget','radioButton','textEdit','plainTextEdit','lineEdit','button']
+        for name in list_widgets:
+            self.remove_one_widget(formLayout,name)
 
     def test_getWidgetState_returns_visibility(self):
         """
@@ -337,7 +308,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
         self.assertEqual(self.simple_form.getAllWidgetStates(), expected_state)
 
-
 @skip_ci
 class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
@@ -411,24 +381,10 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
         
-    # def test_removeAllWidgets(self):
-    #     """Remove all widgets and check the dictionary"""
-    #     predeletion=self.form.getWidgets().copy()
-    #     #postdeletion=self.form.getWidgets()
-    #     #self.assertEqual(predeletion,postdeletion)
-    #     #self.assertEqual(predeletion,self.form.getWidgets())
-    #     self.remove_every_widget()
-    #     postdeletion=self.form.getWidgets()
-    #     self.assertNotEqual(predeletion,postdeletion)
-    #     #self.assertEqual(predeletion,self.form.getWidgets)
-    #     #assert False
-
-    def test_remove_one_widget(self):
-        #formLayout = self.form.uiElements['groupBoxFormLayout']
-        #name='label'
-
-
-    
+    def test_remove_every_widget(self):
+        formLayout = self.form.formWidget.uiElements['groupBoxFormLayout']
+        self.remove_every_widget(formLayout)
+   
 
 @skip_ci
 class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
@@ -502,6 +458,10 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
+        
+    def test_remove_every_widget(self):
+        formLayout = self.form.uiElements['groupBoxFormLayout']
+        self.remove_every_widget(formLayout)
 
 
 @skip_ci
@@ -576,3 +536,7 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
+        
+    def test_remove_every_widget(self):
+        formLayout = self.form.widget().uiElements['groupBoxFormLayout']
+        self.remove_every_widget(formLayout)
