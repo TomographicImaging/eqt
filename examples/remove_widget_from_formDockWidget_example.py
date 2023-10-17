@@ -62,13 +62,13 @@ class MainUI(QtWidgets.QMainWindow):
         dock.widget().addSpanningWidget(buttonremove, 'Button Remove Spanning')
         buttonremove.clicked.connect(lambda: self.remove(dock, 'input_title'))
 
-        #print dictionary of all widgets
+        # print dictionary of all widgets
         print("Dictionary of widgets:\n" + str(dock.widget().getWidgets()))
 
         self.show()
 
     def remove(self, dock, userselection=False):
-        if userselection == False:
+        if userselection is False:
             userselection = dock.getWidget('userinput').currentText()
         print("Remove " + userselection)
         dock.removeWidget(userselection)

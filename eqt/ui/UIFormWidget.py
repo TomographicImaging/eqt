@@ -64,10 +64,10 @@ class UIFormWidget:
         Deletes the field (and label) from the dictionary.
         '''
         formLayout = self.uiElements['groupBoxFormLayout']
-        qwidget = self.getWidget(name, role='field') #retrieves the widget from its name
-        formLayout.removeRow(qwidget)                #removes the whole row from the layout
-        self.num_widgets -= 1                        #updates total number of widgets
-        self.getWidgets().pop(name + '_field')       #removes field from the dictionary
+        qwidget = self.getWidget(name, role='field') # retrieves the widget from its name
+        formLayout.removeRow(qwidget)                # removes the whole row from the layout
+        self.num_widgets -= 1                        # updates total number of widgets
+        self.getWidgets().pop(name + '_field')       # removes field from the dictionary
         try:
             self.getWidgets().pop(name + '_label')
         except KeyError:
