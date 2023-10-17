@@ -76,7 +76,9 @@ class FormDialog(QtWidgets.QDialog):
 
     def removeWidget(self, name):
         '''
-        Removes a widget (and its label) from the layout by invoking formWidget.removeWidget
+        Removes a widget (and its label if present) from the layout.
+        Decreases the counter for the number of widgets in the layout.
+        Deletes the field (and label) from the dictionary.
         '''
         self.formWidget.removeWidget(name)
 
@@ -99,11 +101,11 @@ class FormDialog(QtWidgets.QDialog):
             raise ValueError(
                 f"layout {layout} is not recognised, must be set to 'form' or 'vertical'")
 
-    def extract_number_widgets(self):
+    def extractNumWidgets(self):
         '''
-        Extracts the number of widgets in the form 
+        Extracts the updated number of widgets, even after `addWidget` or `removeWidget` are invoked.
         '''
-        return self.formWidget.extract_number_widgets()
+        return self.formWidget.extractNumWidgets()
 
     def insertWidget(self, index, qwidget):
         '''inserts a widget to the vertical layout at the specific index'''

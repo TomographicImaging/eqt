@@ -63,16 +63,19 @@ class UIFormWidget:
         Deletes the field (and label) from the dictionary.
         '''
         formLayout = self.uiElements['groupBoxFormLayout']
-        qwidget=self.getWidget(name, role='field') #retrieves the widget from its name 
-        formLayout.removeRow(qwidget) #removes the whole row from the layout
+        qwidget=self.getWidget(name, role='field') #retrieve the widget from its name 
+        formLayout.removeRow(qwidget) #remove the whole row from the layout
         self.num_widgets -= 1 #update total number of widgets
-        self.getWidgets().pop(name+'_field') #removes field from he dictionary
+        self.getWidgets().pop(name+'_field') #remove field from the dictionary
         try:
             self.getWidgets().pop(name+'_label')
         except KeyError:
             logging.info('Widget '+name+' does not have a label.')
 
-    def extract_number_widgets(self):
+    def extractNumWidgets(self):
+        '''
+        Extracts the updated number of widgets, even after `addWidget` or `removeWidget` are invoked.
+        '''
         return self.num_widgets
 
     def getWidget(self, name, role='field'):
@@ -344,12 +347,17 @@ class FormDockWidget(QtWidgets.QDockWidget):
     
     def removeWidget(self, name):
         '''
-        Removes a widget (and its label) from the layout by invoking formWidget.removeWidget
+        Removes a widget (and its label if present) from the layout.
+        Decreases the counter for the number of widgets in the layout.
+        Deletes the field (and label) from the dictionary.
         '''
         self.widget().removeWidget(name)
 
-    def extract_number_widgets(self):
-        return self.widget().extract_number_widgets()
+    def extractNumWidgets(self):
+        '''
+        Extracts the updated number of widgets, even after `addWidget` or `removeWidget` are invoked.
+        '''
+        return self.widget().extractNumWidgets()
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
