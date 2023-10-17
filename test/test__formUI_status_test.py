@@ -39,34 +39,43 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
-    def remove_one_widget(self,name):
-            """
-            Remove one widget. 
-            Checks the number of widget in the form before and after deletion are consistent. 
-            Checks the number of rows in the layoput and number of widgets in the form are
-              consistent.
+    def remove_one_widget(self, name):
+        """
+            Remove one widget.
+            Checks the number of widget in the form before and after deletion are consistent.
+            Checks the number of rows in the layoput and number of widgets in the form are consistent.
 
-            name: name in the dictionary of the widget to be removed 
+            name: name in the dictionary of the widget to be removed
             """
-            qwidget=self.form.getWidget(name, role='field') # retrieves the widget from its name
-            rowpre, role = self.layout.getWidgetPosition(qwidget) # checks the widget exists
-            prerowcount=self.layout.rowCount() # counts the rows in the layout
-            predictionary=self.form.getWidgets().copy() # extracts the dictionary and copies it
-            prenumwidgets=self.form.extractNumWidgets()
-            self.form.removeWidget(name) # removes the widget
-            postrowcount=self.layout.rowCount() 
-            postdictionary=self.form.getWidgets() 
-            postnumwidgets=self.form.extractNumWidgets()
-            self.assertNotEqual(predictionary,postdictionary) # checks the dictionary before and after deletion of a widget
-            self.assertEqual(prenumwidgets,postnumwidgets+1) # checks the number of widget in the form before and after deletion of a widget
-            self.assertEqual(prerowcount,postrowcount+1) # checks the number of rows in the layout before and after deletion of a widget
-            self.assertEqual(postrowcount,postnumwidgets) # checks consistency of the number of widgets and the rows in the layout
-            
+        qwidget = self.form.getWidget(name, role='field')     #retrieves the widget from its name
+        rowpre, role = self.layout.getWidgetPosition(qwidget) #checks the widget exists
+        prerowcount = self.layout.rowCount()                  #counts the rows in the layout
+        predictionary = self.form.getWidgets().copy()         #extracts the dictionary and copies it
+        prenumwidgets = self.form.extractNumWidgets()
+        self.form.removeWidget(name)                          #removes the widget
+        postrowcount = self.layout.rowCount()
+        postdictionary = self.form.getWidgets()
+        postnumwidgets = self.form.extractNumWidgets()
+        self.assertNotEqual(
+            predictionary,
+            postdictionary)                                   #checks the dictionary before and after deletion of a widget
+        self.assertEqual(
+            prenumwidgets, postnumwidgets +
+            1)                                                #checks the number of widget in the form before and after deletion of a widget
+        self.assertEqual(
+            prerowcount, postrowcount +
+            1)                                                #checks the number of rows in the layout before and after deletion of a widget
+        self.assertEqual(
+            postrowcount,
+            postnumwidgets)                                   #checks consistency of the number of widgets and the rows in the layout
+
     def test_remove_every_widget(self):
         """Remove every widget from `self.form`"""
-        list_widgets=['label','checkBox','comboBox','doubleSpinBox','spinBox','slider','uiSliderWidget','radioButton','textEdit','plainTextEdit','lineEdit','button']
+        list_widgets = [
+            'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
+            'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
         for name in list_widgets:
-            self.remove_one_widget(name)        
+            self.remove_one_widget(name)
 
     def test_getWidgetState_returns_visibility(self):
         """
@@ -316,6 +325,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
         self.assertEqual(self.simple_form.getAllWidgetStates(), expected_state)
 
+
 @skip_ci
 class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
@@ -323,8 +333,8 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.add_every_widget()
         self.simple_form = FormDialog()
         self.add_two_widgets()
-        self.layout= self.form.formWidget.uiElements['groupBoxFormLayout']
-    
+        self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
+
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
         initial_label_value = 'Label: '
@@ -389,7 +399,8 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
-        
+
+
 @skip_ci
 class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
@@ -397,7 +408,7 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.add_every_widget()
         self.simple_form = FormWidget()
         self.add_two_widgets()
-        self.layout= self.form.uiElements['groupBoxFormLayout']
+        self.layout = self.form.uiElements['groupBoxFormLayout']
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""

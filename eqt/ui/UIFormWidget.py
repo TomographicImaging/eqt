@@ -1,8 +1,9 @@
+import logging
+
 from PySide2 import QtWidgets
 
 from .UISliderWidget import UISliderWidget
 
-import logging
 
 class UIFormWidget:
     '''
@@ -63,14 +64,14 @@ class UIFormWidget:
         Deletes the field (and label) from the dictionary.
         '''
         formLayout = self.uiElements['groupBoxFormLayout']
-        qwidget=self.getWidget(name, role='field') # retrieves the widget from its name 
-        formLayout.removeRow(qwidget) # removes the whole row from the layout
-        self.num_widgets -= 1 # updates total number of widgets
-        self.getWidgets().pop(name+'_field') # removes field from the dictionary
+        qwidget = self.getWidget(name, role='field') #retrieves the widget from its name
+        formLayout.removeRow(qwidget)                #removes the whole row from the layout
+        self.num_widgets -= 1                        #updates total number of widgets
+        self.getWidgets().pop(name + '_field')       #removes field from the dictionary
         try:
-            self.getWidgets().pop(name+'_label')
+            self.getWidgets().pop(name + '_label')
         except KeyError:
-            logging.info('Widget '+name+' does not have a label.')
+            logging.info('Widget ' + name + ' does not have a label.')
 
     def extractNumWidgets(self):
         '''
@@ -345,7 +346,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
     def addWidget(self, qwidget, qlabel, name):
         self.widget().addWidget(qwidget, qlabel, name)
-    
+
     def removeWidget(self, name):
         '''
         Removes a widget (and its label if present) from the layout.
