@@ -10,6 +10,7 @@ class MainUI(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self, parent)
         dock=UIFormWidget.FormDockWidget(parent=self)
         dock.setWindowTitle('Example remove widget')
+        
         # add widget 1 as QLineEdit
         qlabel = QtWidgets.QLabel(dock)
         qlabel.setText("Widget 1: ")
