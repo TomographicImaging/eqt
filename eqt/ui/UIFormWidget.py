@@ -71,7 +71,10 @@ class UIFormWidget:
             self.getWidgets().pop(name+'_label')
         except KeyError:
             logging.info('Widget '+name+' does not have a label.')
-            
+
+    def extract_number_widgets(self):
+        return self.num_widgets
+
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
 
@@ -344,7 +347,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
         Removes a widget (and its label) from the layout by invoking formWidget.removeWidget
         '''
         self.widget().removeWidget(name)
-        
+
+    def extract_number_widgets(self):
+        return self.widget().extract_number_widgets()
+
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
 
