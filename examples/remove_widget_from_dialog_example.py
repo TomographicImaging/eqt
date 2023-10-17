@@ -76,12 +76,12 @@ class MainUI(QtWidgets.QMainWindow):
         self.dialog = dialog
         self.dialog.onCancel = self.rejected
 
-        #print dictionary of all widgets
+        # print dictionary of all widgets
         print("Dictionary of widgets:\n" +str(self.dialog.getWidgets()))
         dialog.exec()
 
     def remove(self,userselection=False):
-        if userselection ==False:
+        if userselection is False:
             userselection=self.dialog.getWidget('userinput').currentText()
         print("Remove "+userselection)
         self.dialog.removeWidget(userselection)

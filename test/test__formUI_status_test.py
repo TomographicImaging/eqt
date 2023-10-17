@@ -43,23 +43,24 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             """
             Remove one widget. 
             Checks the number of widget in the form before and after deletion are consistent. 
-            Checks the number of rows in the layoput and number of widgets in the form are consistent.
+            Checks the number of rows in the layoput and number of widgets in the form are
+              consistent.
 
             name: name in the dictionary of the widget to be removed 
             """
-            qwidget=self.form.getWidget(name, role='field') #retrieve the widget from its name
-            rowpre, role = self.layout.getWidgetPosition(qwidget) #check the widget exists
-            prerowcount=self.layout.rowCount() #count the rows in the layout
-            predictionary=self.form.getWidgets().copy() #extract the dictionary and copies it
+            qwidget=self.form.getWidget(name, role='field') # retrieves the widget from its name
+            rowpre, role = self.layout.getWidgetPosition(qwidget) # checks the widget exists
+            prerowcount=self.layout.rowCount() # counts the rows in the layout
+            predictionary=self.form.getWidgets().copy() # extracts the dictionary and copies it
             prenumwidgets=self.form.extractNumWidgets()
-            self.form.removeWidget(name) #remove the widget
+            self.form.removeWidget(name) # removes the widget
             postrowcount=self.layout.rowCount() 
             postdictionary=self.form.getWidgets() 
             postnumwidgets=self.form.extractNumWidgets()
-            self.assertNotEqual(predictionary,postdictionary) #check the dictionary before and after deletion of a widget
-            self.assertEqual(prenumwidgets,postnumwidgets+1) #check the number of widget in the form before and after deletion of a widget
-            self.assertEqual(prerowcount,postrowcount+1) #check the number of rows in the layout before and after deletion of a widget
-            self.assertEqual(postrowcount,postnumwidgets) #check consistency of the number of widgets and the rows in the layout
+            self.assertNotEqual(predictionary,postdictionary) # checks the dictionary before and after deletion of a widget
+            self.assertEqual(prenumwidgets,postnumwidgets+1) # checks the number of widget in the form before and after deletion of a widget
+            self.assertEqual(prerowcount,postrowcount+1) # checks the number of rows in the layout before and after deletion of a widget
+            self.assertEqual(postrowcount,postnumwidgets) # checks consistency of the number of widgets and the rows in the layout
             
     def test_remove_every_widget(self):
         """Remove every widget from `self.form`"""

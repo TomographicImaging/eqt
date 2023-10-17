@@ -103,7 +103,8 @@ class FormDialog(QtWidgets.QDialog):
 
     def extractNumWidgets(self):
         '''
-        Extracts the updated number of widgets, even after `addWidget` or `removeWidget` are invoked.
+        Extracts the updated number of widgets, even after `addWidget` or `removeWidget`
+          are invoked.
         '''
         return self.formWidget.extractNumWidgets()
 
