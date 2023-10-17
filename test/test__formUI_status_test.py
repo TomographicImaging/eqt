@@ -41,18 +41,25 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     def remove_one_widget(self,name):
             """
-            Remove one widget.
-            name: name of the widget in the dictionary
+            Remove one widget. 
+            Checks the number of widget in the form before and after deletion are consistent. 
+            Checks the number of rows in the layoput and number of widgets in the form are consistent.
+
+            name: name in the dictionary of the widget to be removed 
             """
             qwidget=self.form.getWidget(name, role='field') #retrieve the widget from its name
             rowpre, role = self.layout.getWidgetPosition(qwidget) #check the widget exists
+            prerowcount=self.layout.rowCount() #count the rows in the layout
             predictionary=self.form.getWidgets().copy() #extract the dictionary and copies it
             prenumwidgets=self.form.extractNumWidgets()
             self.form.removeWidget(name) #remove the widget
+            postrowcount=self.layout.rowCount() 
             postdictionary=self.form.getWidgets() 
             postnumwidgets=self.form.extractNumWidgets()
             self.assertNotEqual(predictionary,postdictionary) #check the dictionary before and after deletion of a widget
-            self.assertEqual(prenumwidgets,postnumwidgets+1)
+            self.assertEqual(prenumwidgets,postnumwidgets+1) #check the number of widget in the form before and after deletion of a widget
+            self.assertEqual(prerowcount,postrowcount+1) #check the number of rows in the layout before and after deletion of a widget
+            self.assertEqual(postrowcount,postnumwidgets) #check consistency of the number of widgets and the rows in the layout
             
     def test_remove_every_widget(self):
         """Remove every widget from `self.form`"""
