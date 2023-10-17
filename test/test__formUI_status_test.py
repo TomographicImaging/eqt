@@ -56,15 +56,15 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         postrowcount = self.layout.rowCount()
         postdictionary = self.form.getWidgets()
         postnumwidgets = self.form.extractNumWidgets()
-        # checks the dictionary before and after deletion of a widget
-        self.assertNotEqual(predictionary, postdictionary)                                   
-        # checks the number of widget in the form before and after deletion of a widget
-        self.assertEqual(prenumwidgets, postnumwidgets + 1)                                                
-        # checks the number of rows in the layout before and after deletion of a widget
-        self.assertEqual(prerowcount, postrowcount + 1)                                                
-        # checks consistency of the number of widgets and the rows in the layout
-        self.assertEqual(postrowcount, postnumwidgets)      
-                                     
+                                                              # checks the dictionary before and after deletion of a widget
+        self.assertNotEqual(predictionary, postdictionary)
+                                                              # checks the number of widget in the form before and after deletion of a widget
+        self.assertEqual(prenumwidgets, postnumwidgets + 1)
+                                                              # checks the number of rows in the layout before and after deletion of a widget
+        self.assertEqual(prerowcount, postrowcount + 1)
+                                                              # checks consistency of the number of widgets and the rows in the layout
+        self.assertEqual(postrowcount, postnumwidgets)
+
     def test_remove_every_widget(self):
         """Remove every widget from `self.form`"""
         list_widgets = [
