@@ -26,13 +26,11 @@ class MainUI(QtWidgets.QMainWindow):
         self.show()
 
     def openFormDialog(self):
-        # Example on how to add elements to the FormDialog
         # add input 1 as QLineEdit
         qlabel = QtWidgets.QLabel(self.dialog.groupBox)
         qlabel.setText("Input 1: ")
         qwidget = QtWidgets.QLineEdit(self.dialog.groupBox)
         qwidget.setClearButtonEnabled(True)
-        # finally add to the form widget
         self.dialog.addSpanningWidget(QtWidgets.QLabel("Input Values: "), 'input_title')
         self.dialog.addWidget(qwidget, qlabel, 'input1')
 
@@ -44,34 +42,24 @@ class MainUI(QtWidgets.QMainWindow):
         qwidget.addItem("option 2")
         qwidget.setCurrentIndex(0)
         qwidget.setEnabled(True)
-        # finally add to the form widget
         self.dialog.addWidget(qwidget, qlabel, 'input2')
         self.dialog.addWidget(QtWidgets.QLabel("Example Vertical Layout Text"), layout="vertical")
 
         # Example of using 'getWidget':
         self.dialog.getWidget('input2').setCurrentIndex(1)
 
-        # store a reference
-        #self.dialog = dialog
+        #redefine the onOk and onCancel functions
         self.dialog.onOk = self.accepted
         self.dialog.onCancel = self.rejected
 
-        #self.dialog.restoreAllSavedWidgetStates()
-        if hasattr(self.dialog, 'widget_states'):
-            print("There are states")
-            print(self.dialog.widget_states)
-    
+    #open dialog function when the parent button is clicked
     def executedialog(self):
-        self.dialog.restoreAllSavedWidgetStates()
-        self.dialog.exec()
+        self.dialog.open()
 
     def accepted(self):
-        self.dialog.widget_states = self.dialog.saveAllWidgetStates()    
         print("accepted")
         print(self.dialog.widgets['input1_field'].text())
         print(self.dialog.widgets['input2_field'].currentText())
-        #print(self.widget_states)
-        print(self.dialog.widget_states)
         self.dialog.close()
 
     def rejected(self):

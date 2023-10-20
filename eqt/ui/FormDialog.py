@@ -25,9 +25,7 @@ class FormDialog(QtWidgets.QDialog):
         self.formWidget.uiElements['verticalLayout'].addWidget(bb)
         bb.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self._onOk)
         bb.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self._onCancel)
-
         
-
     @property
     def Ok(self):
         '''returns a reference to the Dialog Ok button to connect its signals'''
@@ -40,22 +38,23 @@ class FormDialog(QtWidgets.QDialog):
 
     def _onOk(self):
         '''calls `onOk`'''
-        print("I am _onOk")
+        self.saveAllWidgetStates()  
         self.onOk()
 
     def _onCancel(self):
-        '''calls onCancel and closes the FormDialog'''  
+        '''calls onCancel and closes the FormDialog'''
         self.onCancel()
+        self.restoreAllSavedWidgetStates()
         self.close()
 
     def onOk(self):
         '''Called when the dialog's "Ok" button is clicked.
-          Can be redefined to add additional functionality on "Ok"'''
+        Can be redefined to add additional functionality on "Ok"'''
         pass
 
     def onCancel(self):
         '''Called when the dialog's "Cancel" button is clicked.
-          Can be redefined to add additional functionality on "Cancel"'''
+        Can be redefined to add additional functionality on "Cancel"'''
         pass
 
     @property
