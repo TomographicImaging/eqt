@@ -37,12 +37,12 @@ class FormDialog(QtWidgets.QDialog):
         return self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel)
 
     def _onOk(self):
-        '''calls `onOk`'''
+        '''saves the widget states and calls `onOk`'''
         self.saveAllWidgetStates()  
         self.onOk()
 
     def _onCancel(self):
-        '''calls onCancel and closes the FormDialog'''
+        '''calls `onCancel`, restores the previously saved states if existing and closes the FormDialog'''
         self.onCancel()
         self.restoreAllSavedWidgetStates()
         self.close()

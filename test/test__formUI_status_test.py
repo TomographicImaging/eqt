@@ -44,19 +44,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
     def set_state(self,ii):
         #define two states for every widget
         state=[0,0]
-        state[1] = {'label_value': 'Test label state 1',
-                    'checkbox_value':True,
-                    'combobox_value': 1,
-                    'doubleSpinBox_value': 1.0,
-                    'spinBox_value': 1,
-                    'slider_value': 1,
-                    'uislider_value': 1,
-                    'radio_value': True,
-                    'textEdit_value': 'test edit 1',
-                    'plainTextEdit_value': 'test plain 1',
-                    'lineEdit_value': 'test line 1',
-                    'pushButton_value': True               
-                    }
         state[0] = {'label_value': 'Test label state 0',
                     'checkbox_value':False,
                     'combobox_value': 0,
@@ -69,6 +56,19 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
                     'plainTextEdit_value': 'test plain 0',
                     'lineEdit_value': 'test line 0',
                     'pushButton_value': False               
+                    }
+        state[1] = {'label_value': 'Test label state 1',
+                    'checkbox_value':True,
+                    'combobox_value': 1,
+                    'doubleSpinBox_value': 1.0,
+                    'spinBox_value': 1,
+                    'slider_value': 1,
+                    'uislider_value': 1,
+                    'radio_value': True,
+                    'textEdit_value': 'test edit 1',
+                    'plainTextEdit_value': 'test plain 1',
+                    'lineEdit_value': 'test line 1',
+                    'pushButton_value': True               
                     }
         #set the states
         #QLabel
