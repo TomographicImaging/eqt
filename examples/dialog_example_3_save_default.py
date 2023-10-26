@@ -5,6 +5,7 @@ from PySide2 import QtWidgets
 from eqt.ui import FormDialog
 from eqt.ui.UISliderWidget import UISliderWidget
 
+
 class MainUI(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
@@ -12,7 +13,7 @@ class MainUI(QtWidgets.QMainWindow):
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Dialog with form layout")
         pb.clicked.connect(lambda: self.executedialog())
-    
+
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
         widg = QtWidgets.QWidget()
@@ -39,11 +40,12 @@ class MainUI(QtWidgets.QMainWindow):
         self.dialog.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISlider: ', 'uiSliderWidget')
         self.dialog.addWidget(QtWidgets.QRadioButton('select me'), 'RadioButton: ', 'radioButton')
         self.dialog.addWidget(QtWidgets.QTextEdit('write text here'), 'TextEdit: ', 'textEdit')
-        self.dialog.addWidget(QtWidgets.QPlainTextEdit('write text here'), 'PlainTextEdit: ', 'plainTextEdit')
+        self.dialog.addWidget(QtWidgets.QPlainTextEdit('write text here'), 'PlainTextEdit: ',
+                              'plainTextEdit')
         self.dialog.addWidget(QtWidgets.QLineEdit('write text here'), 'LineEdit: ', 'lineEdit')
         self.dialog.addWidget(QtWidgets.QPushButton('Click me'), 'Button: ', 'button')
 
-        #redefine the onOk and onCancel functions
+        # redefine the onOk and onCancel functions
         self.dialog.onOk = self.accepted
         self.dialog.onCancel = self.rejected
 
@@ -54,9 +56,10 @@ class MainUI(QtWidgets.QMainWindow):
     def rejected(self):
         print("States rejected")
 
-    #open dialog function when the parent button is clicked
+    # open dialog function when the parent button is clicked
     def executedialog(self):
         self.dialog.open()
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
