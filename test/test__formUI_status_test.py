@@ -364,39 +364,46 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def test_save_states_default(self):
         #test both states are working
+        self.form.open()
+        #state1
         self.set_state(1)
         states1=self.form.getAllWidgetStates()
+        self.assertEqual(states1,self.form.getAllWidgetStates())
+        #state0
         self.set_state(0)
         states0=self.form.getAllWidgetStates()
+        self.assertNotEqual(states1,self.form.getAllWidgetStates())
+        self.assertEqual(states0,self.form.getAllWidgetStates())
+        #together
         self.assertEqual(states0,states0)
         self.assertEqual(states1,states1)
-        #self.assertEqual(states0,states1)
-        # Click the Ok button
-        self.click_Ok()
-        #self.form.close()
-
-        #self.form.open()
-        self.assertEqual(states0,self.form.getAllWidgetStates())
-        #self.assertEqual(states0,states1)
-        #self.assertEqual(states0,states0)
-
-        # Click the Ok button
-        self.click_Ok()
-        self.form.close()
-
-        self.form.open()
-        # #check states are states 1
-        self.set_state(0)
+        self.assertNotEqual(states0,states1)
+        #check nothing is saved when Cancel is pressed
         self.click_Cancel()
-        self.form.close()
-
+        self.assertNotEqual(states0,self.form.getAllWidgetStates())
+        self.assertNotEqual(states1,self.form.getAllWidgetStates())
+        #save state 0
         self.form.open()
-        # #check states are states 1
         self.set_state(0)
-        # #press ok
+        self.assertEqual(states0,self.form.getAllWidgetStates())
+        self.click_Ok()   
         self.form.close()
         self.form.open()
-        # check states are states 0
+        self.assertEqual(states0,self.form.getAllWidgetStates())
+        #save state 1
+        self.form.open()
+        self.set_state(1)
+        self.assertEqual(states1,self.form.getAllWidgetStates())
+        self.click_Ok()   
+        self.form.close()
+        self.form.open()
+        self.assertEqual(states1,self.form.getAllWidgetStates())
+        #change to state 0 without saving
+        self.set_state(0)
+        self.assertEqual(states0,self.form.getAllWidgetStates())
+        self.click_Cancel() 
+        self.form.open()
+        self.assertEqual(states1,self.form.getAllWidgetStates())
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
