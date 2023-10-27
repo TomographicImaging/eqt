@@ -39,11 +39,11 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
-    def remove_one_widget(self, name):
+    def _test_remove_one_widget(self, name):
         """
             Remove one widget.
-            Checks the number of widget in the form before and after deletion are consistent.
-            Checks the number of rows in the layoput and number of widgets in the form are
+            Checks the number of widgets in the form before and after deletion are consistent.
+            Checks the number of rows in the layout and number of widgets in the form are
               consistent.
 
             name: name in the dictionary of the widget to be removed
@@ -52,11 +52,11 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         rowpre, role = self.layout.getWidgetPosition(qwidget) # checks the widget exists
         prerowcount = self.layout.rowCount()                  # counts the rows in the layout
         predictionary = self.form.getWidgets().copy()         # extracts the dictionary
-        prenumwidgets = self.form.extractNumWidgets()
+        prenumwidgets = self.form.getNumWidgets()
         self.form.removeWidget(name)                          # removes the widget
         postrowcount = self.layout.rowCount()
         postdictionary = self.form.getWidgets()
-        postnumwidgets = self.form.extractNumWidgets()
+        postnumwidgets = self.form.getNumWidgets()
         'checks the dictionary before and after deletion of a widget'
         self.assertNotEqual(predictionary, postdictionary)
         'checks the number of widget in the form before and after deletion of a widget'
@@ -72,7 +72,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
             'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
         for name in list_widgets:
-            self.remove_one_widget(name)
+            self._test_remove_one_widget(name)
 
     def test_getWidgetState_returns_visibility(self):
         """

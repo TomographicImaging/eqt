@@ -4,17 +4,34 @@ from PySide2 import QtWidgets
 
 from eqt.ui import FormDialog
 
+from eqt.ui import UIFormWidget
+
+import utilitiesForExamples as utex
+
 
 class MainUI(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
 
+        #create a FormDockWidget
+        dock = UIFormWidget.FormDockWidget(parent=self)
+        dock.setWindowTitle('Example remove widget')
+        utex.addWidgetsToExample(self,dock)
+
+        # add a button to remove user selected widget
+        buttonremove = QtWidgets.QPushButton(dock)
+        buttonremove.setText("Remove user selected widget")
+        dock.addSpanningWidget(buttonremove, 'Button Remove User')
+        buttonremove.clicked.connect(lambda: self.remove(dock))
+
+        #create button for Form Dialog
         pb = QtWidgets.QPushButton(self)
-        pb.setText("Open Dialog with form layout")
+        pb.setText("Open Form Dialog")
         pb.clicked.connect(lambda: self.openFormDialog())
 
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
+        layout.addWidget(dock)
         widg = QtWidgets.QWidget()
         widg.setLayout(layout)
 
@@ -25,52 +42,10 @@ class MainUI(QtWidgets.QMainWindow):
     def openFormDialog(self):
         dialog = FormDialog(parent=self, title='Example remove widget')
 
-        dialog.Ok.clicked.connect(lambda: self.remove())
+        dialog.Ok.clicked.connect(lambda: self.remove(dialog))
 
-        # add widget 1 as QLineEdit
-        qlabel = QtWidgets.QLabel(dialog.groupBox)
-        qlabel.setText("Widget 1: ")
-        qwidget = QtWidgets.QLineEdit(dialog.groupBox)
-        qwidget.setClearButtonEnabled(True)
-        dialog.addWidget(qwidget, qlabel, 'Widget 1')
-
-        # add widget 2 as QLineEdit
-        qlabel = QtWidgets.QLabel(dialog.groupBox)
-        qlabel.setText("Widget 2: ")
-        qwidget = QtWidgets.QLineEdit(dialog.groupBox)
-        qwidget.setClearButtonEnabled(True)
-        dialog.addWidget(qwidget, qlabel, 'Widget 2')
-
-        # add widget 3 as QLineEdit
-        qlabel = QtWidgets.QLabel(dialog.groupBox)
-        qlabel.setText("Widget 3: ")
-        qwidget = QtWidgets.QLineEdit(dialog.groupBox)
-        qwidget.setClearButtonEnabled(True)
-        dialog.addWidget(qwidget, qlabel, 'Widget 3')
-
-        # add input as QComboBox
-        dialog.addSpanningWidget(
-            QtWidgets.QLabel("Pick the widget you want to remove then press ok: "), 'input_title')
-        qlabel = QtWidgets.QLabel(dialog.groupBox)
-        qlabel.setText("User input: ")
-        qwidget = QtWidgets.QComboBox(dialog.groupBox)
-        qwidget.addItem("Widget 2")
-        qwidget.addItem("Widget 3")
-        qwidget.setCurrentIndex(0)
-        qwidget.setEnabled(True)
-        dialog.addWidget(qwidget, qlabel, 'userinput')
-
-        # add a button to remove widget 1
-        buttonremove = QtWidgets.QPushButton(dialog.groupBox)
-        buttonremove.setText("Remove widget 1")
-        dialog.addSpanningWidget(buttonremove, 'Button Remove')
-        buttonremove.clicked.connect(lambda: self.remove('Widget 1'))
-
-        # add a button to remove spanning widget
-        buttonremove = QtWidgets.QPushButton(dialog.groupBox)
-        buttonremove.setText("Remove spanning widget")
-        dialog.addSpanningWidget(buttonremove, 'Button Remove Spanning')
-        buttonremove.clicked.connect(lambda: self.remove('input_title'))
+        utex.addWidgetsToExample(self,dialog)
+        
 
         # store a reference
         self.dialog = dialog
@@ -78,19 +53,19 @@ class MainUI(QtWidgets.QMainWindow):
 
         # print dictionary of all widgets
         print("Dictionary of widgets:\n" + str(self.dialog.getWidgets()))
-        dialog.exec()
-
-    def remove(self, userselection=False):
-        if userselection is False:
-            userselection = self.dialog.getWidget('userinput').currentText()
-        print("Remove " + userselection)
-        self.dialog.removeWidget(userselection)
-        print("Dictionary of widgets after deletion of " + userselection + ":\n" +
-              str(self.dialog.getWidgets()))
+        dialog.open()
 
     def rejected(self):
         print("Close the dialog")
 
+
+    def remove(self, form, userselection=False):
+        if userselection is False:
+            userselection = form.getWidget('userinput').currentText()
+        print("Remove " + userselection)
+        form.removeWidget(userselection)
+        print("Dictionary of widgets after deletion of " + userselection + ":\n" +
+                str(form.getWidgets()))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

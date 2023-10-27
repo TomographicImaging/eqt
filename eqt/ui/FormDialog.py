@@ -101,12 +101,11 @@ class FormDialog(QtWidgets.QDialog):
             raise ValueError(
                 f"layout {layout} is not recognised, must be set to 'form' or 'vertical'")
 
-    def extractNumWidgets(self):
+    def getNumWidgets(self):
         '''
-        Extracts the updated number of widgets, even after `addWidget` or `removeWidget`
-          are invoked.
+        Returns the number of widgets in the form.
         '''
-        return self.formWidget.extractNumWidgets()
+        return self.formWidget.getNumWidgets()
 
     def insertWidget(self, index, qwidget):
         '''inserts a widget to the vertical layout at the specific index'''

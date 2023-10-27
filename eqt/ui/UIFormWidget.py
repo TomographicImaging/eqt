@@ -73,10 +73,9 @@ class UIFormWidget:
         except KeyError:
             logging.info('Widget ' + name + ' does not have a label.')
 
-    def extractNumWidgets(self):
+    def getNumWidgets(self):
         '''
-        Extracts the updated number of widgets, even after `addWidget` or `removeWidget`
-          are invoked.
+        Returns the number of widgets in the form.
         '''
         return self.num_widgets
 
@@ -347,6 +346,9 @@ class FormDockWidget(QtWidgets.QDockWidget):
     def addWidget(self, qwidget, qlabel, name):
         self.widget().addWidget(qwidget, qlabel, name)
 
+    def addSpanningWidget(self, qwidget, name):
+        self.widget().addSpanningWidget(qwidget, name)
+
     def removeWidget(self, name):
         '''
         Removes a widget (and its label if present) from the layout.
@@ -355,12 +357,11 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
         self.widget().removeWidget(name)
 
-    def extractNumWidgets(self):
+    def getNumWidgets(self):
         '''
-        Extracts the updated number of widgets, even after `addWidget` or `removeWidget`
-          are invoked.
+        Returns the number of widgets in the form.
         '''
-        return self.widget().extractNumWidgets()
+        return self.widget().getNumWidgets()
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
