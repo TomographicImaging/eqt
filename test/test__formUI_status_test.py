@@ -50,7 +50,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             """
         qwidget = self.form.getWidget(name, role='field')
         rowpre, role = self.layout.getWidgetPosition(qwidget) # checks the widget exists
-        prerowcount = self.layout.rowCount()       
+        prerowcount = self.layout.rowCount()
         predictionary = self.form.getWidgets().copy()
         prenumwidgets = self.form.getNumWidgets()
         self.form.removeWidget(name)

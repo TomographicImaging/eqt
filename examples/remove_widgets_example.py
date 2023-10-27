@@ -2,9 +2,7 @@ import sys
 
 from PySide2 import QtWidgets
 
-from eqt.ui import FormDialog
-
-from eqt.ui import UIFormWidget
+from eqt.ui import FormDialog, UIFormWidget
 
 
 class MainUI(QtWidgets.QMainWindow):
@@ -20,7 +18,7 @@ class MainUI(QtWidgets.QMainWindow):
         buttonuser = QtWidgets.QPushButton(dock)
         buttonuser.setText("Remove user selected widget")
         dock.addSpanningWidget(buttonuser, 'Button Remove User')
-        buttonuser.clicked.connect(lambda: self.remove(dock,buttonuser))
+        buttonuser.clicked.connect(lambda: self.remove(dock, buttonuser))
 
         # create button for Form Dialog
         pb = QtWidgets.QPushButton(self)
@@ -42,7 +40,7 @@ class MainUI(QtWidgets.QMainWindow):
 
     def openFormDialog(self):
         dialog = FormDialog(parent=self, title='Example remove widget')
-        dialog.Ok.clicked.connect(lambda: self.remove(dialog,dialog.Ok))
+        dialog.Ok.clicked.connect(lambda: self.remove(dialog, dialog.Ok))
         self.addWidgetsToExampleForm(dialog)
 
         # store a reference
@@ -54,7 +52,7 @@ class MainUI(QtWidgets.QMainWindow):
 
         dialog.open()
 
-    def addWidgetsToExampleForm(self,form):
+    def addWidgetsToExampleForm(self, form):
 
         # add widget 1 as QLineEdit
         qlabel = QtWidgets.QLabel(form)
@@ -78,8 +76,8 @@ class MainUI(QtWidgets.QMainWindow):
         form.addWidget(qwidget, qlabel, 'Widget 3')
 
         # add input as QComboBox
-        form.addSpanningWidget(
-            QtWidgets.QLabel("Pick the widget you want to remove:"), 'input_title')
+        form.addSpanningWidget(QtWidgets.QLabel("Pick the widget you want to remove:"),
+                               'input_title')
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("User input: ")
         qwidget = QtWidgets.QComboBox(form)
@@ -93,18 +91,18 @@ class MainUI(QtWidgets.QMainWindow):
         button1 = QtWidgets.QPushButton(form)
         button1.setText("Remove widget 1")
         form.addSpanningWidget(button1, 'Button Remove w1')
-        button1.clicked.connect(lambda: self.remove(form,button1,'Widget 1'))
+        button1.clicked.connect(lambda: self.remove(form, button1, 'Widget 1'))
 
         # add a button to remove spanning widget
         buttonspanning = QtWidgets.QPushButton(form)
         buttonspanning.setText("Remove spanning widget")
         form.addSpanningWidget(buttonspanning, 'Button Remove Spanning')
-        buttonspanning.clicked.connect(lambda: self.remove(form,buttonspanning,'input_title'))
+        buttonspanning.clicked.connect(lambda: self.remove(form, buttonspanning, 'input_title'))
 
     def rejected(self):
         print("\nDialog closed.")
 
-    def remove(self, form, button,userselection=False):
+    def remove(self, form, button, userselection=False):
         if userselection is False:
             userselection = form.getWidget('userinput').currentText()
             form.getWidget('userinput').removeItem(form.getWidget('userinput').currentIndex())
@@ -112,11 +110,13 @@ class MainUI(QtWidgets.QMainWindow):
         form.removeWidget(userselection)
         if form.getWidget('userinput').currentIndex() == -1:
             button.setEnabled(False)
-        if button == form.getWidget('Button Remove w1') or button == form.getWidget('Button Remove Spanning'):
+        if button == form.getWidget('Button Remove w1') or button == form.getWidget(
+                'Button Remove Spanning'):
             button.setEnabled(False)
-        
+
         print("\nDictionary of widgets after deletion of " + userselection + ":\n" +
-                str(form.getWidgets()))
+              str(form.getWidgets()))
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
