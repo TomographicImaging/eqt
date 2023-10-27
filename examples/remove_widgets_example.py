@@ -55,6 +55,7 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.open()
 
     def addWidgetsToExampleForm(self,form):
+
         # add widget 1 as QLineEdit
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("Widget 1: ")
@@ -101,7 +102,7 @@ class MainUI(QtWidgets.QMainWindow):
         buttonspanning.clicked.connect(lambda: self.remove(form,buttonspanning,'input_title'))
 
     def rejected(self):
-        print("Close the dialog")
+        print("\nDialog closed.")
 
     def remove(self, form, button,userselection=False):
         if userselection is False:
