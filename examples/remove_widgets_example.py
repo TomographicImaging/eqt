@@ -42,6 +42,10 @@ class MainUI(QtWidgets.QMainWindow):
         dialog = FormDialog(parent=self, title='Example remove widget')
         dialog.Ok.clicked.connect(lambda: self.remove(dialog, dialog.Ok))
         self.addWidgetsToExampleForm(dialog)
+        dialog.addSpanningWidget(
+            QtWidgets.QLabel(
+                "Press `Ok` to remove the user selected widget and `Cancel` to close the dialog:"),
+            'ok_cancel_instructions')
 
         # store a reference
         self.dialog = dialog
