@@ -39,6 +39,37 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
+    def _test_remove_one_widget(self, name):
+        """
+            Remove one widget.
+            Checks the number of widgets in the form before and after deletion are consistent.
+            Checks the number of rows in the layout and number of widgets in the form are
+              consistent.
+
+            name: name in the dictionary of the widget to be removed
+            """
+        qwidget = self.form.getWidget(name, role='field')
+        rowpre, role = self.layout.getWidgetPosition(qwidget) # checks the widget exists
+        prerowcount = self.layout.rowCount()
+        predictionary = self.form.getWidgets().copy()
+        prenumwidgets = self.form.getNumWidgets()
+        self.form.removeWidget(name)
+        postrowcount = self.layout.rowCount()
+        postdictionary = self.form.getWidgets()
+        postnumwidgets = self.form.getNumWidgets()
+        self.assertNotEqual(predictionary, postdictionary)
+        self.assertEqual(prenumwidgets, postnumwidgets + 1)
+        self.assertEqual(prerowcount, postrowcount + 1)
+        self.assertEqual(postrowcount, postnumwidgets)
+
+    def test_remove_every_widget(self):
+        """Remove every widget from `self.form`"""
+        list_widgets = [
+            'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
+            'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
+        for name in list_widgets:
+            self._test_remove_one_widget(name)
+
     def test_getWidgetState_returns_visibility(self):
         """
         Check that the visibility of the widget is saved to the state
@@ -295,6 +326,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.add_every_widget()
         self.simple_form = FormDialog()
         self.add_two_widgets()
+        self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
@@ -369,6 +401,7 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.add_every_widget()
         self.simple_form = FormWidget()
         self.add_two_widgets()
+        self.layout = self.form.uiElements['groupBoxFormLayout']
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
@@ -443,6 +476,7 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.add_every_widget()
         self.simple_form = FormDockWidget()
         self.add_two_widgets()
+        self.layout = self.form.widget().uiElements['groupBoxFormLayout']
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
