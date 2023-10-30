@@ -109,6 +109,10 @@ class UIFormWidget:
     def _addWidget(self, name, qwidget, qlabel=None):
         formLayout = self.uiElements['groupBoxFormLayout']
 
+        # create the default values
+        if not hasattr(self, 'widget_default'):
+            self.widget_default={}
+
         # Create the widgets:
 
         widgetno = self.num_widgets
@@ -116,6 +120,9 @@ class UIFormWidget:
         # add the field
         field = f'{name}_field'
         self.widgets[field] = qwidget
+
+        # add the default value of the qwidget
+        self.widget_default[field]=self.getWidgetState(qwidget)['value']
 
         if qlabel is not None:
             # add the label
@@ -125,11 +132,14 @@ class UIFormWidget:
                 qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
                 qlabel.setText(txt)
             formLayout.setWidget(widgetno, QtWidgets.QFormLayout.LabelRole, qlabel)
-
+            
             # save a reference to label widgets in the dictionary
             self.widgets[label] = qlabel
 
             field_form_role = QtWidgets.QFormLayout.FieldRole
+
+            # add the default value of the qlabel
+            self.widget_default[label]=self.getWidgetState(qlabel,label)['value']
 
         else:
             # In the case we don't have a qlabel, set a spanning widget:
@@ -137,18 +147,10 @@ class UIFormWidget:
 
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
-        self.getWidgetValuesFromState()
-
-    def getWidgetValuesFromState(self):
-        if not hasattr(self, 'widget_default'):
-            self.widget_default={}
-        states=self.getAllWidgetStates()
-        self.widget_default={state_key:states[state_key]['value'] for state_key in states.keys()}
-        print(self.widget_default)
-        print("invoking get default")
 
     def applyWidgetValuesToState(self):
         self.saveAllWidgetStates()
+        print("this time i am inside default apply")
         for state_key in self.widget_default.keys():
             self.widget_states[state_key]['value']=self.widget_default[state_key]
         print("invoking apply default")
@@ -323,7 +325,7 @@ class UIFormWidget:
 
         if not hasattr(self, 'widget_states'):
             self.applyWidgetValuesToState()
-            print("making the default state")
+            print("apply the default state")
         self.applyWidgetStates(self.widget_states)
         print("applying saved states")
 
