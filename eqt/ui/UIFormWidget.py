@@ -137,6 +137,26 @@ class UIFormWidget:
 
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
+        self.getWidgetValuesFromState()
+
+    def getWidgetValuesFromState(self):
+        if not hasattr(self, 'widget_default'):
+            self.widget_default={}
+        states=self.getAllWidgetStates()
+        self.widget_default={state_key:states[state_key]['value'] for state_key in states.keys()}
+        print(self.widget_default)
+        print("invoking get default")
+
+    def applyWidgetValuesToState(self):
+        self.saveAllWidgetStates()
+        for state_key in self.widget_default.keys():
+            self.widget_states[state_key]['value']=self.widget_default[state_key]
+        print("invoking apply default")
+        
+        
+
+        
+
 
     def getAllWidgetStates(self):
         '''
@@ -292,6 +312,7 @@ class UIFormWidget:
         Saves the state of all widgets in the form.
         To later restore the states, use `restoreAllSavedWidgetStates()`.
         '''
+        print("saving states")
         self.widget_states = self.getAllWidgetStates()
 
     def restoreAllSavedWidgetStates(self):
@@ -299,8 +320,13 @@ class UIFormWidget:
         Restore all widgets in the form to the state saved by `saveAllWidgetStates()`.
         If `saveAllWidgetStates()` method was not previously invoked, do nothing.
         '''
-        if hasattr(self, 'widget_states'):
-            self.applyWidgetStates(self.widget_states)
+
+        if not hasattr(self, 'widget_states'):
+            self.applyWidgetValuesToState()
+            print("making the default state")
+        self.applyWidgetStates(self.widget_states)
+        print("applying saved states")
+
 
 
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
