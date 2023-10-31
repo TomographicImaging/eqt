@@ -3,7 +3,8 @@ import sys
 from PySide2 import QtWidgets
 
 from eqt.ui import FormDialog
-from eqt.ui.UISliderWidget import UISliderWidget
+
+import utilitiesForExamples as utex
 
 
 class MainUI(QtWidgets.QMainWindow):
@@ -12,7 +13,7 @@ class MainUI(QtWidgets.QMainWindow):
 
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Dialog with form layout")
-        pb.clicked.connect(lambda: self.executedialog())
+        pb.clicked.connect(lambda: self.executeDialog())
 
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
@@ -26,38 +27,19 @@ class MainUI(QtWidgets.QMainWindow):
         self.show()
 
     def openFormDialog(self):
-        # add a spanning widget
-        self.dialog.addSpanningWidget(QtWidgets.QLabel("Input Values: "), 'input_title')
-        # add all widgets
-        self.dialog.addWidget(QtWidgets.QLabel('Label'), 'Label: ', 'label')
-        self.dialog.addWidget(QtWidgets.QCheckBox('check me'), 'CheckBox: ', 'checkBox')
-        combobox_list = ['choice 1', 'choice 2']
-        self.dialog.addWidget(QtWidgets.QComboBox(), 'ComboBox: ', 'comboBox')
-        self.dialog.getWidget('comboBox').addItems(combobox_list)
-        self.dialog.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
-        self.dialog.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
-        self.dialog.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-        self.dialog.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISlider: ', 'uiSliderWidget')
-        self.dialog.addWidget(QtWidgets.QRadioButton('select me'), 'RadioButton: ', 'radioButton')
-        self.dialog.addWidget(QtWidgets.QTextEdit('write text here'), 'TextEdit: ', 'textEdit')
-        self.dialog.addWidget(QtWidgets.QPlainTextEdit('write text here'), 'PlainTextEdit: ',
-                              'plainTextEdit')
-        self.dialog.addWidget(QtWidgets.QLineEdit('write text here'), 'LineEdit: ', 'lineEdit')
-        self.dialog.addWidget(QtWidgets.QPushButton('Click me'), 'Button: ', 'button')
-
+        utex.addWidgetsToExample(self.dialog)
         # redefine the onOk and onCancel functions
         self.dialog.onOk = self.accepted
         self.dialog.onCancel = self.rejected
 
     def accepted(self):
         print("States saved")
-        self.dialog.close()
 
     def rejected(self):
         print("States rejected")
 
     # open dialog function when the parent button is clicked
-    def executedialog(self):
+    def executeDialog(self):
         self.dialog.open()
 
 

@@ -40,6 +40,7 @@ class FormDialog(QtWidgets.QDialog):
         '''saves the widget states and calls `onOk`'''
         self.saveAllWidgetStates()
         self.onOk()
+        self.close()
 
     def _onCancel(self):
         '''calls `onCancel`, restores the previously saved states if existing and
