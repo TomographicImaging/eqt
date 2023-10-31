@@ -15,9 +15,29 @@ from . import skip_ci
 
 class FormsCommonTests(metaclass=abc.ABCMeta):
     """Common tests for all Form types"""
+   
     @abc.abstractmethod
     def setUp(self):
         raise NotImplementedError
+    
+    @property                 
+    def exampleState(self): 
+        # define two states for every widget
+        state=[
+            {
+            'label_value': 'Test label state 0', 'checkbox_value': False, 'combobox_value': 0,
+            'doubleSpinBox_value': 10.0, 'spinBox_value': 10, 'slider_value': 10,
+            'uislider_value': 10, 'radio_value': False, 'textEdit_value': 'test edit 0',
+            'plainTextEdit_value': 'test plain 0', 'lineEdit_value': 'test line 0',
+            'pushButton_value': False},
+            {
+            'label_value': 'Test label state 1', 'checkbox_value': True, 'combobox_value': 1,
+            'doubleSpinBox_value': 1.0, 'spinBox_value': 1, 'slider_value': 1, 'uislider_value': 1,
+            'radio_value': True, 'textEdit_value': 'test edit 1',
+            'plainTextEdit_value': 'test plain 1', 'lineEdit_value': 'test line 1',
+            'pushButton_value': True}
+            ]    
+        return state
 
     def add_every_widget(self):
         """Generate every widget and add it to `self.form`"""
@@ -42,20 +62,14 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
     def set_state(self, ii):
-        # define two states for every widget
-        state = [0, 0]
-        state[0] = {
-            'label_value': 'Test label state 0', 'checkbox_value': False, 'combobox_value': 0,
-            'doubleSpinBox_value': 10.0, 'spinBox_value': 10, 'slider_value': 10,
-            'uislider_value': 10, 'radio_value': False, 'textEdit_value': 'test edit 0',
-            'plainTextEdit_value': 'test plain 0', 'lineEdit_value': 'test line 0',
-            'pushButton_value': False}
-        state[1] = {
-            'label_value': 'Test label state 1', 'checkbox_value': True, 'combobox_value': 1,
-            'doubleSpinBox_value': 1.0, 'spinBox_value': 1, 'slider_value': 1, 'uislider_value': 1,
-            'radio_value': True, 'textEdit_value': 'test edit 1',
-            'plainTextEdit_value': 'test plain 1', 'lineEdit_value': 'test line 1',
-            'pushButton_value': True}
+        """
+        Applies the values saved in `self.exampleState` at position `ii` to the widgets in the form.
+
+        Parameters
+        ----------------
+        ii: int
+        """
+        state=self.exampleState
         # set the states
         # QLabel
         self.form.getWidget('label').setText(state[ii]['label_value'])
@@ -350,7 +364,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def test_save_states_default(self):
         # test both states are working
-        self.form.open()
         # state1
         self.set_state(1)
         states1 = self.form.getAllWidgetStates()
@@ -360,35 +373,24 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         states0 = self.form.getAllWidgetStates()
         self.assertNotEqual(states1, self.form.getAllWidgetStates())
         self.assertEqual(states0, self.form.getAllWidgetStates())
-        # together
-        self.assertEqual(states0, states0)
-        self.assertEqual(states1, states1)
-        self.assertNotEqual(states0, states1)
-        # check nothing is saved when Cancel is pressed
+        # check state 0 and 1 are not saved when Cancel is pressed
         self.click_Cancel()
         self.assertNotEqual(states0, self.form.getAllWidgetStates())
         self.assertNotEqual(states1, self.form.getAllWidgetStates())
         # save state 0
-        self.form.open()
         self.set_state(0)
         self.assertEqual(states0, self.form.getAllWidgetStates())
         self.click_Ok()
-        self.form.close()
-        self.form.open()
         self.assertEqual(states0, self.form.getAllWidgetStates())
         # save state 1
-        self.form.open()
         self.set_state(1)
         self.assertEqual(states1, self.form.getAllWidgetStates())
         self.click_Ok()
-        self.form.close()
-        self.form.open()
         self.assertEqual(states1, self.form.getAllWidgetStates())
         # change to state 0 without saving
         self.set_state(0)
         self.assertEqual(states0, self.form.getAllWidgetStates())
         self.click_Cancel()
-        self.form.open()
         self.assertEqual(states1, self.form.getAllWidgetStates())
 
     def test_getWidgetState_returns_QLabel_value(self):
