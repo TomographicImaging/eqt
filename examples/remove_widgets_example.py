@@ -10,8 +10,7 @@ class MainUI(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self, parent)
 
         # create a FormDockWidget
-        dock = UIFormWidget.FormDockWidget(parent=self)
-        dock.setWindowTitle('Example remove widget')
+        dock = UIFormWidget.FormDockWidget(parent=self, title = 'Example remove widget')
         self.addWidgetsToExampleForm(dock)
 
         # add a button to dock to remove user selected widget

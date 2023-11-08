@@ -341,7 +341,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         widget = FormWidget(parent)
         self.setWidget(widget)
         if title is not None:
-            self.setObjectName(title)
+            self.setWindowTitle(title)
 
     def addWidget(self, qwidget, qlabel, name):
         self.widget().addWidget(qwidget, qlabel, name)
