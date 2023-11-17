@@ -61,43 +61,43 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
-    def set_state(self, ii):
+    def set_state(self, i):
         """
-        Applies the values saved in `self.exampleState` at position `ii` to the widgets in the form.
+        Applies the values saved in `self.exampleState` at position `i` to the widgets in the form.
 
         Parameters
         ----------------
-        ii: int
+        i: int
         """
         state=self.exampleState
         # set the states
         # QLabel
-        self.form.getWidget('label').setText(state[ii]['label_value'])
+        self.form.getWidget('label').setText(state[i]['label_value'])
         # QCheckBox
-        self.form.getWidget('checkBox').setChecked(state[ii]['checkbox_value'])
+        self.form.getWidget('checkBox').setChecked(state[i]['checkbox_value'])
         # QComboBox
         combobox_list = ['test', 'test2']
         self.form.getWidget('comboBox').addItems(combobox_list)
-        self.form.getWidget('comboBox').setCurrentIndex(state[ii]['combobox_value'])
+        self.form.getWidget('comboBox').setCurrentIndex(state[i]['combobox_value'])
         # QDoubleSpinBox
-        self.form.getWidget('doubleSpinBox').setValue(state[ii]['doubleSpinBox_value'])
+        self.form.getWidget('doubleSpinBox').setValue(state[i]['doubleSpinBox_value'])
         # QSpinBox
-        self.form.getWidget('spinBox').setValue(state[ii]['spinBox_value'])
+        self.form.getWidget('spinBox').setValue(state[i]['spinBox_value'])
         # QSlider
-        self.form.getWidget('slider').setValue(state[ii]['slider_value'])
+        self.form.getWidget('slider').setValue(state[i]['slider_value'])
         # UISlider
-        self.form.getWidget('uiSliderWidget').setValue(state[ii]['uislider_value'])
+        self.form.getWidget('uiSliderWidget').setValue(state[i]['uislider_value'])
         # QRadioButton
-        self.form.getWidget('radioButton').setChecked(state[ii]['radio_value'])
+        self.form.getWidget('radioButton').setChecked(state[i]['radio_value'])
         # QTextEdit
-        self.form.getWidget('textEdit').setText(state[ii]['textEdit_value'])
+        self.form.getWidget('textEdit').setText(state[i]['textEdit_value'])
         # QPlainTextEdit
-        self.form.getWidget('plainTextEdit').setPlainText(state[ii]['plainTextEdit_value'])
+        self.form.getWidget('plainTextEdit').setPlainText(state[i]['plainTextEdit_value'])
         # QLineEdit
-        self.form.getWidget('lineEdit').setText(state[ii]['lineEdit_value'])
+        self.form.getWidget('lineEdit').setText(state[i]['lineEdit_value'])
         # QPushButton
         self.form.getWidget('button').setCheckable(True)
-        self.form.getWidget('button').setChecked(state[ii]['pushButton_value'])
+        self.form.getWidget('button').setChecked(state[i]['pushButton_value'])
 
     def test_getWidgetState_returns_visibility(self):
         """
