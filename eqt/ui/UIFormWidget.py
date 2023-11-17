@@ -148,7 +148,12 @@ class UIFormWidget:
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
 
-    def applyWidgetValuesToState(self):
+    def applyDefaultWidgetValuesToState(self):
+        '''
+        Saves all states in a form widget - typically invoked when a form is firstly opened and no states are saved yet.
+        Retrieves the default values from the widgets and applies them to the saved states - this preserves visible and 
+        enabled in the widgets.
+        '''
         self.saveAllWidgetStates()
         for state_key in self.widget_default.keys():
             self.widget_states[state_key]['value']=self.widget_default[state_key]
@@ -315,7 +320,7 @@ class UIFormWidget:
         If `saveAllWidgetStates()` method was not previously invoked, do nothing.
         '''
         if not hasattr(self, 'widget_states'):
-            self.applyWidgetValuesToState()
+            self.applyDefaultWidgetValuesToState()
         self.applyWidgetStates(self.widget_states)
 
         
