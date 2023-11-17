@@ -15,28 +15,24 @@ from . import skip_ci
 
 class FormsCommonTests(metaclass=abc.ABCMeta):
     """Common tests for all Form types"""
-   
     @abc.abstractmethod
     def setUp(self):
         raise NotImplementedError
-    
-    @property                 
-    def exampleState(self): 
+
+    @property
+    def exampleState(self):
         # define two states for every widget
-        state=[
-            {
+        state = [{
             'label_value': 'Test label state 0', 'checkbox_value': False, 'combobox_value': 0,
             'doubleSpinBox_value': 10.0, 'spinBox_value': 10, 'slider_value': 10,
             'uislider_value': 10, 'radio_value': False, 'textEdit_value': 'test edit 0',
             'plainTextEdit_value': 'test plain 0', 'lineEdit_value': 'test line 0',
-            'pushButton_value': False},
-            {
-            'label_value': 'Test label state 1', 'checkbox_value': True, 'combobox_value': 1,
-            'doubleSpinBox_value': 1.0, 'spinBox_value': 1, 'slider_value': 1, 'uislider_value': 1,
-            'radio_value': True, 'textEdit_value': 'test edit 1',
-            'plainTextEdit_value': 'test plain 1', 'lineEdit_value': 'test line 1',
-            'pushButton_value': True}
-            ]    
+            'pushButton_value': False}, {
+                'label_value': 'Test label state 1', 'checkbox_value': True, 'combobox_value': 1,
+                'doubleSpinBox_value': 1.0, 'spinBox_value': 1, 'slider_value': 1,
+                'uislider_value': 1, 'radio_value': True, 'textEdit_value': 'test edit 1',
+                'plainTextEdit_value': 'test plain 1', 'lineEdit_value': 'test line 1',
+                'pushButton_value': True}]
         return state
 
     def add_every_widget(self):
@@ -69,7 +65,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         ----------------
         i: int
         """
-        state=self.exampleState
+        state = self.exampleState
         # set the states
         # QLabel
         self.form.getWidget('label').setText(state[i]['label_value'])

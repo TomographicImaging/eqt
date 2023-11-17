@@ -111,7 +111,7 @@ class UIFormWidget:
 
         # create the default values
         if not hasattr(self, 'widget_default'):
-            self.widget_default={}
+            self.widget_default = {}
 
         # Create the widgets:
 
@@ -122,7 +122,7 @@ class UIFormWidget:
         self.widgets[field] = qwidget
 
         # add the default value of the qwidget
-        self.widget_default[field]=self.getWidgetState(qwidget)['value']
+        self.widget_default[field] = self.getWidgetState(qwidget)['value']
 
         if qlabel is not None:
             # add the label
@@ -132,14 +132,14 @@ class UIFormWidget:
                 qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
                 qlabel.setText(txt)
             formLayout.setWidget(widgetno, QtWidgets.QFormLayout.LabelRole, qlabel)
-            
+
             # save a reference to label widgets in the dictionary
             self.widgets[label] = qlabel
 
             field_form_role = QtWidgets.QFormLayout.FieldRole
 
             # add the default value of the qlabel
-            self.widget_default[label]=self.getWidgetState(qlabel,label)['value']
+            self.widget_default[label] = self.getWidgetState(qlabel, label)['value']
 
         else:
             # In the case we don't have a qlabel, set a spanning widget:
@@ -150,14 +150,14 @@ class UIFormWidget:
 
     def applyDefaultWidgetValuesToState(self):
         '''
-        Saves all states in a form widget - typically invoked when a form is firstly opened and no states are saved yet.
-        Retrieves the default values from the widgets and applies them to the saved states - this preserves visible and 
-        enabled in the widgets.
+        Saves all states in a form widget - typically invoked when a form is firstly opened
+        and no states are saved yet. Retrieves the default values from the widgets and applies
+        them to the saved states - this preserves visible and enabled in the widgets.
         '''
         self.saveAllWidgetStates()
         for state_key in self.widget_default.keys():
-            self.widget_states[state_key]['value']=self.widget_default[state_key]
-        
+            self.widget_states[state_key]['value'] = self.widget_default[state_key]
+
     def getAllWidgetStates(self):
         '''
         Returns
@@ -317,15 +317,15 @@ class UIFormWidget:
     def restoreAllSavedWidgetStates(self):
         '''
         There are saved states only if `saveAllWidgetStates` was previously invoked.
-        If there are no previously saved states, `applyDefaultWidgetValuesToState` 
-        saves the states and applies default values to them. Once the existence of the 
+        If there are no previously saved states, `applyDefaultWidgetValuesToState`
+        saves the states and applies default values to them. Once the existence of the
         `widget_states` is checked, all widgets in the form are restored to the saved states.
         '''
         if not hasattr(self, 'widget_states'):
             self.applyDefaultWidgetValuesToState()
         self.applyWidgetStates(self.widget_states)
 
-        
+
 class FormWidget(QtWidgets.QWidget, UIFormWidget):
     def __init__(self, parent=None):
         # dockWidgetContents = QtWidgets.QWidget()

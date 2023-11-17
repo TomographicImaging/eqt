@@ -1,5 +1,7 @@
 from PySide2 import QtWidgets
+
 from eqt.ui.UISliderWidget import UISliderWidget
+
 
 def addWidgetsToExample(form):
     '''
@@ -19,8 +21,6 @@ def addWidgetsToExample(form):
     form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISlider: ', 'uiSliderWidget')
     form.addWidget(QtWidgets.QRadioButton('select me'), 'RadioButton: ', 'radioButton')
     form.addWidget(QtWidgets.QTextEdit('write text here'), 'TextEdit: ', 'textEdit')
-    form.addWidget(QtWidgets.QPlainTextEdit('write text here'), 'PlainTextEdit: ',
-                            'plainTextEdit')
+    form.addWidget(QtWidgets.QPlainTextEdit('write text here'), 'PlainTextEdit: ', 'plainTextEdit')
     form.addWidget(QtWidgets.QLineEdit('write text here'), 'LineEdit: ', 'lineEdit')
     form.addWidget(QtWidgets.QPushButton('Click me'), 'Button: ', 'button')
-

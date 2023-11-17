@@ -1,10 +1,9 @@
 import sys
 
+import utilitiesForExamples as utex
 from PySide2 import QtWidgets
 
 from eqt.ui import FormDialog
-
-import utilitiesForExamples as utex
 
 
 class MainUI(QtWidgets.QMainWindow):
