@@ -316,8 +316,10 @@ class UIFormWidget:
 
     def restoreAllSavedWidgetStates(self):
         '''
-        Restore all widgets in the form to the state saved by `saveAllWidgetStates()`.
-        If `saveAllWidgetStates()` method was not previously invoked, do nothing.
+        There are saved states only if `saveAllWidgetStates` was previously invoked.
+        If there are no previously saved states, `applyDefaultWidgetValuesToState` 
+        saves the states and applies default values to them. Once the existence of the 
+        `widget_states` is checked, all widgets in the form are restored to the saved states.
         '''
         if not hasattr(self, 'widget_states'):
             self.applyDefaultWidgetValuesToState()
