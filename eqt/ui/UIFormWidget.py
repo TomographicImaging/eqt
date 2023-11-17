@@ -337,11 +337,11 @@ class FormWidget(QtWidgets.QWidget, UIFormWidget):
 
 class FormDockWidget(QtWidgets.QDockWidget):
     def __init__(self, parent=None, title=None):
-        QtWidgets.QDockWidget.__init__(self, parent)
+        QtWidgets.QDockWidget.__init__(self, title, parent)
         widget = FormWidget(parent)
         self.setWidget(widget)
         if title is not None:
-            self.setWindowTitle(title)
+            self.setObjectName(title)
 
     def addWidget(self, qwidget, qlabel, name):
         self.widget().addWidget(qwidget, qlabel, name)
