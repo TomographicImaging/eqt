@@ -57,6 +57,16 @@ class UIFormWidget:
     def addWidget(self, qwidget, qlabel, name):
         self._addWidget(name, qwidget, qlabel)
 
+    def insertWidget3(self, index, qwidget, qlabel, name):
+        '''
+        Inserts a widget to the form layout at the specific index.
+        '''
+        #temp_tot_widgets = self.num_widgets
+        #self.num_widgets = index
+        self.uiElements['groupBoxFormLayout'].insertRow(index, qlabel, qwidget)
+        #self.addWidget(qwidget, qlabel, name)
+        self.num_widgets += 1   
+
     def removeWidget(self, name):
         '''
         Removes a widget (and its label if present) from the layout.
@@ -348,6 +358,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
     def addSpanningWidget(self, qwidget, name):
         self.widget().addSpanningWidget(qwidget, name)
+
+    def insertWidget(self, index, qwidget):
+        '''Invokes `insertWidget` from `UIFormWidget`.'''
+        self.widget().insertWidget(index, qwidget)
 
     def removeWidget(self, name):
         '''

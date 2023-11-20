@@ -74,6 +74,16 @@ class FormDialog(QtWidgets.QDialog):
         else:
             raise ValueError(f"layout '{layout}' unrecognised: expected 'form' or 'vertical'")
 
+    def insertWidget3(self, index, qwidget, qlabel, name):
+        '''Invokes `insertWidget` from `UIFormWidget`.'''
+        self.formWidget.insertWidget3(index, qwidget, qlabel, name)
+
+    def insertWidgetVerticalLayout(self, index, qwidget):
+        '''
+        Inserts a widget to the vertical layout at the specific index.
+        '''
+        self.formWidget.uiElements['verticalLayout'].insertWidget(index, qwidget)
+
     def removeWidget(self, name):
         '''
         Removes a widget (and its label if present) from the layout.
@@ -106,10 +116,6 @@ class FormDialog(QtWidgets.QDialog):
         Returns the number of widgets in the form.
         '''
         return self.formWidget.getNumWidgets()
-
-    def insertWidget(self, index, qwidget):
-        '''inserts a widget to the vertical layout at the specific index'''
-        self.formWidget.uiElements['verticalLayout'].insertWidget(index, qwidget)
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
