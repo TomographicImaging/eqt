@@ -39,6 +39,30 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
+    def _test_insert_one_widget(self, row,name):
+        """
+        Inserts the widget `name` from the widgets dictionary at position row in the layout.
+        Checks the position of the widget in the form is `row`.
+
+        name: name in the dictionary of the widgets already present in the layout.
+        """
+        qwidget = self.form.getWidget(name, role='field')
+        if f'{name}_label' in self.form.getWidgets():
+            qlabel = self.form.getWidget(name, role='label')
+        else:
+            qlabel=None
+        self.form.insertWidgetToFormLayout(row,name,qwidget, qlabel)
+        position=self.layout.getWidgetPosition(self.form.getWidget(name,'field'))[0]
+        self.assertEqual(position, row)
+
+    def test_insert_every_widget(self):
+        """Inserts every widget from `self.form` in position 0"""
+        list_widgets = [
+            'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
+            'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
+        for name in list_widgets:
+            self._test_insert_one_widget(0,name)
+
     def _test_remove_one_widget(self, name):
         """
             Remove one widget.
