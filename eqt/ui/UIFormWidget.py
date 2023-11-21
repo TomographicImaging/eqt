@@ -57,14 +57,21 @@ class UIFormWidget:
     def addWidget(self, qwidget, qlabel, name):
         self._addWidget(name, qwidget, qlabel)
 
-    def insertWidget3(self, index, qwidget, qlabel, name):
+    def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''
-        Inserts a widget to the form layout at the specific index.
+        Inserts a widget and a label widget or a spanning widget to the form layout in the position specified by row.
+        If row is out of bounds, the widget is added at the end.
+        It adds the field (and label if present) in the widget dictionary.
+        It increases "num_widgets" by 1 unit.
         '''
-        #temp_tot_widgets = self.num_widgets
-        #self.num_widgets = index
-        self.uiElements['groupBoxFormLayout'].insertRow(index, qlabel, qwidget)
-        #self.addWidget(qwidget, qlabel, name)
+        field = f'{name}_field'
+        self.widgets[field] = qwidget
+        if qlabel is not None:
+            self.uiElements['groupBoxFormLayout'].insertRow(row, qlabel, qwidget)
+            label = f'{name}_label'
+            self.widgets[label] = qlabel
+        else:
+            self.uiElements['groupBoxFormLayout'].insertRow(row, qwidget)
         self.num_widgets += 1   
 
     def removeWidget(self, name):
@@ -359,9 +366,9 @@ class FormDockWidget(QtWidgets.QDockWidget):
     def addSpanningWidget(self, qwidget, name):
         self.widget().addSpanningWidget(qwidget, name)
 
-    def insertWidget(self, index, qwidget):
-        '''Invokes `insertWidget` from `UIFormWidget`.'''
-        self.widget().insertWidget(index, qwidget)
+    def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
+        '''Invokes `insertWidgetToFormLayout(` from `UIFormWidget`.'''
+        self.widget().insertWidgetToFormLayout(row, name, qwidget, qlabel)
 
     def removeWidget(self, name):
         '''

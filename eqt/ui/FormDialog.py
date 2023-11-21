@@ -74,15 +74,15 @@ class FormDialog(QtWidgets.QDialog):
         else:
             raise ValueError(f"layout '{layout}' unrecognised: expected 'form' or 'vertical'")
 
-    def insertWidget3(self, index, qwidget, qlabel, name):
+    def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''Invokes `insertWidget` from `UIFormWidget`.'''
-        self.formWidget.insertWidget3(index, qwidget, qlabel, name)
+        self.formWidget.insertWidgetToFormLayout(row, name, qwidget, qlabel)
 
-    def insertWidgetVerticalLayout(self, index, qwidget):
+    def insertWidgetToVerticalLayout(self, row, qwidget):
         '''
-        Inserts a widget to the vertical layout at the specific index.
+        Inserts a widget to the vertical layout at position specified by row.
         '''
-        self.formWidget.uiElements['verticalLayout'].insertWidget(index, qwidget)
+        self.formWidget.uiElements['verticalLayout'].insertWidget(row, qwidget)
 
     def removeWidget(self, name):
         '''
