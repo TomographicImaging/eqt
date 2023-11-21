@@ -1,20 +1,11 @@
 
-import json
-import os
-import shutil
 import unittest
-from datetime import datetime
 from unittest import mock
-from unittest.mock import patch
 
-from PySide2.QtCore import QSettings, QThreadPool
-from PySide2.QtWidgets import QMenu, QMenuBar
-
-import eqt
 from eqt.io import zip_directory
 from eqt.ui.MainWindowWithSessionManagement import MainWindowWithSessionManagement
 
-from eqt.ui.SessionDialogs import (LoadSessionDialog)
+from eqt.ui.SessionDialogs import LoadSessionDialog
 
 from . import skip_ci
 
