@@ -28,9 +28,6 @@ class TestMainWindowWithSessionManagementCreateLoadSessionDialog(unittest.TestCa
     def test_createLoadSessionDialog_populates_session_dropdown(self):
         dialog = self.smw.createLoadSessionDialog(self.zip_folders)
         assert dialog is not None
-        print(LoadSessionDialog)
-        print(type(LoadSessionDialog))
-        print(type(dialog))
         assert isinstance(dialog, LoadSessionDialog)
         select_session_combo = dialog.getWidget('select_session')
         assert select_session_combo is not None
