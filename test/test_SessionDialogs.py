@@ -1,6 +1,7 @@
 import os
 import unittest
 from pathlib import Path
+from unittest import mock
 from unittest.mock import patch
 
 from PySide2.QtWidgets import QFileDialog
@@ -13,6 +14,8 @@ from eqt.ui.SessionDialogs import (
     SessionDirectorySelectionDialog,
     WarningDialog,
 )
+
+from eqt.ui.MainWindowWithSessionManagement import MainWindowWithSessionManagement
 
 from . import skip_ci
 
@@ -139,3 +142,4 @@ class TestAppSettingsDialog(unittest.TestCase):
     def test_init(self):
         asd = AppSettingsDialog()
         assert asd is not None
+

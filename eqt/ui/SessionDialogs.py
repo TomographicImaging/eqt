@@ -70,7 +70,7 @@ class SessionDirectorySelectionDialog(FormDialog):
         self.app_name = app_name
 
         label_text = ("Select a session directory to save and retrieve all"
-                      f" {app_name or ''} Sessions:")
+                      f"{app_name or ''} Sessions:")
 
         self.addSpanningWidget(QLabel(label_text), 'select_session_directory')
 
