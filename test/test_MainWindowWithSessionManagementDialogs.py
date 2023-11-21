@@ -1,14 +1,13 @@
 import unittest
 from unittest import mock
 
-from eqt.io import zip_directory
 from eqt.ui.MainWindowWithSessionManagement import MainWindowWithSessionManagement
 from eqt.ui.SessionDialogs import LoadSessionDialog
 
 from . import skip_ci
 
-''' Unit tests for the MainWindowWithSessionManagement class
-methods which create dialogs'''
+# Unit tests for the MainWindowWithSessionManagement class
+# methods which create dialogs
 
 
 @skip_ci
