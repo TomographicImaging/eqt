@@ -64,7 +64,7 @@ class UIFormWidget:
         It adds the field (and label if present) in the widget dictionary.
         It increases "num_widgets" by 1 unit.
         It should not be used to move widgets in a form.
-        
+
         Parameters:
         ----------
         row: int
@@ -84,7 +84,7 @@ class UIFormWidget:
             self.widgets[label] = qlabel
         else:
             self.uiElements['groupBoxFormLayout'].insertRow(row, qwidget)
-        self.num_widgets += 1   
+        self.num_widgets += 1
 
     def removeWidget(self, name):
         '''
@@ -164,7 +164,7 @@ class UIFormWidget:
         Adds a widget, and a label widget, or a spanning widget to the the end of the `groupBoxFormLayout`.
         It adds the field (and label if present) in the widget dictionary, `self.widgets`.
         It creates the counter `self.num_widgets` and it increases it by 1 unit.
-        
+
         Parameters:
         ----------
         name: str
