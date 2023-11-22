@@ -25,7 +25,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             QtWidgets.QSpinBox(), 
             QtWidgets.QSlider(), 
             UISliderWidget(QtWidgets.QLabel()), 
-            QtWidgets.QRadioButton('test r adio button'), 
+            QtWidgets.QRadioButton('test radio button'), 
             QtWidgets.QTextEdit('test text edit'), 
             QtWidgets.QPlainTextEdit('test plain text edit'), 
             QtWidgets.QLineEdit('test line edit'), 
@@ -72,28 +72,24 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     def _test_insert_one_widget(self, row,name, qwidget, qlabel=None):
         """
-        Inserts the widget `name` from the widgets dictionary at position row in the layout.
-        Checks the position of the widget in the form is `row`.
-        ----------------
-        name: name in the dictionary of the widgets already present in the layout.
+        Invokes `insertWidgetToFormLayout`, therefore inserts the qwidget (and the qlabel) 
+        at position row in the layout. Checks the position of the widget in the form is `row`.
         """
         self.form.insertWidgetToFormLayout(row,f'{name}',qwidget,qlabel)
         position=self.layout.getWidgetPosition(self.form.getWidget(name,'field'))[0]
         self.assertEqual(position, row)
 
-
     def test_insert_every_widget(self):
-        """Inserts every widget from `self.form` in position 0."""
-        list_widgets_names = [
+        """Inserts each widget, and then each spanning widget, in position 0 of the form layout."""
+        list_widget_names = [
             'label insert', 'checkBox insert', 'comboBox insert', 'doubleSpinBox insert', 'spinBox insert', 'slider insert',
             'uiSliderWidget insert', 'radioButton insert', 'textEdit insert', 'plainTextEdit insert', 'lineEdit insert', 'button insert']
         for i in range(0,len(self.list_all_widgets)):
             qwidget = self.list_all_widgets[i]
-            name = list_widgets_names[i]
+            name = list_widget_names[i]
             self._test_insert_one_widget(0,name,qwidget,name)
             qwidget = self.list_all_widgets[i]
             self._test_insert_one_widget(0,name+' spanning',qwidget)
-            print(name+' spanning')
 
     def _test_remove_one_widget(self, name):
         """
@@ -103,7 +99,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         consistent.
         ----------------
         name: name in the dictionary of the widget to be removed
-            """
+        """
         qwidget = self.form.getWidget(name, role='field')
         rowpre, role = self.layout.getWidgetPosition(qwidget) # checks the widget exists
         prerowcount = self.layout.rowCount()

@@ -39,75 +39,45 @@ class MainUI(QtWidgets.QMainWindow):
     def openFormDialog(self):
         dialog = FormDialog(parent=self, title='Example insert widget')
         self.addWidgetsToExampleForm(dialog)
-        
-        print(dialog.formWidget.uiElements['verticalLayout'].count(),dialog.formWidget.uiElements['groupBoxFormLayout'].count(),dialog.formWidget.num_widgets)
         dialog.Ok.clicked.connect(lambda: self.insert_vertical(dialog))
         dialog.Ok.clicked.connect(lambda: self.insert_form(dialog, dialog.Ok))
-        print(dialog.formWidget.uiElements['verticalLayout'].count(),dialog.formWidget.uiElements['groupBoxFormLayout'].count(),dialog.formWidget.num_widgets)
-        
-        
-    
-        #self.addWidgetsToExampleForm(dialog)
-        # dialog.addSpanningWidget(
-            # QtWidgets.QLabel(
-            #     "Press `Ok` to remove the user selected widget and `Cancel` to close the dialog:"),
-            # 'ok_cancel_instructions')
 
         # store a reference
         self.dialog = dialog
         self.dialog.onCancel = self.rejected
 
         # print dictionary of all widgets in dialog
-        print("Dictionary of widgets in Form Dialog:\n" + str(self.dialog.getWidgets()))
+        print("\nDictionary of widgets in Form Dialog:\n" + str(self.dialog.getWidgets()))
 
         dialog.open()
 
     def addWidgetsToExampleForm(self, form):
-
-        # add widget 1 as QLineEdit
-        qlabel = QtWidgets.QLabel(form)
-        qlabel.setText("Initial widget raw 0: ")
-        qwidget = QtWidgets.QLineEdit(form)
-        qwidget.setClearButtonEnabled(True)
-        form.addWidget(qwidget, qlabel, 'Initial widget raw 0')
-
-        #add spanning widget
-        form.addSpanningWidget(QtWidgets.QLabel("Initial widget row 1"),
-                               'Initial widget row 1')
-        # add input as QComboBox
-        qlabel = QtWidgets.QLabel(form)
-        qlabel.setText("Initial widget row 2")
+        form.addWidget(QtWidgets.QLineEdit(), "Initial widget raw 0: ", 'Initial widget raw 0')
+        form.addSpanningWidget(QtWidgets.QLabel("Initial widget row 1"), 'Initial widget row 1')
+        # add QComboBox
         qwidget = QtWidgets.QComboBox(form)
         qwidget.addItem("0")
         qwidget.addItem("1")
-        qwidget.setCurrentIndex(0)
-        qwidget.setEnabled(True)
-        form.addWidget(qwidget, qlabel, 'Initial widget row 2')
+        form.addWidget(qwidget, "Initial widget row 2", 'Initial widget row 2')
 
     def rejected(self):
         print("\nDialog closed.")
 
     def insert_vertical(self, form):
-        buttonuser = QtWidgets.QPushButton(self)
-        buttonuser.setText("Insert widget")
-        form.insertWidgetToVerticalLayout(1,buttonuser)
-        print("\nDictionary of widgets after insertion in the vertical lyout" + ":\n" +
-              str(form.getWidgets()))
-        print("insert count"+str(form.formWidget.uiElements['verticalLayout'].count()),form.formWidget.num_widgets)
-
+        form.insertWidgetToVerticalLayout(1,QtWidgets.QPushButton("Inserted widget in vertical layout"))
+        print("\nThe dictionary of widgets does not change after insertion in the vertical layout.")
 
     def insert_form(self, form, button):
-        # insert widget
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("Widget inserted in row 0: ")
         qwidget = QtWidgets.QLineEdit(form)
         form.insertWidgetToFormLayout(0, 'inserted widget', qwidget, qlabel)
         
-        buttonuser = QtWidgets.QPushButton(self)
-        buttonuser.setText("Inserted widget in row 2")
-        form.insertWidgetToFormLayout(2, 'inserted spanning widget', buttonuser)
+        buttonspanning = QtWidgets.QPushButton(self)
+        buttonspanning.setText("Spanning widget inserted in row 2")
+        form.insertWidgetToFormLayout(2, 'inserted spanning widget', buttonspanning)
         
-        print("\nDictionary of widgets after insertion in the form layout" + ":\n" +
+        print(f'\nDictionary of widgets after insertion in the form layout:\n' +
               str(form.getWidgets()))
         button.setEnabled(False)
 

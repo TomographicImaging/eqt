@@ -59,13 +59,18 @@ class UIFormWidget:
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''
-        Inserts a widget and a label widget or a spanning widget to the form layout in the position specified by row.
+        Inserts a widget, and a label widget, or a spanning widget to the form layout in the position specified by row.
         If row is out of bounds, the widget is added at the end.
         It adds the field (and label if present) in the widget dictionary.
         It increases "num_widgets" by 1 unit.
         It should not be used to move widgets in a form.
+        
+        Parameters:
         ----------
-        qlabel: str or qlabel widget
+        row: int
+        name: str
+        qwidget: qwidget
+        qlabel: qlabel widget or str
         '''
         field = f'{name}_field'
         self.widgets[field] = qwidget
@@ -74,7 +79,6 @@ class UIFormWidget:
                 txt = qlabel
                 qlabel = QtWidgets.QLabel(self)
                 qlabel.setText(txt)
-                print("hello")
             self.uiElements['groupBoxFormLayout'].insertRow(row, qlabel, qwidget)
             label = f'{name}_label'
             self.widgets[label] = qlabel
@@ -156,7 +160,17 @@ class UIFormWidget:
         self._addWidget(name, frame)
 
     def _addWidget(self, name, qwidget, qlabel=None):
-        """qlabel string or widget"""
+        '''
+        Adds a widget, and a label widget, or a spanning widget to the the end of the `groupBoxFormLayout`.
+        It adds the field (and label if present) in the widget dictionary, `self.widgets`.
+        It creates the counter `self.num_widgets` and it increases it by 1 unit.
+        
+        Parameters:
+        ----------
+        name: str
+        qwidget: widget
+        qlabel: qlabel widget or str
+        '''
         formLayout = self.uiElements['groupBoxFormLayout']
 
         # Create the widgets:
@@ -376,7 +390,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         self.widget().addSpanningWidget(qwidget, name)
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
-        '''Invokes `insertWidgetToFormLayout(` from `UIFormWidget`.'''
+        '''Invokes `insertWidgetToFormLayout` in `UIFormWidget`.'''
         self.widget().insertWidgetToFormLayout(row, name, qwidget, qlabel)
 
     def removeWidget(self, name):
