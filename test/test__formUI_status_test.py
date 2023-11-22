@@ -330,7 +330,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def test_form_init_title(self):
         """Tests if the FormDialog is created correctly with or without the title input"""
-        for form in [FormDialog(),FormDialog(title=None),FormDialog(title='title')]:
+        for form in [FormDialog(), FormDialog(title=None), FormDialog(title='title')]:
             self.assertRaises(TypeError, form)
 
     def test_getWidgetState_returns_QLabel_value(self):
@@ -485,7 +485,7 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
 
     def test_form_init_title(self):
         """Tests if the FormDockWidget is created correctly with or without the title input"""
-        for form in [FormDockWidget(),FormDockWidget(title=None),FormDockWidget(title='title')]:
+        for form in [FormDockWidget(), FormDockWidget(title=None), FormDockWidget(title='title')]:
             self.assertRaises(TypeError, form)
 
     def test_getWidgetState_returns_QLabel_value(self):
