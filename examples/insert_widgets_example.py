@@ -16,8 +16,8 @@ class MainUI(QtWidgets.QMainWindow):
         buttoninsert = QtWidgets.QPushButton(dock)
         buttoninsert.setText("Insert widgets")
         dock.addSpanningWidget(buttoninsert, 'Button insert widgets')
-        buttoninsert.clicked.connect(lambda: self.insert_form(dock,buttoninsert))
-        
+        buttoninsert.clicked.connect(lambda: self.insert_form(dock, buttoninsert))
+
         # create button for Form Dialog
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Form Dialog")
@@ -64,22 +64,25 @@ class MainUI(QtWidgets.QMainWindow):
         print("\nDialog closed.")
 
     def insert_vertical(self, form):
-        form.insertWidgetToVerticalLayout(1,QtWidgets.QPushButton("Inserted widget in vertical layout"))
-        print("\nThe dictionary of widgets does not change after insertion in the vertical layout.")
+        form.insertWidgetToVerticalLayout(
+            1, QtWidgets.QPushButton("Inserted widget in vertical layout"))
+        print(
+            "\nThe dictionary of widgets does not change after insertion in the vertical layout.")
 
     def insert_form(self, form, button):
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("Widget inserted in row 0: ")
         qwidget = QtWidgets.QLineEdit(form)
         form.insertWidgetToFormLayout(0, 'inserted widget', qwidget, qlabel)
-        
+
         buttonspanning = QtWidgets.QPushButton(self)
         buttonspanning.setText("Spanning widget inserted in row 2")
         form.insertWidgetToFormLayout(2, 'inserted spanning widget', buttonspanning)
-        
-        print(f'\nDictionary of widgets after insertion in the form layout:\n' +
+
+        print('\nDictionary of widgets after insertion in the form layout:\n' +
               str(form.getWidgets()))
         button.setEnabled(False)
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

@@ -92,7 +92,6 @@ class FormDialog(QtWidgets.QDialog):
             raise ValueError(
                 f"layout {layout} is not recognised, must be set to 'form' or 'vertical'")
 
-
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''Invokes `insertWidgetToFormLayout` in `UIFormWidget`.'''
         self.formWidget.insertWidgetToFormLayout(row, name, qwidget, qlabel)
