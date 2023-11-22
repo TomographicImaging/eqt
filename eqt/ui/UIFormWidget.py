@@ -59,8 +59,8 @@ class UIFormWidget:
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''
-        Inserts a widget, and a label widget, or a spanning widget to the form layout in the position specified by row.
-        If row is out of bounds, the widget is added at the end.
+        Inserts a widget, and a label widget, or a spanning widget to the form layout
+        in the position specified by row. If row is out of bounds, the widget is added at the end.
         It adds the field (and label if present) in the widget dictionary.
         It increases "num_widgets" by 1 unit.
         It should not be used to move widgets in a form.
@@ -161,9 +161,10 @@ class UIFormWidget:
 
     def _addWidget(self, name, qwidget, qlabel=None):
         '''
-        Adds a widget, and a label widget, or a spanning widget to the the end of the `groupBoxFormLayout`.
-        It adds the field (and label if present) in the widget dictionary, `self.widgets`.
-        It creates the counter `self.num_widgets` and it increases it by 1 unit.
+        Adds a widget, and a label widget, or a spanning widget to the the end of
+        the `groupBoxFormLayout`. It adds the field (and label if present) in the
+        widget dictionary, `self.widgets`. It creates the counter `self.num_widgets`
+        and it increases it by 1 unit.
 
         Parameters:
         ----------
