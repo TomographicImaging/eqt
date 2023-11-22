@@ -63,10 +63,18 @@ class UIFormWidget:
         If row is out of bounds, the widget is added at the end.
         It adds the field (and label if present) in the widget dictionary.
         It increases "num_widgets" by 1 unit.
+        It should not be used to move widgets in a form.
+        ----------
+        qlabel: str or qlabel widget
         '''
         field = f'{name}_field'
         self.widgets[field] = qwidget
         if qlabel is not None:
+            if isinstance(qlabel, str):
+                txt = qlabel
+                qlabel = QtWidgets.QLabel(self)
+                qlabel.setText(txt)
+                print("hello")
             self.uiElements['groupBoxFormLayout'].insertRow(row, qlabel, qwidget)
             label = f'{name}_label'
             self.widgets[label] = qlabel
@@ -148,6 +156,7 @@ class UIFormWidget:
         self._addWidget(name, frame)
 
     def _addWidget(self, name, qwidget, qlabel=None):
+        """qlabel string or widget"""
         formLayout = self.uiElements['groupBoxFormLayout']
 
         # Create the widgets:

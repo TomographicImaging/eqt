@@ -17,6 +17,21 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
     def setUp(self):
         raise NotImplementedError
 
+    @property
+    def list_all_widgets(self):
+        list_all_widgets = [QtWidgets.QLabel('test label'), QtWidgets.QCheckBox('test checkbox'),
+            QtWidgets.QComboBox(),
+            QtWidgets.QDoubleSpinBox(), 
+            QtWidgets.QSpinBox(), 
+            QtWidgets.QSlider(), 
+            UISliderWidget(QtWidgets.QLabel()), 
+            QtWidgets.QRadioButton('test r adio button'), 
+            QtWidgets.QTextEdit('test text edit'), 
+            QtWidgets.QPlainTextEdit('test plain text edit'), 
+            QtWidgets.QLineEdit('test line edit'), 
+            QtWidgets.QPushButton('test push button')]
+        return list_all_widgets
+
     def add_every_widget(self):
         """Generate every widget and add it to `self.form`"""
         form = self.form
@@ -33,44 +48,61 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
         form.addWidget(QtWidgets.QPushButton('test'), 'Button: ', 'button')
 
+    def add_every_spanning_widget(self):
+        """Generate every spanning widget and add it to `self.form`"""
+        form = self.form
+        form.addSpanningWidget(QtWidgets.QLabel('test label'), 'spanning label')
+        form.addSpanningWidget(QtWidgets.QCheckBox('test checkbox'), 'spanning checkBox')
+        form.addSpanningWidget(QtWidgets.QComboBox(), 'spanning comboBox')
+        form.addSpanningWidget(QtWidgets.QDoubleSpinBox(), 'spanning doubleSpinBox')
+        form.addSpanningWidget(QtWidgets.QSpinBox(), 'spanning spinBox')
+        form.addSpanningWidget(QtWidgets.QSlider(), 'spanning slider')
+        form.addSpanningWidget(UISliderWidget(QtWidgets.QLabel()), 'spanning uiSliderWidget')
+        form.addSpanningWidget(QtWidgets.QRadioButton('test'), 'spanning radioButton')
+        form.addSpanningWidget(QtWidgets.QTextEdit('test'), 'spanning textEdit')
+        form.addSpanningWidget(QtWidgets.QPlainTextEdit('test'), 'spanning plainTextEdit')
+        form.addSpanningWidget(QtWidgets.QLineEdit('test'), 'spanning lineEdit')
+        form.addSpanningWidget(QtWidgets.QPushButton('test'), 'spanning button')
+
     def add_two_widgets(self):
         """Generate two widgets and add them to `self.simple_form`"""
         form = self.simple_form
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
-    def _test_insert_one_widget(self, row,name):
+    def _test_insert_one_widget(self, row,name, qwidget, qlabel=None):
         """
         Inserts the widget `name` from the widgets dictionary at position row in the layout.
         Checks the position of the widget in the form is `row`.
-
+        ----------------
         name: name in the dictionary of the widgets already present in the layout.
         """
-        qwidget = self.form.getWidget(name, role='field')
-        if f'{name}_label' in self.form.getWidgets():
-            qlabel = self.form.getWidget(name, role='label')
-        else:
-            qlabel=None
-        self.form.insertWidgetToFormLayout(row,name,qwidget, qlabel)
+        self.form.insertWidgetToFormLayout(row,f'{name}',qwidget,qlabel)
         position=self.layout.getWidgetPosition(self.form.getWidget(name,'field'))[0]
         self.assertEqual(position, row)
 
+
     def test_insert_every_widget(self):
-        """Inserts every widget from `self.form` in position 0"""
-        list_widgets = [
-            'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
-            'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
-        for name in list_widgets:
-            self._test_insert_one_widget(0,name)
+        """Inserts every widget from `self.form` in position 0."""
+        list_widgets_names = [
+            'label insert', 'checkBox insert', 'comboBox insert', 'doubleSpinBox insert', 'spinBox insert', 'slider insert',
+            'uiSliderWidget insert', 'radioButton insert', 'textEdit insert', 'plainTextEdit insert', 'lineEdit insert', 'button insert']
+        for i in range(0,len(self.list_all_widgets)):
+            qwidget = self.list_all_widgets[i]
+            name = list_widgets_names[i]
+            self._test_insert_one_widget(0,name,qwidget,name)
+            qwidget = self.list_all_widgets[i]
+            self._test_insert_one_widget(0,name+' spanning',qwidget)
+            print(name+' spanning')
 
     def _test_remove_one_widget(self, name):
         """
-            Remove one widget.
-            Checks the number of widgets in the form before and after deletion are consistent.
-            Checks the number of rows in the layout and number of widgets in the form are
-              consistent.
-
-            name: name in the dictionary of the widget to be removed
+        Remove one widget.
+        Checks the number of widgets in the form before and after deletion are consistent.
+        Checks the number of rows in the layout and number of widgets in the form are
+        consistent.
+        ----------------
+        name: name in the dictionary of the widget to be removed
             """
         qwidget = self.form.getWidget(name, role='field')
         rowpre, role = self.layout.getWidgetPosition(qwidget) # checks the widget exists

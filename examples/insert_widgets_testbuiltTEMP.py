@@ -14,7 +14,7 @@ class MainUI(QtWidgets.QMainWindow):
         # create a FormDockWidget
         dock = UIFormWidget.FormDockWidget(parent=self)
         dock.setWindowTitle('Example insert widget')
-        self.addWidgetsToExampleForm(dock)
+        #self.addWidgetsToExampleForm(dock)
         buttoninsert = QtWidgets.QPushButton(dock)
         buttoninsert.setText("Insert widgets")
         dock.addSpanningWidget(buttoninsert, 'Button insert widgets')
@@ -22,19 +22,19 @@ class MainUI(QtWidgets.QMainWindow):
         
         form = dock
         form.layout=form.widget().uiElements['groupBoxFormLayout']
-        form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
-        form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
-        form.addWidget(QtWidgets.QComboBox(), 'ComboBox: ', 'comboBox')
-        form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
-        form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
-        form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-        form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
-        form.addWidget(QtWidgets.QRadioButton('test'), 'RadioButton: ', 'radioButton')
-        form.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
-        form.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')
-        form.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
-        form.addWidget(QtWidgets.QPushButton('test'), 'Button: ', 'button')
-        form.addSpanningWidget(QtWidgets.QPushButton('spanning widget'), 'spanning widget')
+        # form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
+        # form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
+        # form.addWidget(QtWidgets.QComboBox(), 'ComboBox: ', 'comboBox')
+        # form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
+        # form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
+        # form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
+        # form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
+        # form.addWidget(QtWidgets.QRadioButton('test'), 'RadioButton: ', 'radioButton')
+        # form.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
+        # form.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')
+        # form.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
+        # form.addWidget(QtWidgets.QPushButton('test'), 'Button: ', 'button')
+        # form.addSpanningWidget(QtWidgets.QPushButton('spanning widget'), 'spanning widget')
         
         self.test_insert_every_widget(form)
 
@@ -60,22 +60,37 @@ class MainUI(QtWidgets.QMainWindow):
     def openFormDialog(self):
         dialog = FormDialog(parent=self, title='Example insert widget')
         dialog.layout=dialog.formWidget.uiElements['groupBoxFormLayout']
-        self.addWidgetsToExampleForm(dialog)
+        #self.addWidgetsToExampleForm(dialog)
         
         form = dialog
-        form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
-        form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
-        form.addWidget(QtWidgets.QComboBox(), 'ComboBox: ', 'comboBox')
-        form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
-        form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
-        form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-        form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
-        form.addWidget(QtWidgets.QRadioButton('test'), 'RadioButton: ', 'radioButton')
-        form.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
-        form.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')
-        form.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
-        form.addWidget(QtWidgets.QPushButton('test'), 'Button: ', 'button')
-        form.addSpanningWidget(QtWidgets.QPushButton('spanning widget'), 'spanning widget')
+        # form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
+        # form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
+        # form.addWidget(QtWidgets.QComboBox(), 'ComboBox: ', 'comboBox')
+        # form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
+        # form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
+        # form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
+        # form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
+        # form.addWidget(QtWidgets.QRadioButton('test'), 'RadioButton: ', 'radioButton')
+        # form.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
+        # form.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')
+        # form.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
+        # form.addWidget(QtWidgets.QPushButton('test'), 'Button: ', 'button')
+        # form.addSpanningWidget(QtWidgets.QPushButton('spanning widget'), 'spanning widget')
+
+        """Generate every spanning widget and add it to `self.form`"""
+        
+        # form.addSpanningWidget(QtWidgets.QLabel('test label'), 'Label: s')
+        # form.addSpanningWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: s')
+        # form.addSpanningWidget(QtWidgets.QComboBox(), 'ComboBox: s')
+        # form.addSpanningWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox:s ')
+        # form.addSpanningWidget(QtWidgets.QSpinBox(), 'SpinBox:s ')
+        # form.addSpanningWidget(QtWidgets.QSlider(), 'Sliders: ')
+        # form.addSpanningWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget:s ')
+        # form.addSpanningWidget(QtWidgets.QRadioButton('test'), 'RadioButton:s ')
+        # form.addSpanningWidget(QtWidgets.QTextEdit('test'), 'TextEdit:s ')
+        # form.addSpanningWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: s')
+        # form.addSpanningWidget(QtWidgets.QLineEdit('test'), 'LineEdit:s ')
+        # form.addSpanningWidget(QtWidgets.QPushButton('test'), 'Button: s')
         
         self.test_insert_every_widget(form)
 
@@ -129,12 +144,26 @@ class MainUI(QtWidgets.QMainWindow):
 
     def insert_vertical(self, form):
         buttonuser = QtWidgets.QPushButton(self)
-        buttonuser.setText("Insert widget")
+        buttonuser.setText("Insert widget button bbbb")
         form.insertWidgetToVerticalLayout(1,buttonuser)
         #print("\nDictionary of widgets after insertion in the vertical lyout" + ":\n" +
               #str(form.getWidgets()))
         #print("insert count"+str(form.formWidget.uiElements['verticalLayout'].count()),form.formWidget.num_widgets)
 
+    @property
+    def list_all_widgets(self):
+        list_all_widgets = [QtWidgets.QLabel('test label'), QtWidgets.QCheckBox('test checkbox'),
+            QtWidgets.QComboBox(),
+            QtWidgets.QDoubleSpinBox(), 
+            QtWidgets.QSpinBox(), 
+            QtWidgets.QSlider(), 
+            UISliderWidget(QtWidgets.QLabel()), 
+            QtWidgets.QRadioButton('test r adio button'), 
+            QtWidgets.QTextEdit('test text edit'), 
+            QtWidgets.QPlainTextEdit('test plain text edit'), 
+            QtWidgets.QLineEdit('test line edit'), 
+            QtWidgets.QPushButton('test push button')]
+        return list_all_widgets
 
     def insert_form(self, form, button):
         # insert widget
@@ -151,29 +180,32 @@ class MainUI(QtWidgets.QMainWindow):
         #      str(form.getWidgets()))
         button.setEnabled(False)
 
-    def _test_insert_one_widget(self, row,name,form):
-        qwid = form.getWidget(name, role='field')
-        if f'{name}_label' in form.getWidgets():
-            qlab = form.getWidget(name, role='label')
-        else:
-            qlab=None
-        form.insertWidgetToFormLayout(row,name,qwid, qlab)
-        position=form.layout.getWidgetPosition(form.getWidget(name,'field'))
-        print(position[0])
-        if f'{name}_label' in form.getWidgets():
-            position=form.layout.getWidgetPosition(form.getWidget(name,'label'))
-            print(position)
+    def _test_insert_one_widget(self, form, row,name, qwidget, qlabel=None):
+        form.insertWidgetToFormLayout(row,f'{name}',qwidget,qlabel)
+        #position=self.layout.getWidgetPosition(self.form.getWidget(name,'field'))[0]
+        #self.assertEqual(position, row)
+        #form.insertWidgetToFormLayout(row,f'{name}_spanning',qwidget)
+        #position=self.layout.getWidgetPosition(self.form.getWidget(name,'field'))[0]
+        #self.assertEqual(position, row)
+        
+        
+        
+
 
     def test_insert_every_widget(self,form):
         """Insert every widget from `self.form`"""
-        list_widgets = [
-            'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
-            'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
-        for name in list_widgets:
-            self._test_insert_one_widget(0,name,form)
-        
-        self._test_insert_one_widget(0,'spanning widget',form)
-
+        list_widgets_names = [
+            'label insert', 'checkBox insert', 'comboBox insert', 'doubleSpinBox insert', 'spinBox insert', 'slider insert',
+            'uiSliderWidget insert', 'radioButton insert', 'textEdit insert', 'plainTextEdit insert', 'lineEdit insert', 'button insert']
+        for i in range(0,len(self.list_all_widgets)):
+            #print(self.list_all_widgets[i])
+            qwidget = self.list_all_widgets[i]
+            #qlabel = QtWidgets.QLabel(form)
+            name = list_widgets_names[i]
+            self._test_insert_one_widget(form,0,name,qwidget,name)
+            qwidget = self.list_all_widgets[i]
+            self._test_insert_one_widget(form,0,name+' spanning',qwidget)
+            print(name+' spanning')
 
 
 
