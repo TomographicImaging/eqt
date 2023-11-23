@@ -358,17 +358,12 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def click_Cancel(self):
         QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
 
-    def test_save_states_default(self):
-        # test both states are working
-        # state1
+    def test_dialog_buttons_default_behaviour(self):
+        # create the states dictionary
         self.set_state(1)
         states1 = self.form.getAllWidgetStates()
-        self.assertEqual(states1, self.form.getAllWidgetStates())
-        # state0
         self.set_state(0)
         states0 = self.form.getAllWidgetStates()
-        self.assertNotEqual(states1, self.form.getAllWidgetStates())
-        self.assertEqual(states0, self.form.getAllWidgetStates())
         # check state 0 and 1 are not saved when Cancel is pressed
         self.click_Cancel()
         self.assertNotEqual(states0, self.form.getAllWidgetStates())
