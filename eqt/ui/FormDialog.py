@@ -43,8 +43,8 @@ class FormDialog(QtWidgets.QDialog):
         self.close()
 
     def _onCancel(self):
-        '''calls `onCancel`, restores the previously saved states if existing and
-          closes the FormDialog'''
+        '''calls `onCancel`, closes the FormDialog and restores the previously saved states
+        or the default states.'''
         self.onCancel()
         self.close()
         self.restoreAllSavedWidgetStates()
