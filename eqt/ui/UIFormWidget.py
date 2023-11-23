@@ -117,7 +117,6 @@ class UIFormWidget:
         field = f'{name}_field'
         self.widgets[field] = qwidget
 
-        
         if qlabel is not None:
             # add the label
             label = f'{name}_label'
@@ -132,30 +131,28 @@ class UIFormWidget:
 
             field_form_role = QtWidgets.QFormLayout.FieldRole
 
-            
-
         else:
             # In the case we don't have a qlabel, set a spanning widget:
             field_form_role = QtWidgets.QFormLayout.SpanningRole
 
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
-        self.populate_default_widget_states_dictionary(name,qlabel)
+        self.populate_default_widget_states_dictionary(name, qlabel)
 
-    def populate_default_widget_states_dictionary(self,name,qlabel):
+    def populate_default_widget_states_dictionary(self, name, qlabel):
         '''
-        Creates an attribute dictionary of default widget states. The entries are in the 
+        Creates an attribute dictionary of default widget states. The entries are in the
         format: {'value': str | bool | int, 'enabled': bool, 'visible': bool}.
         This can be used to restore the default states of the widgets invoking `applyWidgetStates`.
         '''
         if not hasattr(self, 'default_widget_states'):
             self.default_widget_states = {}
         # add the default state of the qwidget
-        self.default_widget_states[f'{name}_field'] = self.getWidgetState(name,'field')
+        self.default_widget_states[f'{name}_field'] = self.getWidgetState(name, 'field')
         # add the default state of the qlabel
         if qlabel is not None:
             self.default_widget_states[f'{name}_label'] = self.getWidgetState(name, 'label')
-        
+
     def make_default_widget_states_visible(self):
         '''
         Sets all of the entries 'visible' in the `default_widget_states` dictionary to be `True`.
@@ -321,9 +318,9 @@ class UIFormWidget:
 
     def restoreAllSavedWidgetStates(self):
         '''
-        All widgets in the form are restored to the saved states. There are saved states only if 
-        `saveAllWidgetStates` was previously invoked. If there are no previously saved states, 
-        `default_widget_states` are used instead, after being made visible. 
+        All widgets in the form are restored to the saved states. There are saved states only if
+        `saveAllWidgetStates` was previously invoked. If there are no previously saved states,
+        `default_widget_states` are used instead, after being made visible.
         '''
         if not hasattr(self, 'widget_states'):
             self.make_default_widget_states_visible()
