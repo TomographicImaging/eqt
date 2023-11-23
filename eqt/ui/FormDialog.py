@@ -88,6 +88,14 @@ class FormDialog(QtWidgets.QDialog):
         else:
             raise ValueError(f"layout '{layout}' unrecognised: expected 'form' or 'vertical'")
 
+    def removeWidget(self, name):
+        '''
+        Removes a widget (and its label if present) from the layout.
+        Decreases the counter for the number of widgets in the layout.
+        Deletes the field (and label) from the dictionary.
+        '''
+        self.formWidget.removeWidget(name)
+
     def addSpanningWidget(self, qwidget, name=None, layout='form'):
         '''
         Adds a spanning widget to the layout.
@@ -106,6 +114,12 @@ class FormDialog(QtWidgets.QDialog):
         else:
             raise ValueError(
                 f"layout {layout} is not recognised, must be set to 'form' or 'vertical'")
+
+    def getNumWidgets(self):
+        '''
+        Returns the number of widgets in the form.
+        '''
+        return self.formWidget.getNumWidgets()
 
     def insertWidget(self, index, qwidget):
         '''inserts a widget to the vertical layout at the specific index'''

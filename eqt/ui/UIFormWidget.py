@@ -1,3 +1,5 @@
+import logging
+
 from PySide2 import QtWidgets
 
 from .UISliderWidget import UISliderWidget
@@ -54,6 +56,28 @@ class UIFormWidget:
 
     def addWidget(self, qwidget, qlabel, name):
         self._addWidget(name, qwidget, qlabel)
+
+    def removeWidget(self, name):
+        '''
+        Removes a widget (and its label if present) from the layout.
+        Decreases the counter for the number of widgets in the layout.
+        Deletes the field (and label) from the dictionary.
+        '''
+        formLayout = self.uiElements['groupBoxFormLayout']
+        qwidget = self.getWidget(name, role='field') # retrieves the widget from its name
+        formLayout.removeRow(qwidget)                # removes the whole row from the layout
+        self.num_widgets -= 1                        # updates total number of widgets
+        self.getWidgets().pop(name + '_field')       # removes field from the dictionary
+        try:
+            self.getWidgets().pop(name + '_label')
+        except KeyError:
+            logging.info('Widget ' + name + ' does not have a label.')
+
+    def getNumWidgets(self):
+        '''
+        Returns the number of widgets in the form.
+        '''
+        return self.num_widgets
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
@@ -347,6 +371,23 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
     def addWidget(self, qwidget, qlabel, name):
         self.widget().addWidget(qwidget, qlabel, name)
+
+    def addSpanningWidget(self, qwidget, name):
+        self.widget().addSpanningWidget(qwidget, name)
+
+    def removeWidget(self, name):
+        '''
+        Removes a widget (and its label if present) from the layout.
+        Decreases the counter for the number of widgets in the layout.
+        Deletes the field (and label) from the dictionary.
+        '''
+        self.widget().removeWidget(name)
+
+    def getNumWidgets(self):
+        '''
+        Returns the number of widgets in the form.
+        '''
+        return self.widget().getNumWidgets()
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
