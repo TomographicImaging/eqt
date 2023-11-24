@@ -50,11 +50,18 @@ class MainUI(QtWidgets.QMainWindow):
         # store a reference
         self.dialog = dialog
         self.dialog.onCancel = self.rejected
+        #redefine `onOk`` so it does not close the dialog.
+        self.dialog._onOk= self._onOkRedefined
 
         # print dictionary of all widgets in dialog
-        print("Dictionary of widgets in Form Dialog:\n" + str(self.dialog.getWidgets()))
+        print("\nDictionary of widgets in Form Dialog:\n" + str(self.dialog.getWidgets()))
 
         dialog.open()
+
+    def _onOkRedefined(self):
+        '''saves the widget states'''
+        self.dialog.saveAllWidgetStates()
+        #pass
 
     def addWidgetsToExampleForm(self, form):
 
