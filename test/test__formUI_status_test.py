@@ -329,9 +329,11 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
 
     def test_form_init_title(self):
-        """Tests if the FormDialog is created correctly with or without the title input"""
-        for form in [FormDialog(), FormDialog(title=None), FormDialog(title='title')]:
-            self.assertRaises(TypeError, form)
+        """Tests if the FormDialog is created correctly with or without the title argument."""
+        FormDialog()
+        FormDialog(title=None)
+        FormDialog(title='title')
+        
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
