@@ -485,9 +485,10 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.layout = self.form.widget().uiElements['groupBoxFormLayout']
 
     def test_form_init_title(self):
-        """Tests if the FormDockWidget is created correctly with or without the title input"""
-        for form in [FormDockWidget(), FormDockWidget(title=None), FormDockWidget(title='title')]:
-            self.assertRaises(TypeError, form)
+        """Tests if the FormDockWidget is created correctly with or without the title argument."""
+        FormDockWidget()
+        FormDockWidget(title=None)
+        FormDockWidget(title='title')
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
