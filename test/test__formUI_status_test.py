@@ -333,7 +333,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         FormDialog()
         FormDialog(title=None)
         FormDialog(title='title')
-        
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
