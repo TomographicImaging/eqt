@@ -164,7 +164,6 @@ class UIFormWidget:
 
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
-        #self.default_widgets = self.widgets.copy()
         self.populate_default_widget_states_dictionary(name, qlabel)
 
     def populate_default_widget_states_dictionary(self, name, qlabel):
@@ -351,18 +350,9 @@ class UIFormWidget:
         `default_widget_states` are used instead, after being made visible.
         '''
         if not hasattr(self, 'widget_states'):
-            print(self.widgets)
-            print(self.default_widgets)
-            #self.widgets=self.default_widgets
-            print(self.widgets)
             self.make_default_widget_states_visible()
-            #for key in self.default_widget_states.keys():
-            ##    if key not in self.widgets:
-            #        self.addWidget
-            #self.widgets[name + '_field']
             self.applyWidgetStates(self.default_widget_states)
         else:
-            print(self.default_widgets)
             self.applyWidgetStates(self.widget_states)
 
 
