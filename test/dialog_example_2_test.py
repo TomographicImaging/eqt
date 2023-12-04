@@ -56,7 +56,7 @@ class MainUI(QtWidgets.QMainWindow):
         # store a reference
         self.dialog = dialog
 
-        dialog.exec()
+        dialog.open()
 
     def accepted(self):
         print("accepted")

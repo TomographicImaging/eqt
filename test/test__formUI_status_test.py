@@ -416,6 +416,12 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.click_Cancel()
         self.assertEqual(states1, self.form.getAllWidgetStates())
 
+    def test_form_init_title(self):
+        """Tests if the FormDialog is created correctly with or without the title argument."""
+        FormDialog()
+        FormDialog(title=None)
+        FormDialog(title='title')
+
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
         initial_label_value = 'Label: '
@@ -565,6 +571,12 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.simple_form = FormDockWidget()
         self.add_two_widgets()
         self.layout = self.form.widget().uiElements['groupBoxFormLayout']
+
+    def test_form_init_title(self):
+        """Tests if the FormDockWidget is created correctly with or without the title argument."""
+        FormDockWidget()
+        FormDockWidget(title=None)
+        FormDockWidget(title='title')
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
