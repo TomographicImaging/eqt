@@ -108,27 +108,31 @@ class UIFormWidget:
             dictionary[f'{name}_label'] = qlabel
         
 
-    def populate_widget_number_dictionary(self, name, widget_number):
+    def populate_widget_number_dictionary(self, name, row):
+        widget_number = row 
         if widget_number == -1:
-            self.widget_number_dictionary[name] = self.num_widgets + self.num_removed_widgets
-        #else:
-            d = {}
-            digits = {}
-            d = [key for key, value in d.items() if str(value).isdigit() and value >= widget_number]
-            print(d)
-            print("Hello")
-            #dictionary[f'{name}_number'] = widget_number
+            self.widget_number_dictionary[name] = self.num_widgets + self.num_removed_widgets - 1 
+            print(self.widget_number_dictionary)
+        else:
+            for key, value in self.widget_number_dictionary.items():
+                if value >= widget_number:
+                    self.widget_number_dictionary[key] = value + 1
+            self.widget_number_dictionary[name] = widget_number
+            print(self.widget_number_dictionary)
 
-
-
+    def pop_widget_number_dictionary(self, name, row):
+        widget_number = row 
+        for key, value in self.widget_number_dictionary.items():
+            if value > widget_number:
+                self.widget_number_dictionary[key] = value - 1
+        self.widget_number_dictionary.pop(name) 
+        print(self.widget_number_dictionary)
 
     def remove_widget_from_dictionary(self, dictionary, name):
         if f'{name}_field' in dictionary.keys():
             dictionary.pop(f'{name}_field')       # removes field from the dictionary
         if f'{name}_label' in dictionary.keys():
-            dictionary.pop(f'{name}_label')
-        if name in dictionary.keys():
-            dictionary.pop(name)    
+            dictionary.pop(f'{name}_label') 
 
     def addWidget(self, qwidget, qlabel, name):
         self._addWidget(name, qwidget, qlabel)
@@ -170,6 +174,7 @@ class UIFormWidget:
         self.decreaseNumWidgets()                   # updates total number of widgets
         self.remove_widget_from_dictionary(self.getWidgets(), name)
         self.num_removed_widgets += 1
+        self.pop_widget_number_dictionary(name, widget_number)
 
 
 
