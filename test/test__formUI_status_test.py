@@ -138,7 +138,10 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.assertEqual(position, row)
 
     def test_insert_every_widget(self):
-        """Inserts each widget, and then each spanning widget, in position 0 of the form layout."""
+        """
+        Inserts each widget, and then each spanning widget, in position 0 of the form layout. 
+        Tests the position of the widgets in the layout is 0.
+        """
         list_widget_names = [
             'label insert', 'checkBox insert', 'comboBox insert', 'doubleSpinBox insert',
             'spinBox insert', 'slider insert', 'uiSliderWidget insert', 'radioButton insert',
@@ -438,7 +441,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.simple_form = FormDialog()
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
-
+        self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
     def click_Ok(self):
         QTest.mouseClick(self.form.Ok, Qt.LeftButton)
 
@@ -477,6 +480,21 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         FormDialog(title=None)
         FormDialog(title='title')
 
+    def _test_insert_one_widget_to_vertical_layout(self, row, qwidget):
+        """
+        Invokes `insertWidgetToVerticalLayout`, therefore inserts the qwidget at position 
+        row in the layout. Checks the position of the widget in the form is `row`.
+        """
+        self.form.insertWidgetToVerticalLayout(row, qwidget)
+        position = self.vertical_layout.indexOf(qwidget)
+        self.assertEqual(position, row)
+
+    def test_insert_every_widget_to_vertical_layout(self):
+        """Inserts each widget in position 0 of the vertical layout and tests its position in the layout is 0."""
+        for i in range(0, len(self.list_all_widgets)):
+            qwidget = self.list_all_widgets[i]
+            self._test_insert_one_widget_to_vertical_layout(0, qwidget)
+    
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
         initial_label_value = 'Label: '
