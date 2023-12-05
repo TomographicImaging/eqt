@@ -52,17 +52,12 @@ class UIFormWidget:
     def groupBox(self):
         return self.uiElements['groupBox']
 
-    def addSpanningWidget(self, qwidget, name):
-        self._addWidget(name, qwidget)
-
-    def addWidget(self, qwidget, qlabel, name):
-        self._addWidget(name, qwidget, qlabel)
-
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''
-        Inserts a widget, and a label widget, or a spanning widget to the form layout
+        Inserts a widget, and a label widget, or a spanning widget to the form layout, `groupBoxFormLayout`,
         in the position specified by row. If row is out of bounds, the widget is added at the end.
-        It adds the field (and label if present) in the widget dictionary.
+        It invokes `populate_widget_dictionaries` to populate the widget dictionary and the default states 
+        dictionary.
         It increases "num_widgets" by 1 unit.
         It should not be used to move widgets in a form.
 
@@ -73,19 +68,66 @@ class UIFormWidget:
         qwidget: qwidget
         qlabel: qlabel widget or str
         '''
-        field = f'{name}_field'
-        self.widgets[field] = qwidget
+        formLayout = self.uiElements['groupBoxFormLayout']
+
         if qlabel is not None:
             if isinstance(qlabel, str):
                 txt = qlabel
                 qlabel = QtWidgets.QLabel(self)
                 qlabel.setText(txt)
             self.uiElements['groupBoxFormLayout'].insertRow(row, qlabel, qwidget)
-            label = f'{name}_label'
-            self.widgets[label] = qlabel
         else:
             self.uiElements['groupBoxFormLayout'].insertRow(row, qwidget)
+        self.increaseNumWidgets() 
+        self.populate_widget_dictionary(self.widgets, name, qwidget, qlabel)
+        self.populate_widget_dictionary(self.default_widgets, name, qwidget, qlabel)
+        self.populate_default_widget_states_dictionary(name)
+
+    def _addWidget(self, name, qwidget, qlabel=None):
+        '''
+        Adds a widget, and a label widget, or a spanning widget at the the end of
+        the `groupBoxFormLayout` by invoking `insertWidgetToFormLayout`, where row is out of bounds. 
+
+        Parameters:
+        ----------
+        name: str
+        qwidget: widget
+        qlabel: qlabel widget or str
+        '''
+        self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
+
+    def populate_widget_dictionary(self, dictionary, name, qwidget, qlabel = None):
+        """Adds the field (and label if present) in the widget dictionary."""
+        field = f'{name}_field'
+        dictionary[field] = qwidget
+        if qlabel is not None:
+            label = f'{name}_label'
+            dictionary[label] = qlabel
+
+    def remove_widget_from_dictionary(self, dictionary, name):
+        dictionary.pop(f'{name}_field')       # removes field from the dictionary
+        if f'{name}_label' in dictionary.keys():
+            dictionary.pop(f'{name}_label')
+
+    def addWidget(self, qwidget, qlabel, name):
+        self._addWidget(name, qwidget, qlabel)
+    
+    def addSpanningWidget(self, qwidget, name):
+        self._addWidget(name, qwidget)
+        
+    def getNumWidgets(self):
+        '''
+        Returns the number of widgets in the form.
+        '''
+        return self.num_widgets
+
+    def increaseNumWidgets(self):
+        """Increases `num_widget` by 1 unit."""
         self.num_widgets += 1
+
+    def decreaseNumWidgets(self):
+        """Decreases `num_widget` by 1 unit."""
+        self.num_widgets -= 1
 
     def removeWidget(self, name):
         '''
@@ -94,20 +136,19 @@ class UIFormWidget:
         Deletes the field (and label) from the dictionary.
         '''
         formLayout = self.uiElements['groupBoxFormLayout']
+        if not hasattr(self, 'removed_widget_dictionary'):
+            self.removed_widget_dictionary = {}
         qwidget = self.getWidget(name, role='field') # retrieves the widget from its name
+        if f'{name}_label' in self.getWidgets().keys():
+            qlabel = self.getWidget(name, role='label') 
+            self.populate_widget_dictionary(self.removed_widget_dictionary, name, qwidget, qlabel)
+        else:
+            self.populate_widget_dictionary(self.removed_widget_dictionary, name, qwidget)
         formLayout.removeRow(qwidget)                # removes the whole row from the layout
-        self.num_widgets -= 1                        # updates total number of widgets
-        self.getWidgets().pop(name + '_field')       # removes field from the dictionary
-        try:
-            self.getWidgets().pop(name + '_label')
-        except KeyError:
-            logging.info('Widget ' + name + ' does not have a label.')
+        self.decreaseNumWidgets()                   # updates total number of widgets
+        self.remove_widget_from_dictionary(self.getWidgets(), name)
 
-    def getNumWidgets(self):
-        '''
-        Returns the number of widgets in the form.
-        '''
-        return self.num_widgets
+
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
@@ -160,53 +201,6 @@ class UIFormWidget:
         frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self._addWidget(name, frame)
 
-    def _addWidget(self, name, qwidget, qlabel=None):
-        '''
-        Adds a widget, and a label widget, or a spanning widget to the the end of
-        the `groupBoxFormLayout`. It adds the field (and label if present) in the
-        widget dictionary, `self.widgets`. It creates the counter `self.num_widgets`
-        and it increases it by 1 unit.
-
-        Parameters:
-        ----------
-        name: str
-        qwidget: widget
-        qlabel: qlabel widget or str
-        '''
-        formLayout = self.uiElements['groupBoxFormLayout']
-
-        # Create the widgets:
-
-        widgetno = self.num_widgets
-
-        # add the field
-        field = f'{name}_field'
-        self.widgets[field] = qwidget
-        self.default_widgets[field] = qwidget
-
-        if qlabel is not None:
-            # add the label
-            label = f'{name}_label'
-            if isinstance(qlabel, str):
-                txt = qlabel
-                qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
-                qlabel.setText(txt)
-            formLayout.setWidget(widgetno, QtWidgets.QFormLayout.LabelRole, qlabel)
-
-            # save a reference to label widgets in the dictionary
-            self.widgets[label] = qlabel
-            self.default_widgets[label] = qlabel
-
-            field_form_role = QtWidgets.QFormLayout.FieldRole
-
-        else:
-            # In the case we don't have a qlabel, set a spanning widget:
-            field_form_role = QtWidgets.QFormLayout.SpanningRole
-
-        formLayout.setWidget(widgetno, field_form_role, qwidget)
-        self.num_widgets += 1
-        self.populate_default_widget_states_dictionary(name)
-
     def populate_default_widget_states_dictionary(self, name):
         '''
         Creates an attribute dictionary of default widget states. The entries are in the
@@ -220,7 +214,7 @@ class UIFormWidget:
         # add the default state of the qlabel
         if f'{name}_label' in self.widgets.keys():
             self.default_widget_states[f'{name}_label'] = self.getWidgetState(name, 'label')
-
+    
     def set_default_widget_states_visible_true(self):
         '''
         Sets all of the entries 'visible' in the `default_widget_states` dictionary to be `True`.
