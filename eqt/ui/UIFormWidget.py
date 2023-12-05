@@ -41,7 +41,11 @@ class UIFormWidget:
         # Add elements to layout
         verticalLayout.addWidget(groupBox)
 
+        # number of widgets currently present in the groupBoxFormLayout
         self.num_widgets = 0
+        # number of widgets removed from the groupBoxFormLayout
+        self.num_removed_widgets = 0
+        self.widget_number_dictionary = {}
         self.uiElements = {
             'verticalLayout': verticalLayout, 'groupBox': groupBox,
             'groupBoxFormLayout': groupBoxFormLayout}
@@ -80,6 +84,7 @@ class UIFormWidget:
             self.uiElements['groupBoxFormLayout'].insertRow(row, qwidget)
         self.increaseNumWidgets() 
         self.populate_widget_dictionary(self.widgets, name, qwidget, qlabel)
+        self.populate_widget_number_dictionary(name, row)
         self.populate_widget_dictionary(self.default_widgets, name, qwidget, qlabel)
         self.populate_default_widget_states_dictionary(name)
 
@@ -97,17 +102,33 @@ class UIFormWidget:
         self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
 
     def populate_widget_dictionary(self, dictionary, name, qwidget, qlabel = None):
-        """Adds the field (and label if present) in the widget dictionary."""
-        field = f'{name}_field'
-        dictionary[field] = qwidget
+        """Adds the field (and label if present) in the widget dictionary.""" 
+        dictionary[f'{name}_field'] = qwidget
         if qlabel is not None:
-            label = f'{name}_label'
-            dictionary[label] = qlabel
+            dictionary[f'{name}_label'] = qlabel
+        
+
+    def populate_widget_number_dictionary(self, name, widget_number):
+        if widget_number == -1:
+            self.widget_number_dictionary[name] = self.num_widgets + self.num_removed_widgets
+        #else:
+            d = {}
+            digits = {}
+            d = [key for key, value in d.items() if str(value).isdigit() and value >= widget_number]
+            print(d)
+            print("Hello")
+            #dictionary[f'{name}_number'] = widget_number
+
+
+
 
     def remove_widget_from_dictionary(self, dictionary, name):
-        dictionary.pop(f'{name}_field')       # removes field from the dictionary
+        if f'{name}_field' in dictionary.keys():
+            dictionary.pop(f'{name}_field')       # removes field from the dictionary
         if f'{name}_label' in dictionary.keys():
             dictionary.pop(f'{name}_label')
+        if name in dictionary.keys():
+            dictionary.pop(name)    
 
     def addWidget(self, qwidget, qlabel, name):
         self._addWidget(name, qwidget, qlabel)
@@ -138,6 +159,7 @@ class UIFormWidget:
         formLayout = self.uiElements['groupBoxFormLayout']
         if not hasattr(self, 'removed_widget_dictionary'):
             self.removed_widget_dictionary = {}
+        widget_number = self.getWidgetNumber(name)
         qwidget = self.getWidget(name, role='field') # retrieves the widget from its name
         if f'{name}_label' in self.getWidgets().keys():
             qlabel = self.getWidget(name, role='label') 
@@ -147,6 +169,7 @@ class UIFormWidget:
         formLayout.removeRow(qwidget)                # removes the whole row from the layout
         self.decreaseNumWidgets()                   # updates total number of widgets
         self.remove_widget_from_dictionary(self.getWidgets(), name)
+        self.num_removed_widgets += 1
 
 
 
@@ -162,6 +185,10 @@ class UIFormWidget:
         if role in allowed_roles:
             return self.widgets[f'{name}_{role}']
         raise ValueError(f'Unexpected role: expected any of {allowed_roles}, got {role}')
+
+    def getWidgetNumber(self, name):
+        '''Returns the Widget number by the name with which it has been added.'''
+        return self.widget_number_dictionary[name]
 
     def setWidgetVisible(self, name, visible):
         '''
