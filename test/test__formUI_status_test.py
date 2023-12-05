@@ -3,6 +3,8 @@ import unittest
 from unittest import mock
 
 from PySide2 import QtWidgets
+from PySide2.QtCore import Qt
+from PySide2.QtTest import QTest
 
 from eqt.ui.FormDialog import FormDialog
 from eqt.ui.UIFormWidget import FormDockWidget, FormWidget
@@ -16,6 +18,22 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def setUp(self):
         raise NotImplementedError
+
+    @property
+    def exampleState(self):
+        # define two states for every widget
+        state = [{
+            'label_value': 'Test label state 0', 'checkbox_value': False, 'combobox_value': 0,
+            'doubleSpinBox_value': 10.0, 'spinBox_value': 10, 'slider_value': 10,
+            'uislider_value': 10, 'radio_value': False, 'textEdit_value': 'test edit 0',
+            'plainTextEdit_value': 'test plain 0', 'lineEdit_value': 'test line 0',
+            'pushButton_value': False}, {
+                'label_value': 'Test label state 1', 'checkbox_value': True, 'combobox_value': 1,
+                'doubleSpinBox_value': 1.0, 'spinBox_value': 1, 'slider_value': 1,
+                'uislider_value': 1, 'radio_value': True, 'textEdit_value': 'test edit 1',
+                'plainTextEdit_value': 'test plain 1', 'lineEdit_value': 'test line 1',
+                'pushButton_value': True}]
+        return state
 
     @property
     def list_all_widgets(self):
@@ -71,6 +89,44 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form = self.simple_form
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
+
+    def set_state(self, i):
+        """
+        Applies the values saved in `self.exampleState` at position `i` to the widgets in the form.
+
+        Parameters
+        ----------------
+        i: int
+        """
+        state = self.exampleState
+        # set the states
+        # QLabel
+        self.form.getWidget('label').setText(state[i]['label_value'])
+        # QCheckBox
+        self.form.getWidget('checkBox').setChecked(state[i]['checkbox_value'])
+        # QComboBox
+        combobox_list = ['test', 'test2']
+        self.form.getWidget('comboBox').addItems(combobox_list)
+        self.form.getWidget('comboBox').setCurrentIndex(state[i]['combobox_value'])
+        # QDoubleSpinBox
+        self.form.getWidget('doubleSpinBox').setValue(state[i]['doubleSpinBox_value'])
+        # QSpinBox
+        self.form.getWidget('spinBox').setValue(state[i]['spinBox_value'])
+        # QSlider
+        self.form.getWidget('slider').setValue(state[i]['slider_value'])
+        # UISlider
+        self.form.getWidget('uiSliderWidget').setValue(state[i]['uislider_value'])
+        # QRadioButton
+        self.form.getWidget('radioButton').setChecked(state[i]['radio_value'])
+        # QTextEdit
+        self.form.getWidget('textEdit').setText(state[i]['textEdit_value'])
+        # QPlainTextEdit
+        self.form.getWidget('plainTextEdit').setPlainText(state[i]['plainTextEdit_value'])
+        # QLineEdit
+        self.form.getWidget('lineEdit').setText(state[i]['lineEdit_value'])
+        # QPushButton
+        self.form.getWidget('button').setCheckable(True)
+        self.form.getWidget('button').setChecked(state[i]['pushButton_value'])
 
     def _test_insert_one_widget(self, row, name, qwidget, qlabel=None):
         """
@@ -383,6 +439,44 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
 
+    def click_Ok(self):
+        QTest.mouseClick(self.form.Ok, Qt.LeftButton)
+
+    def click_Cancel(self):
+        QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
+
+    def test_dialog_buttons_default_behaviour(self):
+        # create the states dictionary
+        self.set_state(1)
+        states1 = self.form.getAllWidgetStates()
+        self.set_state(0)
+        states0 = self.form.getAllWidgetStates()
+        # check state 0 and 1 are not saved when Cancel is pressed
+        self.click_Cancel()
+        self.assertNotEqual(states0, self.form.getAllWidgetStates())
+        self.assertNotEqual(states1, self.form.getAllWidgetStates())
+        # save state 0
+        self.set_state(0)
+        self.assertEqual(states0, self.form.getAllWidgetStates())
+        self.click_Ok()
+        self.assertEqual(states0, self.form.getAllWidgetStates())
+        # save state 1
+        self.set_state(1)
+        self.assertEqual(states1, self.form.getAllWidgetStates())
+        self.click_Ok()
+        self.assertEqual(states1, self.form.getAllWidgetStates())
+        # change to state 0 without saving
+        self.set_state(0)
+        self.assertEqual(states0, self.form.getAllWidgetStates())
+        self.click_Cancel()
+        self.assertEqual(states1, self.form.getAllWidgetStates())
+
+    def test_form_init_title(self):
+        """Tests if the FormDialog is created correctly with or without the title argument."""
+        FormDialog()
+        FormDialog(title=None)
+        FormDialog(title='title')
+
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
         initial_label_value = 'Label: '
@@ -532,6 +626,12 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.simple_form = FormDockWidget()
         self.add_two_widgets()
         self.layout = self.form.widget().uiElements['groupBoxFormLayout']
+
+    def test_form_init_title(self):
+        """Tests if the FormDockWidget is created correctly with or without the title argument."""
+        FormDockWidget()
+        FormDockWidget(title=None)
+        FormDockWidget(title='title')
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""

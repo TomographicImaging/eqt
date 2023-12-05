@@ -46,6 +46,7 @@ class UIFormWidget:
             'verticalLayout': verticalLayout, 'groupBox': groupBox,
             'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
+        self.default_widgets = {}
 
     @property
     def groupBox(self):
@@ -181,6 +182,7 @@ class UIFormWidget:
         # add the field
         field = f'{name}_field'
         self.widgets[field] = qwidget
+        self.default_widgets[field] = qwidget
 
         if qlabel is not None:
             # add the label
@@ -193,6 +195,7 @@ class UIFormWidget:
 
             # save a reference to label widgets in the dictionary
             self.widgets[label] = qlabel
+            self.default_widgets[label] = qlabel
 
             field_form_role = QtWidgets.QFormLayout.FieldRole
 
@@ -202,6 +205,28 @@ class UIFormWidget:
 
         formLayout.setWidget(widgetno, field_form_role, qwidget)
         self.num_widgets += 1
+        self.populate_default_widget_states_dictionary(name)
+
+    def populate_default_widget_states_dictionary(self, name):
+        '''
+        Creates an attribute dictionary of default widget states. The entries are in the
+        format: {'value': str | bool | int, 'enabled': bool, 'visible': bool}.
+        This can be used to restore the default states of the widgets invoking `applyWidgetStates`.
+        '''
+        if not hasattr(self, 'default_widget_states'):
+            self.default_widget_states = {}
+        # add the default state of the qwidget
+        self.default_widget_states[f'{name}_field'] = self.getWidgetState(name, 'field')
+        # add the default state of the qlabel
+        if f'{name}_label' in self.widgets.keys():
+            self.default_widget_states[f'{name}_label'] = self.getWidgetState(name, 'label')
+
+    def set_default_widget_states_visible_true(self):
+        '''
+        Sets all of the entries 'visible' in the `default_widget_states` dictionary to be `True`.
+        '''
+        for key in self.default_widget_states.keys():
+            self.default_widget_states[key]['visible'] = True
 
     def getAllWidgetStates(self):
         '''
@@ -361,10 +386,14 @@ class UIFormWidget:
 
     def restoreAllSavedWidgetStates(self):
         '''
-        Restore all widgets in the form to the state saved by `saveAllWidgetStates()`.
-        If `saveAllWidgetStates()` method was not previously invoked, do nothing.
+        All widgets in the form are restored to the saved states. There are saved states only if
+        `saveAllWidgetStates` was previously invoked. If there are no previously saved states,
+        `default_widget_states` are used instead, after being made visible.
         '''
-        if hasattr(self, 'widget_states'):
+        if not hasattr(self, 'widget_states'):
+            self.set_default_widget_states_visible_true()
+            self.applyWidgetStates(self.default_widget_states)
+        else:
             self.applyWidgetStates(self.widget_states)
 
 
@@ -378,7 +407,9 @@ class FormWidget(QtWidgets.QWidget, UIFormWidget):
 
 class FormDockWidget(QtWidgets.QDockWidget):
     def __init__(self, parent=None, title=None):
-        QtWidgets.QDockWidget.__init__(self, parent)
+        if title is None:
+            title = ''
+        QtWidgets.QDockWidget.__init__(self, title, parent)
         widget = FormWidget(parent)
         self.setWidget(widget)
         if title is not None:

@@ -10,8 +10,7 @@ class MainUI(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self, parent)
 
         # create a FormDockWidget
-        dock = UIFormWidget.FormDockWidget(parent=self)
-        dock.setWindowTitle('Example remove widget')
+        dock = UIFormWidget.FormDockWidget(parent=self, title='Example remove widget')
         self.addWidgetsToExampleForm(dock)
 
         # add a button to dock to remove user selected widget
@@ -50,11 +49,17 @@ class MainUI(QtWidgets.QMainWindow):
         # store a reference
         self.dialog = dialog
         self.dialog.onCancel = self.rejected
+        # redefine `onOk`` so it does not close the dialog.
+        self.dialog._onOk = self._onOkRedefined
 
         # print dictionary of all widgets in dialog
-        print("Dictionary of widgets in Form Dialog:\n" + str(self.dialog.getWidgets()))
+        print("\nDictionary of widgets in Form Dialog:\n" + str(self.dialog.getWidgets()))
 
         dialog.open()
+
+    def _onOkRedefined(self):
+        '''Saves the widget states.'''
+        self.dialog.saveAllWidgetStates()
 
     def addWidgetsToExampleForm(self, form):
 
