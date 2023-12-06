@@ -141,8 +141,12 @@ class FormDialog(QtWidgets.QDialog):
         return self.formWidget.getWidget(name, role)
 
     def getWidgets(self):
-        '''returns a dictionary of all the widgets in the form'''
+        '''Invokes `getWidgets` from `UIFormWidget`.'''
         return self.formWidget.getWidgets()
+
+    def getRemovedWidgets(self):
+        '''Invokes `getRemovedWidgets` from `UIFormWidget`.'''
+        return self.formWidget.getRemovedWidgets()
 
     def setWidgetVisible(self, name, visible):
         '''
