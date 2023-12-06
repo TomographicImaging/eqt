@@ -51,6 +51,16 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             QtWidgets.QLineEdit('test line edit'),
             QtWidgets.QPushButton('test push button')]
         return list_all_widgets
+   
+    @property
+    def state_simple_form(self):
+        state_simple_form = {
+            'label_field': {'value': 'test label', 'enabled': True, 'visible': False, 'widget_number': 0},
+            'label_label': {'value': 'Label: ', 'enabled': True, 'visible': False},
+            'checkBox_field': {'value': False, 'enabled': True, 'visible': False,'widget_number': 1},
+            'checkBox_label': {'value': 'CheckBox: ', 'enabled': True, 'visible': False}
+            }
+        return state_simple_form
 
     def add_every_widget(self):
         """Generate every widget and add it to `self.form`"""
@@ -391,46 +401,33 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.assertEqual(self.form.getWidgetState('radioButton_field')['value'], final_radio_value)
 
     def test_applyWidgetStates(self):
-        state_to_set = {
-            'checkBox_field': {'value': True, 'enabled': False, 'visible': False},
-            'label_field': {'value': 'applyWidgetStates Test', 'enabled': True, 'visible': False}}
-
-        self.simple_form.applyWidgetStates(state_to_set)
+        self.simple_form.applyWidgetStates(self.state_simple_form)
 
         self.assertEqual(self.simple_form.getWidgetState('checkBox_field'),
-                         state_to_set['checkBox_field'])
+                         self.state_simple_form['checkBox_field'])
         self.assertEqual(self.simple_form.getWidgetState('label_field'),
-                         state_to_set['label_field'])
+                         self.state_simple_form['label_field'])
 
     def test_applyWidgetState(self):
-        state_to_set = {'value': True, 'enabled': False, 'visible': False}
-        self.simple_form.applyWidgetState('checkBox_field', state_to_set)
-        self.assertEqual(self.simple_form.getWidgetState('checkBox_field'), state_to_set)
+        self.simple_form.applyWidgetState('checkBox_field', self.state_simple_form['checkBox_field'])
+        self.assertEqual(self.simple_form.getWidgetState('checkBox_field'), self.state_simple_form['checkBox_field'])
 
     def test_applyWidgetState_using_role_parameter_field(self):
-        state_to_set = {'value': True, 'enabled': False, 'visible': False}
-        self.simple_form.applyWidgetState('checkBox', state_to_set, role='field')
-        self.assertEqual(self.simple_form.getWidgetState('checkBox', 'field'), state_to_set)
+        self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_field'], role='field')
+        self.assertEqual(self.simple_form.getWidgetState('checkBox', 'field'), self.state_simple_form['checkBox_field'])
 
     def test_applyWidgetState_using_role_parameter_label(self):
-        state_to_set = {'value': 'test the checkbox:', 'enabled': False, 'visible': False}
-        self.simple_form.applyWidgetState('checkBox', state_to_set, role='label')
-        self.assertEqual(self.simple_form.getWidgetState('checkBox', 'label'), state_to_set)
+
+        self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_label'], role='label')
+        self.assertEqual(self.simple_form.getWidgetState('checkBox', 'label'), self.state_simple_form['checkBox_label'])
 
     def test_applyWidgetState_using_role_parameter_default(self):
-        state_to_set = {'value': True, 'enabled': False, 'visible': False}
-        self.simple_form.applyWidgetState('checkBox', state_to_set)
-        self.assertEqual(self.simple_form.getWidgetState('checkBox'), state_to_set)
+        self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_field'])
+        self.assertEqual(self.simple_form.getWidgetState('checkBox'), self.state_simple_form['checkBox_field'])
 
     def test_getAllWidgetStates(self):
         """Check that the state of all widgets is returned"""
-        expected_state = {
-            'checkBox_field': {'value': False, 'enabled': True, 'visible': False},
-            'label_field': {'value': 'test label', 'enabled': True, 'visible': False},
-            'checkBox_label': {'value': 'CheckBox: ', 'enabled': True, 'visible': False},
-            'label_label': {'value': 'Label: ', 'enabled': True, 'visible': False}}
-
-        self.assertEqual(self.simple_form.getAllWidgetStates(), expected_state)
+        self.assertEqual(self.simple_form.getAllWidgetStates(), self.state_simple_form)
 
 
 @skip_ci
@@ -506,13 +503,8 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def test_saveAllWidgetStates(self):
         """Check that the state of all widgets is saved to the state variable"""
-        expected_state = {
-            'checkBox_field': {'value': False, 'enabled': True, 'visible': False},
-            'label_field': {'value': 'test label', 'enabled': True, 'visible': False},
-            'checkBox_label': {'value': 'CheckBox: ', 'enabled': True, 'visible': False},
-            'label_label': {'value': 'Label: ', 'enabled': True, 'visible': False}}
         self.simple_form.saveAllWidgetStates()
-        self.assertEqual(self.simple_form.formWidget.widget_states, expected_state)
+        self.assertEqual(self.simple_form.formWidget.widget_states, self.state_simple_form)
 
     def test_restoreAllSavedWidgetStates(self):
         """Check that the state of all widgets is restored from the state variable"""
@@ -581,13 +573,8 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
 
     def test_saveAllWidgetStates(self):
         """Check that the state of all widgets is saved to the state variable"""
-        expected_state = {
-            'checkBox_field': {'value': False, 'enabled': True, 'visible': False},
-            'label_field': {'value': 'test label', 'enabled': True, 'visible': False},
-            'checkBox_label': {'value': 'CheckBox: ', 'enabled': True, 'visible': False},
-            'label_label': {'value': 'Label: ', 'enabled': True, 'visible': False}}
         self.simple_form.saveAllWidgetStates()
-        self.assertEqual(self.simple_form.widget_states, expected_state)
+        self.assertEqual(self.simple_form.widget_states, self.state_simple_form)
 
     def test_restoreAllSavedWidgetStates(self):
         """Check that the state of all widgets is restored from the state variable"""
@@ -662,13 +649,8 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
 
     def test_saveAllWidgetStates(self):
         """Check that the state of all widgets is saved to the state variable"""
-        expected_state = {
-            'checkBox_field': {'value': False, 'enabled': True, 'visible': False},
-            'label_field': {'value': 'test label', 'enabled': True, 'visible': False},
-            'checkBox_label': {'value': 'CheckBox: ', 'enabled': True, 'visible': False},
-            'label_label': {'value': 'Label: ', 'enabled': True, 'visible': False}}
         self.simple_form.saveAllWidgetStates()
-        self.assertEqual(self.simple_form.widget().widget_states, expected_state)
+        self.assertEqual(self.simple_form.widget().widget_states, self.state_simple_form)
 
     def test_restoreAllSavedWidgetStates(self):
         """Check that the state of all widgets is restored from the state variable"""
