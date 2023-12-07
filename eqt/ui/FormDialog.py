@@ -188,50 +188,16 @@ class FormDialog(QtWidgets.QDialog):
 
     def getWidgetState(self, widget, role=None):
         '''
-        Parameters
-        ----------
-        widget: QWidget or str
-            The (name of) widget to get the state of.
-        role: str, optional, default None, values: 'label', 'field', None.
-            The role of the widget to get the state of (only if `widget` is a `str`).
-            If unspecified, the widget is chosen based on `name=widget`.
-
-        Returns
-        -------
-        dict
-            Widget state, format: {'value': str | bool | int, 'enabled': bool, 'visible': bool},
-            e.g. {'value': 1, 'enabled': True, 'visible': True}.
-            This can be used to restore the state of the widget using `setWidgetState()`.
+        Invokes `getWidgetState` from `UIFormWidget`.
         '''
         return self.formWidget.getWidgetState(widget, role)
 
     def applyWidgetState(self, name, state, role=None):
-        '''
-        Applies the given state to the widget with the given name.
-
-        Parameters
-        ----------
-        name: str
-            The name of the widget to apply the state to.
-        role: str, optional, default None, values: 'label', 'field', None.
-            The role of the widget to apply the state to.
-            If unspecified, the widget is chosen based on `name`.
-        state: dict
-            Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool},
-            e.g. {'value': 1, 'enabled': True, 'visible': True}.
-        '''
+        '''Invokes `applyWidgetState` from `UIFormWidget`.'''
         return self.formWidget.applyWidgetState(name, state, role)
 
     def applyWidgetStates(self, state):
         '''
-        Applies the given states to the form's widgets.
-
-        Parameters
-        ----------
-        state: dict
-          Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool},
-                   ...},
-          e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True},
-                 'widget2': {'value': 2, 'enabled': False, 'visible': False}}.
+        Invokes `applyWidgetStates` from `UIFormWidget`.
         '''
         return self.formWidget.applyWidgetStates(state)

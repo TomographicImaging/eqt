@@ -102,14 +102,13 @@ class UIFormWidget:
         self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
 
     def populate_widget_dictionary(self, dictionary, name, qwidget, qlabel = None):
-        """Adds the field (and label if present) in the widget dictionary.""" 
+        '''Adds the field (and label if present) in the widget dictionary.'''
         dictionary[f'{name}_field'] = qwidget
         if qlabel is not None:
             dictionary[f'{name}_label'] = qlabel
         
-
     def populate_widget_number_dictionary(self, name, widget_number): 
-        """
+        '''
         Adds one item in the widget-number dictionary whose key is name and value is 
         the current widget number (i.e. row) in the form layout.
         As one widget is inserted, the widget number associated to the other widgets 
@@ -121,7 +120,7 @@ class UIFormWidget:
             name of the widget
         widget_number : int
             position of the widget in the form layout, i.e. row, in the current state
-        """
+        '''
         if widget_number == -1:
             self.widget_number_dictionary[name] = self.num_widgets - 1 
         else:
@@ -131,7 +130,7 @@ class UIFormWidget:
             self.widget_number_dictionary[name] = widget_number
 
     def pop_widget_number_dictionary(self, name, widget_number):
-        """
+        '''
         Removes one item in the widget-number dictionary whose key is name and value is 
         the widget number (i.e. row) in the form layout.
         As one widget is removed, the widget number associated to the other widgets 
@@ -143,22 +142,35 @@ class UIFormWidget:
             name of the widget
         widget_number : int
             position of the widget in the form layout, i.e. row, in the current state
-        """
+        '''
         for key, value in self.widget_number_dictionary.items():
             if value > widget_number:
                 self.widget_number_dictionary[key] = value - 1
         self.widget_number_dictionary.pop(name) 
 
-    def remove_widget_from_dictionary(self, dictionary, name):
-        if f'{name}_field' in dictionary.keys():
-            dictionary.pop(f'{name}_field')       # removes field from the dictionary
-        if f'{name}_label' in dictionary.keys():
-            dictionary.pop(f'{name}_label') 
+    def remove_widget_from_dictionary(self, dictionary, name_key):
+        '''
+        Removes the item associated with `name_key` from a dictionary.
+
+        Parameters:
+        -----------------
+        dictionary :  dict
+        name_key: str
+            Format: {name} or {name}_field or {name}_label
+        '''
+        if name_key in dictionary.keys():
+            dictionary.pop(name_key) 
+        if f'{name_key}_field' in dictionary.keys():
+            dictionary.pop(f'{name_key}_field')      
+        if f'{name_key}_label' in dictionary.keys():
+            dictionary.pop(f'{name_key}_label') 
 
     def addWidget(self, qwidget, qlabel, name):
+        '''Adds a qwidget and a qlabel widget in the same row of the form layout by invoking `_addWidget`.'''
         self._addWidget(name, qwidget, qlabel)
     
     def addSpanningWidget(self, qwidget, name):
+        '''Adds a spanning qwidget occupying the full row in the form layout by invoking `_addWidget`.'''
         self._addWidget(name, qwidget)
         
     def getNumWidgets(self):
@@ -168,20 +180,23 @@ class UIFormWidget:
         return self.num_widgets
 
     def increaseNumWidgets(self):
-        """Increases `num_widget` by 1 unit."""
+        '''Increases `num_widget` by 1 unit.'''
         self.num_widgets += 1
 
     def decreaseNumWidgets(self):
-        """Decreases `num_widget` by 1 unit."""
+        '''Decreases `num_widget` by 1 unit.'''
         self.num_widgets -= 1
 
     def removeWidget(self, name):
         '''
         If not present already, creates a dictionary to store the removed qwidgets.
-        Sets the parent of the qwidget (and qlabel if present) to `None`.
-        Decreases the counter for the number of widgets in the layout.
+        Sets the parent of the qwidget (and qlabel if present) to `None` and 
+        stores the widgets in the removed-widgets dictionary.
+        Deletes the row in the form layout.
         Deletes the qwidget and qlabel from the widgets dictionary.
         Deletes the widget number from the widget-number dictionary.
+        Decreases the counter for the number of widgets in the layout.
+        Increases the counter for the removed widgets.
 
         Parameters:
         --------------
@@ -192,25 +207,19 @@ class UIFormWidget:
         if not hasattr(self, 'removed_widgets_dictionary'):
             self.removed_widgets_dictionary = {}
         widget_number = self.getWidgetNumber(name)
-        qwidget = self.getWidget(name, role='field') # retrieves the widget from its name
+        qwidget = self.getWidget(name, role='field') 
         if f'{name}_label' in self.getWidgets().keys():
             qlabel = self.getWidget(name, role='label') 
             self.populate_widget_dictionary(self.removed_widgets_dictionary, name, qwidget, qlabel)
-            print(formLayout.rowCount())
             self.getWidget(name, 'label').setParent(None)
-            print(formLayout.rowCount())
         else:
             self.populate_widget_dictionary(self.removed_widgets_dictionary, name, qwidget)
-        print(formLayout.rowCount())
-        self.getWidget(name, 'field').setParent(None)   
-        formLayout.removeRow(self.widget_number_dictionary[name])          # removes the whole row from the layout
-        print(formLayout.rowCount())
-        self.decreaseNumWidgets()                   # updates total number of widgets
-        self.remove_widget_from_dictionary(self.getWidgets(), name)
-        self.num_removed_widgets += 1
+        self.getWidget(name, 'field').setParent(None)  
+        formLayout.removeRow(self.widget_number_dictionary[name])   
+        self.remove_widget_from_dictionary(self.getWidgets(), name) 
         self.pop_widget_number_dictionary(name, widget_number)
-
-
+        self.decreaseNumWidgets()         
+        self.num_removed_widgets += 1
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
@@ -226,7 +235,7 @@ class UIFormWidget:
         raise ValueError(f'Unexpected role: expected any of {allowed_roles}, got {role}')
 
     def getWidgetNumber(self, name):
-        '''Returns the Widget number by the name with which it has been added.'''
+        '''Returns the widget number by the widget name.'''
         return self.widget_number_dictionary[name]
 
     def setWidgetVisible(self, name, visible):
@@ -313,7 +322,7 @@ class UIFormWidget:
         Parameters
         ----------
         widget: QWidget or str
-            The widget or its name, or its name + "_field" or "_label" (when role is None) to get the state of.
+            The widget or its name (or its name + '_field' or '_label', when role is None) to get the state of.
         role: str, optional, default None, values: 'label', 'field', None.
             The role of the widget to apply the state to (only if `widget` is the widget name string.).
 
@@ -335,17 +344,8 @@ class UIFormWidget:
                 name_role = widget + '_' + role
                 name = widget
             else:
-                name_role = widget
-                if '_field' in name_role:
-                    name = name_role.removesuffix('_field')
-                    role = 'field'
-                elif '_label' in name_role:
-                    name = name_role.removesuffix('_label')
-                    role = 'label'
-                else:
-                    name = widget
-                    role = 'field'
-                    name_role = name + '_' + role
+                name, role = self.getNameAndRoleFromNameKey(widget)
+                name_role = name + '_' + role
 
             try:
                 widget = self.widgets[name_role]
@@ -376,20 +376,40 @@ class UIFormWidget:
 
         if role == 'field':
             widget_state['widget_number'] = self.widget_number_dictionary[name]
-
-
         return widget_state
 
+    def getNameAndRoleFromNameKey(self, name_key):
+        '''
+        Given a name key, returns the name and the role. 
+        Role can be included as a suffix or is `field` by default.
+        
+        Parameters
+        -------------
+        name_key: str
+            Format: name or name_field or name_label
+        '''
+        if name_key.endswith('_field'):
+            name = name_key.removesuffix('_field')
+            role = 'field'
+        elif name_key.endswith('_label'):
+            name = name_key.removesuffix('_label')
+            role = 'label'
+        else:
+            name = name_key
+            role = 'field'
+        return name, role
+
     def getNameAndRoleFromWidget(self, widget):
+        '''       
+        Given a widget, finds it in the widget dictionary and returns its name and role. 
+        
+        Parameters
+        -------------
+        widget: qwidget
+        '''
         for key, value in self.widgets.items():
             if value == widget:
-                name_role = key
-        if '_field' in name_role:
-            name = name_role.removesuffix('_field')
-            role = 'field'
-        elif '_label' in name_role:
-            name = name_role.removesuffix('_label')
-            role = 'label'
+                name, role = self.getNameAndRoleFromNameKey(key)
         return name, role
 
     def applyWidgetState(self, name_key, state, role=None):
@@ -399,10 +419,10 @@ class UIFormWidget:
         Parameters
         ----------
         name_key: str
-            The key of the widget to apply the state to, e.g. name or f'{name}_field' or f'{name}_label'
+            The key of the widget to apply the state to. Format: name or f'{name}_field' or f'{name}_label'
         role: str, optional, default None, values: 'label', 'field', None.
             The role of the widget to apply the state to (only if `widget` is a `str`).
-            If unspecified, the widget is chosen based on name_key.
+            If None, the widget is chosen based on the format of name_key.
         state: dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
                     or {'value': str | bool | int, 'enabled': bool, 'visible': bool}
@@ -411,20 +431,12 @@ class UIFormWidget:
         if role is not None:
             if role not in ['label', 'field']:
                 raise ValueError('Role must be either "label", "field" or None')
-            name_role = name_key + '_' + role  
             name = name_key
         else:
-            name_role = name_key
-            if '_field' in name_role:
-                name = name_role.removesuffix('_field')
-                role = 'field'
-            elif '_label' in name_role:
-                name = name_role.removesuffix('_label')
-                role = 'label'
-            else:
-                name_role = name_key + '_field'
-                name = name_key
+            name, role = self.getNameAndRoleFromNameKey(name_key)
+        name_role = name + '_' + role
 
+        #retrieve widget
         try:
             if name_role in self.widgets.keys():
                 widget = self.widgets[name_role]
@@ -432,22 +444,8 @@ class UIFormWidget:
                 if name_role in self.removed_widgets_dictionary.keys():
                     widget = self.removed_widgets_dictionary[name_role]
         except KeyError:
-            if role is None:
-                try:
-                    name_role = name_key + '_field' 
-                    if name_role in self.widgets.keys():
-                        widget = self.widgets[name_role]
-                    elif hasattr(self, 'removed_widgets_dictionary'):
-                        if name_role in self.removed_widgets_dictionary.keys():
-                            widget = self.removed_widgets_dictionary[name_role]
-                except KeyError:
-                    raise KeyError('No widget associated with the dictionary key `'+name_role+'`.')
-            raise KeyError('No widget associated with the dictionary key `'+name_role+'`.')
-
-
-        
-
-
+            raise KeyError('No widget associated with the dictionary key `'+name_role+'`')
+        #apply state
         for key, value in state.items():
             if key == 'enabled':
                 widget.setEnabled(value)
@@ -476,37 +474,51 @@ class UIFormWidget:
                     if value != self.widget_number_dictionary[name]:
                         self.widget_number_dictionary[name] = value
 
-
-    def applyWidgetStates(self, state):
+    def applyWidgetStates(self, states):
         '''
+        Removes the widgets in the form which are not present in the states. 
+        If the widgets in the states are not present in the form, 
+        they are retrieved from the removed-widgets dictionary and inserted at position 
+        given by the widget number recorded in the states. An error is raised when the 
+        widget in thet state is not in the form nor in the removed widgets.
         Applies the given states to the form's widgets.
 
         Parameters
         ----------
-        state: dict
-          Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool},
-                   ...},
-          e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True},
-                 'widget2': {'value': 2, 'enabled': False, 'visible': False}}.
+        states: nested_dict
+          Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
+                    'name_label': {'value': str | bool | int, 'enabled': bool, 'visible': bool}, ...},
+                  e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : int},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False}}.
         '''
-        for key, widget_state in state.items():
+        # remove extra widgets
+        if self.widgets.keys() > states.keys():
+            for key in self.widgets.keys():
+                if key not in states.keys():
+                    name = self.getNameAndRoleFromNameKey(key)[0]
+                    self.removeWidget(name)
+        # add widgets if necessary
+        for key, widget_state in states.items():
             if key in self.widgets.keys():
                 pass
             elif hasattr(self, 'removed_widgets_dictionary'):
                 if key in self.removed_widgets_dictionary.keys():
-                    if '_field' in key:
+                    if key.endswith('_field'):
                         name = key.removesuffix('_field')
+                        widget_number = states[key]['widget_number']
                         qwidget = self.removed_widgets_dictionary[key]
                         if f'{name}_label' in self.removed_widgets_dictionary.keys():
                             qlabel = self.removed_widgets_dictionary[key]
-                            self.insertWidgetToFormLayout(state[key]['widget_number'],name,qwidget,qlabel)
+                            self.insertWidgetToFormLayout(widget_number,name,qwidget,qlabel)
                         else:
-                            self.insertWidgetToFormLayout(state[key]['widget_number'],name,qwidget)
+                            self.insertWidgetToFormLayout(widget_number,name,qwidget)
+            else:
+                raise KeyError('No widget associated with the dictionary key `'+key+'`')
             self.applyWidgetState(key, widget_state)
 
     def saveAllWidgetStates(self):
         '''
-        Saves the state of all widgets in the form.
+        Saves the state of all widgets currently present in the form.
         To later restore the states, use `restoreAllSavedWidgetStates()`.
         '''
         self.widget_states = self.getAllWidgetStates()
@@ -606,62 +618,29 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
         Returns
         -------
-        states: dict
-          Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool},
-                   ...},
-          e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True},
-                 'widget2': {'value': 2, 'enabled': False, 'visible': False}}.
+        states: nested_dict
+          Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
+                    'name_label': {'value': str | bool | int, 'enabled': bool, 'visible': bool}, ...},
+                  e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : int},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False}}.
         '''
         return self.widget().getAllWidgetStates()
 
     def getWidgetState(self, widget, role=None):
         '''
-        Parameters
-        ----------
-        widget: QWidget or str
-            The (name of) widget to get the state of.
-        role: str, optional, default None, values: 'label', 'field', None.
-            The role of the widget to get the state of (only if `widget` is a `str`).
-            If unspecified, the widget is chosen based on `name=widget`.
-
-        Returns
-        -------
-        dict
-            Widget state, format: {'value': str | bool | int, 'enabled': bool, 'visible': bool},
-            e.g. {'value': 1, 'enabled': True, 'visible': True}.
-            This can be used to restore the state of the widget using `setWidgetState()`.
+        Invokes `getWidgetState` from `UIFormWidget`.
         '''
         return self.widget().getWidgetState(widget, role)
 
     def applyWidgetState(self, name, state, role=None):
         '''
-        Applies the given state to the widget with the given name.
-
-        Parameters
-        ----------
-        name: str
-            The name of the widget to apply the state to.
-        role: str, optional, default None, values: 'label', 'field', None.
-            The role of the widget to apply the state to.
-            If unspecified, the widget is chosen based on `name`.
-        state: dict
-            Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
-                    or {'value': str | bool | int, 'enabled': bool, 'visible': bool}
-                    e.g. {'value': 1, 'enabled': True, 'visible': True}.
+        Invokes `applyWidgetState` from `UIFormWidget`.
         '''
         return self.widget().applyWidgetState(name, state, role)
 
     def applyWidgetStates(self, state):
         '''
-        Applies the given states to the form's widgets.
-
-        Parameters
-        ----------
-        state: dict
-          Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool},
-                   ...},
-          e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True},
-                 'widget2': {'value': 2, 'enabled': False, 'visible': False}}.
+        Invokes `applyWidgetStates` from `UIFormWidget`.
         '''
         return self.widget().applyWidgetStates(state)
 
