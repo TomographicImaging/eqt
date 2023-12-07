@@ -118,26 +118,18 @@ class FormDialog(QtWidgets.QDialog):
 
     def removeWidget(self, name):
         '''
-        Removes a widget (and its label if present) from the layout.
-        Decreases the counter for the number of widgets in the layout.
-        Deletes the field (and label) from the dictionary.
+        Invokes `removeWidget` from `UIFormWidget`.
         '''
         self.formWidget.removeWidget(name)
 
     def getNumWidgets(self):
         '''
-        Returns the number of widgets in the form.
+        Invokes `getNumWidgets` from `UIFormWidget`.
         '''
         return self.formWidget.getNumWidgets()
 
     def getWidget(self, name, role='field'):
-        '''returns the Widget by the name with which it has been added
-
-        By default it returns the widget that is the field in the form.
-        The user can get the label by specifying the role to be label
-
-        Raises ValueError if the role is not field or label.
-        '''
+        '''Invokes `getWidget` from `UIFormWidget`.'''
         return self.formWidget.getWidget(name, role)
 
     def getWidgets(self):

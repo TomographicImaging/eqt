@@ -82,11 +82,11 @@ class UIFormWidget:
             self.uiElements['groupBoxFormLayout'].insertRow(row, qlabel, qwidget)
         else:
             self.uiElements['groupBoxFormLayout'].insertRow(row, qwidget)
-        self.increaseNumWidgets() 
-        self.populate_widget_dictionary(self.widgets, name, qwidget, qlabel)
-        self.populate_widget_number_dictionary(name, row)
-        self.populate_widget_dictionary(self.default_widgets, name, qwidget, qlabel)
-        self.populate_default_widget_states_dictionary(name)
+        self._increaseNumWidgets() 
+        self.populateWidgetDictionary(self.widgets, name, qwidget, qlabel)
+        self._populateWidgetNumberDictionary(name, row)
+        self.populateWidgetDictionary(self.default_widgets, name, qwidget, qlabel)
+        self.populateDefaultWidgetStatesDictionary(name)
 
     def _addWidget(self, name, qwidget, qlabel=None):
         '''
@@ -101,17 +101,17 @@ class UIFormWidget:
         '''
         self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
 
-    def populate_widget_dictionary(self, dictionary, name, qwidget, qlabel = None):
+    def populateWidgetDictionary(self, dictionary, name, qwidget, qlabel = None):
         '''Adds the field (and label if present) in the widget dictionary.'''
         dictionary[f'{name}_field'] = qwidget
         if qlabel is not None:
             dictionary[f'{name}_label'] = qlabel
         
-    def populate_widget_number_dictionary(self, name, widget_number): 
+    def _populateWidgetNumberDictionary(self, name, widget_number): 
         '''
         Adds one item in the widget-number dictionary whose key is name and value is 
         the current widget number (i.e. row) in the form layout.
-        As one widget is inserted, the widget number associated to the other widgets 
+        As one widget is inserted, the widget numbers associated to the other widgets 
         in the layout are updated.
 
         Parameters:
@@ -129,11 +129,11 @@ class UIFormWidget:
                     self.widget_number_dictionary[key] = value + 1
             self.widget_number_dictionary[name] = widget_number
 
-    def pop_widget_number_dictionary(self, name, widget_number):
+    def _popWidgetNumberDictionary(self, name, widget_number):
         '''
         Removes one item in the widget-number dictionary whose key is name and value is 
         the widget number (i.e. row) in the form layout.
-        As one widget is removed, the widget number associated to the other widgets 
+        As one widget is removed, the widget numbers associated to the other widgets 
         in the layout are updated.
 
         Parameters:
@@ -179,11 +179,11 @@ class UIFormWidget:
         '''
         return self.num_widgets
 
-    def increaseNumWidgets(self):
+    def _increaseNumWidgets(self):
         '''Increases `num_widget` by 1 unit.'''
         self.num_widgets += 1
 
-    def decreaseNumWidgets(self):
+    def _decreaseNumWidgets(self):
         '''Decreases `num_widget` by 1 unit.'''
         self.num_widgets -= 1
 
@@ -210,15 +210,15 @@ class UIFormWidget:
         qwidget = self.getWidget(name, role='field') 
         if f'{name}_label' in self.getWidgets().keys():
             qlabel = self.getWidget(name, role='label') 
-            self.populate_widget_dictionary(self.removed_widgets_dictionary, name, qwidget, qlabel)
+            self.populateWidgetDictionary(self.removed_widgets_dictionary, name, qwidget, qlabel)
             self.getWidget(name, 'label').setParent(None)
         else:
-            self.populate_widget_dictionary(self.removed_widgets_dictionary, name, qwidget)
+            self.populateWidgetDictionary(self.removed_widgets_dictionary, name, qwidget)
         self.getWidget(name, 'field').setParent(None)  
         formLayout.removeRow(self.widget_number_dictionary[name])   
         self.remove_widget_from_dictionary(self.getWidgets(), name) 
-        self.pop_widget_number_dictionary(name, widget_number)
-        self.decreaseNumWidgets()         
+        self._popWidgetNumberDictionary(name, widget_number)
+        self._decreaseNumWidgets()         
         self.num_removed_widgets += 1
 
     def getWidget(self, name, role='field'):
@@ -280,7 +280,7 @@ class UIFormWidget:
         frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self._addWidget(name, frame)
 
-    def populate_default_widget_states_dictionary(self, name):
+    def populateDefaultWidgetStatesDictionary(self, name):
         '''
         Creates an attribute dictionary of default widget states. The entries are in the
         format: {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number': int}
@@ -344,7 +344,7 @@ class UIFormWidget:
                 name_role = widget + '_' + role
                 name = widget
             else:
-                name, role = self.getNameAndRoleFromNameKey(widget)
+                name, role = self._getNameAndRoleFromNameKey(widget)
                 name_role = name + '_' + role
 
             try:
@@ -352,7 +352,7 @@ class UIFormWidget:
             except KeyError:
                         raise KeyError('No widget associated with the dictionary key `'+ name_role)
         else:
-            name, role = self.getNameAndRoleFromWidget(widget)
+            name, role = self._getNameAndRoleFromWidget(widget)
         widget_state = {}
         widget_state['enabled'] = widget.isEnabled()
         widget_state['visible'] = widget.isVisible()
@@ -378,7 +378,7 @@ class UIFormWidget:
             widget_state['widget_number'] = self.widget_number_dictionary[name]
         return widget_state
 
-    def getNameAndRoleFromNameKey(self, name_key):
+    def _getNameAndRoleFromNameKey(self, name_key):
         '''
         Given a name key, returns the name and the role. 
         Role can be included as a suffix or is `field` by default.
@@ -399,7 +399,7 @@ class UIFormWidget:
             role = 'field'
         return name, role
 
-    def getNameAndRoleFromWidget(self, widget):
+    def _getNameAndRoleFromWidget(self, widget):
         '''       
         Given a widget, finds it in the widget dictionary and returns its name and role. 
         
@@ -409,7 +409,7 @@ class UIFormWidget:
         '''
         for key, value in self.widgets.items():
             if value == widget:
-                name, role = self.getNameAndRoleFromNameKey(key)
+                name, role = self._getNameAndRoleFromNameKey(key)
         return name, role
 
     def applyWidgetState(self, name_key, state, role=None):
@@ -433,7 +433,7 @@ class UIFormWidget:
                 raise ValueError('Role must be either "label", "field" or None')
             name = name_key
         else:
-            name, role = self.getNameAndRoleFromNameKey(name_key)
+            name, role = self._getNameAndRoleFromNameKey(name_key)
         name_role = name + '_' + role
 
         #retrieve widget
@@ -495,7 +495,7 @@ class UIFormWidget:
         if self.widgets.keys() > states.keys():
             for key in self.widgets.keys():
                 if key not in states.keys():
-                    name = self.getNameAndRoleFromNameKey(key)[0]
+                    name = self._getNameAndRoleFromNameKey(key)[0]
                     self.removeWidget(name)
         # add widgets if necessary
         for key, widget_state in states.items():
