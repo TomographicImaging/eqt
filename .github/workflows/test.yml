@@ -50,8 +50,11 @@ jobs:
           cat <<EOF >> "$GITHUB_STEP_SUMMARY"
         # Missing tag annotation
         ## Fix
-        See <https://github.com/TomographicImaging/eqt/tree/main/.github/workflows#releasing>.
+        See <https://github.com/TomographicImaging/eqt/tree/main/CONTRIBUTING.md#releasing>.
         ## Suggested body
+        See <https://github.com/TomographicImaging/eqt/tree/main/CHANGELOG.md>.
+        In particular, check that these commits are described:
+
         $changelog
         EOF
           exit 1
