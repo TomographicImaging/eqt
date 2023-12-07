@@ -1,3 +1,19 @@
+# Version x.x.x
+- Reinstates changelog (#99)
+- Adds `title` to `FormDockWidget` & update tests/examples (#102)
+- Stops `pre-commit` committing corrections to user PRs (#112)
+- Updates `pre-commit` dependencies (#111, #104, #96, #88, #84, #82, #81)
+- Fixes failing unit tests (#106)
+- Adds `removeWidget` & `getNumWidgets` form methods (#93, #70)
+  + Adds `addSpanningWidget` method to `FormDockWidget` (#93)
+  + update examples/tests
+- Creates `eqt_env.yml` conda environment configuration with all prerequisites (#91)
+- Fixes `find_packages` build bloat & development installation bug (#89)
+- Adds user-defined function for `FormDialog` "Cancel" button (#85)
+- Update installation instructions (#83, #76)
+- Fixes linter errors (#81)
+- Fixes CI release tags
+
 # Version 0.7.1
 - add code linting (#79)
   + add `pre-commit` config
