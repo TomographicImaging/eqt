@@ -60,7 +60,7 @@ class UIFormWidget:
         '''
         Inserts a widget, and a label widget, or a spanning widget to the form layout, `groupBoxFormLayout`,
         in the position specified by row. If row is out of bounds, the widget is added at the end.
-        It invokes `populate_widget_dictionaries` to populate the widget dictionary and the default states 
+        It invokes `populateWidgetDictionary` to populate the widget dictionary and the default states 
         dictionary.
         It increases "num_widgets" by 1 unit.
         It should not be used to move widgets in a form.
@@ -148,7 +148,7 @@ class UIFormWidget:
                 self.widget_number_dictionary[key] = value - 1
         self.widget_number_dictionary.pop(name) 
 
-    def remove_widget_from_dictionary(self, dictionary, name_key):
+    def removeWidgetFromDictionary(self, dictionary, name_key):
         '''
         Removes the item associated with `name_key` from a dictionary.
 
@@ -216,7 +216,7 @@ class UIFormWidget:
             self.populateWidgetDictionary(self.removed_widgets_dictionary, name, qwidget)
         self.getWidget(name, 'field').setParent(None)  
         formLayout.removeRow(self.widget_number_dictionary[name])   
-        self.remove_widget_from_dictionary(self.getWidgets(), name) 
+        self.removeWidgetFromDictionary(self.getWidgets(), name) 
         self._popWidgetNumberDictionary(name, widget_number)
         self._decreaseNumWidgets()         
         self.num_removed_widgets += 1
@@ -295,7 +295,7 @@ class UIFormWidget:
         if f'{name}_label' in self.widgets.keys():
             self.default_widget_states[f'{name}_label'] = self.getWidgetState(name, 'label')
     
-    def set_default_widget_states_visible_true(self):
+    def setDefaultWidgetStatesVisibleTrue(self):
         '''
         Sets all of the entries 'visible' in the `default_widget_states` dictionary to be `True`.
         '''
@@ -530,7 +530,7 @@ class UIFormWidget:
         `default_widget_states` are used instead, after being made visible.
         '''
         if not hasattr(self, 'widget_states'):
-            self.set_default_widget_states_visible_true()
+            self.setDefaultWidgetStatesVisibleTrue()
             self.applyWidgetStates(self.default_widget_states)
         else:
             self.applyWidgetStates(self.widget_states)
@@ -601,29 +601,15 @@ class FormDockWidget(QtWidgets.QDockWidget):
         self.widget().setWidgetVisible(name, visible)
 
     def saveAllWidgetStates(self):
-        '''
-        Saves the state of all widgets in the form.
-        To later restore the states, use `restoreAllSavedWidgetStates()`.
-        '''
+        '''Invokes `saveAllWidgetStates` from `UIFormWidget`.'''
         self.widget().saveAllWidgetStates()
 
     def restoreAllSavedWidgetStates(self):
-        '''
-        Restore all widgets in the form to the state saved by `saveAllWidgetStates()`.
-        If `saveAllWidgetStates()` method was not previously invoked, do nothing.
-        '''
+        '''Invokes `restoreAllSavedWidgetStates` from `UIFormWidget`.'''
         self.widget().restoreAllSavedWidgetStates()
 
     def getAllWidgetStates(self):
-        '''
-        Returns
-        -------
-        states: nested_dict
-          Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
-                    'name_label': {'value': str | bool | int, 'enabled': bool, 'visible': bool}, ...},
-                  e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : int},
-                  'widget2': {'value': 2, 'enabled': False, 'visible': False}}.
-        '''
+        '''Invokes `getAllWidgetStates` from `UIFormWidget`.'''
         return self.widget().getAllWidgetStates()
 
     def getWidgetState(self, widget, role=None):
@@ -633,15 +619,11 @@ class FormDockWidget(QtWidgets.QDockWidget):
         return self.widget().getWidgetState(widget, role)
 
     def applyWidgetState(self, name, state, role=None):
-        '''
-        Invokes `applyWidgetState` from `UIFormWidget`.
-        '''
+        '''Invokes `applyWidgetState` from `UIFormWidget`.'''
         return self.widget().applyWidgetState(name, state, role)
 
     def applyWidgetStates(self, state):
-        '''
-        Invokes `applyWidgetStates` from `UIFormWidget`.
-        '''
+        '''Invokes `applyWidgetStates` from `UIFormWidget`.'''
         return self.widget().applyWidgetStates(state)
 
 
