@@ -51,7 +51,6 @@ class UIFormWidget:
             'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
         self.default_widgets = {}
-        self.default_widgets = {}
 
     @property
     def groupBox(self):
