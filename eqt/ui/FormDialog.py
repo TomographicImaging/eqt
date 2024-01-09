@@ -28,22 +28,22 @@ class FormDialog(QtWidgets.QDialog):
 
     @property
     def Ok(self):
-        '''returns a reference to the Dialog Ok button to connect its signals'''
+        '''Returns a reference to the Dialog Ok button to connect its signals'''
         return self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
 
     @property
     def Cancel(self):
-        '''returns a reference to the Dialog Cancel button to connect its signals'''
+        '''Returns a reference to the Dialog Cancel button to connect its signals'''
         return self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel)
 
     def _onOk(self):
-        '''saves the widget states and calls `onOk`'''
+        '''Saves the widget states and calls `onOk`'''
         self.saveAllWidgetStates()
         self.onOk()
         self.close()
 
     def _onCancel(self):
-        '''calls `onCancel`, closes the FormDialog and restores the previously saved states
+        '''Calls `onCancel`, closes the FormDialog and restores the previously saved states
         or the default states.'''
         self.onCancel()
         self.close()
@@ -107,7 +107,19 @@ class FormDialog(QtWidgets.QDialog):
                 f"layout {layout} is not recognised, must be set to 'form' or 'vertical'")
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
-        '''Invokes `insertWidgetToFormLayout` in `UIFormWidget`.'''
+        '''
+        Inserts a widget and a label widget, or a spanning widget if 'qlabel' is None, to the form layout, `groupBoxFormLayout`,
+        in the position specified by row. If row is out of bounds, the widget is added at the end.
+        It adds to the widget dictionary and the default states 
+        dictionary.
+
+        Parameters:
+        ----------
+        row: int
+        name: str
+        qwidget: qwidget
+        qlabel: qlabel widget or str
+        '''
         self.formWidget.insertWidgetToFormLayout(row, name, qwidget, qlabel)
 
     def insertWidgetToVerticalLayout(self, row, qwidget):
@@ -118,26 +130,42 @@ class FormDialog(QtWidgets.QDialog):
 
     def removeWidget(self, name):
         '''
-        Invokes `removeWidget` from `UIFormWidget`.
+        If not present already, creates a dictionary to store the removed qwidgets.
+        Sets the parent of the qwidget (and qlabel if present) to `None` and 
+        stores the widgets in the removed-widgets dictionary.
+        Deletes the row in the form layout.
+        Deletes the qwidget and qlabel from the widgets dictionary.
+        Deletes the widget number from the widget-number dictionary.
+    
+        Parameters:
+        --------------
+        name : str
+            name of the widget to be removed
         '''
         self.formWidget.removeWidget(name)
 
     def getNumWidgets(self):
         '''
-        Invokes `getNumWidgets` from `UIFormWidget`.
+        Returns the number of widgets in the form.
         '''
         return self.formWidget.getNumWidgets()
 
     def getWidget(self, name, role='field'):
-        '''Invokes `getWidget` from `UIFormWidget`.'''
+        '''Returns the Widget by the name with which it has been added
+
+        By default it returns the widget that is the field in the form.
+        The user can get the label by specifying the role to be label
+
+        Raises ValueError if the role is not field or label.
+        '''
         return self.formWidget.getWidget(name, role)
 
     def getWidgets(self):
-        '''Invokes `getWidgets` from `UIFormWidget`.'''
+        '''Returns a dictionary of the widgets currently present in the form.'''
         return self.formWidget.getWidgets()
 
     def getRemovedWidgets(self):
-        '''Invokes `getRemovedWidgets` from `UIFormWidget`.'''
+        '''Returns the dictionary of the removed widgets previously present in the form.'''
         return self.formWidget.getRemovedWidgets()
 
     def setWidgetVisible(self, name, visible):
@@ -180,16 +208,54 @@ class FormDialog(QtWidgets.QDialog):
 
     def getWidgetState(self, widget, role=None):
         '''
-        Invokes `getWidgetState` from `UIFormWidget`.
+        Parameters
+        ----------
+        widget: QWidget or str
+            The widget or its name (or its name + '_field' or '_label', when role is None) to get the state of.
+        role: str, optional, default None, values: 'label', 'field', None.
+            The role of the widget to apply the state to. This is used only if `widget` is the widget name string.
+
+        Returns
+        -------
+        state: dict
+            Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
+            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
+            This can be used to restore the state of the widget using `setWidgetState()`.
         '''
         return self.formWidget.getWidgetState(widget, role)
 
     def applyWidgetState(self, name, state, role=None):
-        '''Invokes `applyWidgetState` from `UIFormWidget`.'''
+        '''
+        Applies the given `state` to the widget associated with `name` and `role`. 
+        If role is None, the role is assigned to be 'field'.
+
+        Parameters
+        ----------
+        name: str
+            The name of the widget to apply the state to. 
+        role: str, optional, default None, values: 'label', 'field', None.
+            The role of the widget to apply the state to.
+        state: dict
+            Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
+                    e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
+        '''
         return self.formWidget.applyWidgetState(name, state, role)
 
     def applyWidgetStates(self, state):
         '''
-        Invokes `applyWidgetStates` from `UIFormWidget`.
+        Removes the widgets in the form which are not present in the states. 
+        If the widgets in the states are not present in the form, 
+        they are retrieved from the removed-widgets dictionary and inserted at position 
+        given by the widget number recorded in the states. An error is raised when the 
+        widget in thet state is not in the form nor in the removed widgets.
+        Applies the given states to the form's widgets.
+
+        Parameters
+        ----------
+        states: nested_dict
+          Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
+                    'name_label': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int}, ...},
+                  e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number' : 1}}.
         '''
         return self.formWidget.applyWidgetStates(state)
