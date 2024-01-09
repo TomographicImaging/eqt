@@ -42,15 +42,16 @@ class UIFormWidget:
         verticalLayout.addWidget(groupBox)
 
         # number of widgets currently present in the groupBoxFormLayout
-        self.num_widgets = 0
-        # number of widgets removed from the groupBoxFormLayout
-        self.num_removed_widgets = 0
         self.widget_number_dictionary = {}
         self.uiElements = {
             'verticalLayout': verticalLayout, 'groupBox': groupBox,
             'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
         self.default_widgets = {}
+
+    @property
+    def num_widgets(self):
+        return self.uiElements['groupBoxFormLayout'].rowCount()
 
     @property
     def groupBox(self):
@@ -62,7 +63,6 @@ class UIFormWidget:
         in the position specified by row. If row is out of bounds, the widget is added at the end.
         It invokes `populateWidgetDictionary` to populate the widget dictionary and the default states 
         dictionary.
-        It increases "num_widgets" by 1 unit.
         It should not be used to move widgets in a form.
 
         Parameters:
@@ -82,7 +82,6 @@ class UIFormWidget:
             self.uiElements['groupBoxFormLayout'].insertRow(row, qlabel, qwidget)
         else:
             self.uiElements['groupBoxFormLayout'].insertRow(row, qwidget)
-        self._increaseNumWidgets() 
         self.populateWidgetDictionary(self.widgets, name, qwidget, qlabel)
         self._populateWidgetNumberDictionary(name, row)
         self.populateWidgetDictionary(self.default_widgets, name, qwidget, qlabel)
@@ -179,14 +178,6 @@ class UIFormWidget:
         '''
         return self.num_widgets
 
-    def _increaseNumWidgets(self):
-        '''Increases `num_widget` by 1 unit.'''
-        self.num_widgets += 1
-
-    def _decreaseNumWidgets(self):
-        '''Decreases `num_widget` by 1 unit.'''
-        self.num_widgets -= 1
-
     def removeWidget(self, name):
         '''
         If not present already, creates a dictionary to store the removed qwidgets.
@@ -195,9 +186,7 @@ class UIFormWidget:
         Deletes the row in the form layout.
         Deletes the qwidget and qlabel from the widgets dictionary.
         Deletes the widget number from the widget-number dictionary.
-        Decreases the counter for the number of widgets in the layout.
-        Increases the counter for the removed widgets.
-
+    
         Parameters:
         --------------
         name : str
@@ -217,9 +206,7 @@ class UIFormWidget:
         self.getWidget(name, 'field').setParent(None)  
         formLayout.removeRow(self.widget_number_dictionary[name])   
         self.removeWidgetFromDictionary(self.getWidgets(), name) 
-        self._popWidgetNumberDictionary(name, widget_number)
-        self._decreaseNumWidgets()         
-        self.num_removed_widgets += 1
+        self._popWidgetNumberDictionary(name, widget_number)        
 
     def getWidget(self, name, role='field'):
         '''returns the Widget by the name with which it has been added
