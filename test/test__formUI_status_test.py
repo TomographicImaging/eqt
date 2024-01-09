@@ -409,8 +409,8 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
                          self.state_simple_form['label_field'])
 
     def test_applyWidgetState(self):
-        self.simple_form.applyWidgetState('checkBox_field', self.state_simple_form['checkBox_field'])
-        self.assertEqual(self.simple_form.getWidgetState('checkBox_field'), self.state_simple_form['checkBox_field'])
+        self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_field'])
+        self.assertEqual(self.simple_form.getWidgetState('checkBox'), self.state_simple_form['checkBox_field'])
 
     def test_applyWidgetState_using_role_parameter_field(self):
         self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_field'], role='field')

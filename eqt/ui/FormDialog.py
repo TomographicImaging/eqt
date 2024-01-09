@@ -40,6 +40,7 @@ class FormDialog(QtWidgets.QDialog):
         '''saves the widget states and calls `onOk`'''
         self.saveAllWidgetStates()
         self.onOk()
+        print(self.getWidgets())
         self.close()
 
     def _onCancel(self):
@@ -48,6 +49,7 @@ class FormDialog(QtWidgets.QDialog):
         self.onCancel()
         self.close()
         self.restoreAllSavedWidgetStates()
+        print(self.getWidgets())
 
     def onOk(self):
         '''Called when the dialog's "Ok" button is clicked.
@@ -69,7 +71,7 @@ class FormDialog(QtWidgets.QDialog):
 
     def addWidget(self, qwidget, qlabel=None, name=None, layout='form'):
         '''
-        Adds a widget to the layout.
+        Adds a qwidget (and a qlabel widget) in the (same row of the) layout.
         layout = 'form' - adds to the FormLayout
         layout = 'vertical' - adds to the Vertical layout below the form.
         To add to the form layout, qlabel and name must be passed.
@@ -89,7 +91,7 @@ class FormDialog(QtWidgets.QDialog):
 
     def addSpanningWidget(self, qwidget, name=None, layout='form'):
         '''
-        Adds a spanning widget to the layout.
+        Adds a spanning qwidget occupying the full row in the layout.
         layout = 'form' - adds the widget to the FormLayout
         layout = 'vertical' - adds the widget to the Vertical layout below the form.
         To add to the form layout, name must be passed.
