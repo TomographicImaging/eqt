@@ -374,8 +374,8 @@ class UIFormWidget:
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
 
-        if role == 'field':
-            widget_state['widget_number'] = self.widget_number_dictionary[name]
+        widget_state['widget_number'] = self.widget_number_dictionary[name]
+
         return widget_state
 
     def _getNameAndRoleFromNameKey(self, name_key):
