@@ -129,6 +129,16 @@ class FormDialog(QtWidgets.QDialog):
         '''
         self.formWidget.uiElements['verticalLayout'].insertWidget(row, qwidget)
 
+    def removeWidgetFromVerticalLayout(self, qwidget):
+        '''
+        Removes a widget from the vertical layout.
+        '''
+        self.formWidget.uiElements['verticalLayout'].removeWidget(qwidget)
+        qwidget.setParent(None)
+
+    def getWidgetFromVerticalLayout(self, index):
+        return self.formWidget.uiElements['verticalLayout'].itemAt(index).widget()
+
     def removeWidget(self, name):
         '''
         If not present already, creates a dictionary to store the removed qwidgets.

@@ -93,7 +93,8 @@ class MainUI(QtWidgets.QMainWindow):
             if self.dialog.getWidget('Button insert widgets').isEnabled() == False:
                 self.dialog.formWidget.removeWidgetFromDictionary(self.dialog.formWidget.default_widget_states,'inserted widget')
                 self.dialog.formWidget.removeWidgetFromDictionary(self.dialog.formWidget.default_widget_states,'inserted spanning widget')
-                
+            if self.dialog.getWidget('Button insert vertical').isEnabled() == False:
+                self.dialog.removeWidgetFromVerticalLayout(self.dialog.getWidgetFromVerticalLayout(1))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
