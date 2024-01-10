@@ -39,6 +39,7 @@ class FormDialog(QtWidgets.QDialog):
     def _onOk(self):
         '''Saves the widget states and calls `onOk`'''
         self.saveAllWidgetStates()
+        print("saving"+str(self.formWidget.widget_states))
         self.onOk()
         self.close()
 
@@ -167,6 +168,10 @@ class FormDialog(QtWidgets.QDialog):
     def getRemovedWidgets(self):
         '''Returns the dictionary of the removed widgets previously present in the form.'''
         return self.formWidget.getRemovedWidgets()
+
+    def getWidgetNumberDictionary(self):
+        '''Returns the widget number dictionary.'''
+        return self.formWidget.getWidgetNumberDictionary()
 
     def setWidgetVisible(self, name, visible):
         '''

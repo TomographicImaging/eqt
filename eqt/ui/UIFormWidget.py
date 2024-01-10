@@ -59,10 +59,10 @@ class UIFormWidget:
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''
-        Inserts a widget and a label widget, or a spanning widget if 'qlabel' is None, to the form layout, `groupBoxFormLayout`,
-        in the position specified by row. If row is out of bounds, the widget is added at the end.
-        It adds to the widget dictionary and the default states 
-        dictionary.
+        Inserts a widget and a label widget , or a spanning widget if 'qlabel' is None, to the form layout
+        in the position specified by row. If row is out of bounds, the widget is added at the end. 
+        If 'name' is already in use, it raises an error.
+        It adds to the widget dictionary and the default states dictionary.
 
         Parameters:
         ----------
@@ -71,6 +71,10 @@ class UIFormWidget:
         qwidget: qwidget
         qlabel: qlabel widget or str
         '''
+        
+        if f'{name}_field' in self.widgets.keys():
+            raise ValueError(f'The name of widget you are trying to insert, {name}, is used already. Choose another name.')
+
         formLayout = self.uiElements['groupBoxFormLayout']
 
         if qlabel is not None:
@@ -78,9 +82,9 @@ class UIFormWidget:
                 txt = qlabel
                 qlabel = QtWidgets.QLabel(self)
                 qlabel.setText(txt)
-            self.uiElements['groupBoxFormLayout'].insertRow(row, qlabel, qwidget)
+            formLayout.insertRow(row, qlabel, qwidget)
         else:
-            self.uiElements['groupBoxFormLayout'].insertRow(row, qwidget)
+            formLayout.insertRow(row, qwidget)
         self.addToWidgetDictionary(self.widgets, name, qwidget, qlabel)
         self._addToWidgetNumberDictionary(name, row)
         self.addToWidgetDictionary(self.default_widgets, name, qwidget, qlabel)
@@ -222,7 +226,11 @@ class UIFormWidget:
 
     def getWidgetNumber(self, name):
         '''Returns the widget number by the widget name.'''
-        return self.widget_number_dictionary[name]
+        return self.widget_number_dictionary[f'{name}']
+
+    def getWidgetNumberDictionary(self):
+        '''Returns the widget number dictionary.'''
+        return self.widget_number_dictionary
 
     def setWidgetVisible(self, name, visible):
         '''
@@ -487,17 +495,22 @@ class UIFormWidget:
                         if f'{name}_label' in self.removed_widgets_dictionary.keys():
                             qlabel = self.removed_widgets_dictionary[key]
                             self.insertWidgetToFormLayout(widget_number, name, qwidget, qlabel)
+                            print("inserting"+str(name))
                         else:
                             self.insertWidgetToFormLayout(widget_number, name, qwidget)
+                            print("inserting spanning"+str(name))
             else:
                 raise KeyError('No widget associated with the dictionary key `' + key + '`')
             self.applyWidgetState(name, widget_state, role)
         # remove extra widgets
+        set_to_remove = set()
         if self.widgets.keys() > states.keys():
             for key in self.widgets.keys():
                 if key not in states.keys():
                     name = self._getNameAndRoleFromKey(key)[0]
-                    self.removeWidget(name)
+                    set_to_remove.add(name)
+            for el in set_to_remove:
+                self.removeWidget(el)
 
     def saveAllWidgetStates(self):
         '''
@@ -588,6 +601,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
     def getWidgets(self):
         '''returns a dictionary of all the widgets in the form'''
         return self.widget().getWidgets()
+
+    def getWidgetNumberDictionary(self):
+        '''Returns the widget number dictionary.'''
+        return self.widget().getWidgetNumberDictionary()
 
     def getRemovedWidgets(self):
         '''Returns the dictionary of the removed widgets previously present in the form.'''
