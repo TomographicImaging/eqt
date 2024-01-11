@@ -37,19 +37,19 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     @property
     def list_all_widgets(self):
-        list_all_widgets = [
-            QtWidgets.QLabel('test label'),
-            QtWidgets.QCheckBox('test checkbox'),
-            QtWidgets.QComboBox(),
-            QtWidgets.QDoubleSpinBox(),
-            QtWidgets.QSpinBox(),
-            QtWidgets.QSlider(),
-            UISliderWidget(QtWidgets.QLabel()),
-            QtWidgets.QRadioButton('test radio button'),
-            QtWidgets.QTextEdit('test text edit'),
-            QtWidgets.QPlainTextEdit('test plain text edit'),
-            QtWidgets.QLineEdit('test line edit'),
-            QtWidgets.QPushButton('test push button')]
+        list_all_widgets = {
+            'label': QtWidgets.QLabel('test label'),
+            'checkBox' : QtWidgets.QCheckBox('test checkbox'),
+            'comboBox' : QtWidgets.QComboBox(),
+            'doubleSpinBox' : QtWidgets.QDoubleSpinBox(),
+            'spinBox' : QtWidgets.QSpinBox(),
+            'slider' : QtWidgets.QSlider(),
+            'uiSliderWidget' : UISliderWidget(QtWidgets.QLabel()),
+            'radioButton' : QtWidgets.QRadioButton('test radio button'),
+            'textEdit' : QtWidgets.QTextEdit('test text edit'),
+            'plainTextEdit' : QtWidgets.QPlainTextEdit('test plain text edit'),
+            'lineEdit' : QtWidgets.QLineEdit('test line edit'),
+            'button' : QtWidgets.QPushButton('test push button')}
         return list_all_widgets
    
     @property
@@ -63,36 +63,16 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         return state_simple_form
 
     def add_every_widget(self):
-        """Generate every widget and add it to `self.form`"""
+        """Generate every widget and add it to the form."""
         form = self.form
-        form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
-        form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
-        form.addWidget(QtWidgets.QComboBox(), 'ComboBox: ', 'comboBox')
-        form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
-        form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
-        form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-        form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
-        form.addWidget(QtWidgets.QRadioButton('test'), 'RadioButton: ', 'radioButton')
-        form.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
-        form.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')
-        form.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
-        form.addWidget(QtWidgets.QPushButton('test'), 'Button: ', 'button')
+        for key in self.list_all_widgets.keys():
+            form.addWidget(self.list_all_widgets[key], key, key)
 
     def add_every_spanning_widget(self):
-        """Generate every spanning widget and add it to `self.form`"""
+        """Generate every spanning widget and add it to the form."""
         form = self.form
-        form.addSpanningWidget(QtWidgets.QLabel('test label'), 'spanning label')
-        form.addSpanningWidget(QtWidgets.QCheckBox('test checkbox'), 'spanning checkBox')
-        form.addSpanningWidget(QtWidgets.QComboBox(), 'spanning comboBox')
-        form.addSpanningWidget(QtWidgets.QDoubleSpinBox(), 'spanning doubleSpinBox')
-        form.addSpanningWidget(QtWidgets.QSpinBox(), 'spanning spinBox')
-        form.addSpanningWidget(QtWidgets.QSlider(), 'spanning slider')
-        form.addSpanningWidget(UISliderWidget(QtWidgets.QLabel()), 'spanning uiSliderWidget')
-        form.addSpanningWidget(QtWidgets.QRadioButton('test'), 'spanning radioButton')
-        form.addSpanningWidget(QtWidgets.QTextEdit('test'), 'spanning textEdit')
-        form.addSpanningWidget(QtWidgets.QPlainTextEdit('test'), 'spanning plainTextEdit')
-        form.addSpanningWidget(QtWidgets.QLineEdit('test'), 'spanning lineEdit')
-        form.addSpanningWidget(QtWidgets.QPushButton('test'), 'spanning button')
+        for key in self.list_all_widgets.keys():
+            form.addSpanningWidget(self.list_all_widgets[key], f'{key}_spanning')
 
     def add_two_widgets(self):
         """Generate two widgets and add them to `self.simple_form`"""
@@ -152,16 +132,34 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         Inserts each widget, and then each spanning widget, in position 0 of the form layout. 
         Tests the position of the widgets in the layout is 0.
         """
-        list_widget_names = [
-            'label insert', 'checkBox insert', 'comboBox insert', 'doubleSpinBox insert',
-            'spinBox insert', 'slider insert', 'uiSliderWidget insert', 'radioButton insert',
-            'textEdit insert', 'plainTextEdit insert', 'lineEdit insert', 'button insert']
-        for i in range(0, len(self.list_all_widgets)):
-            qwidget = self.list_all_widgets[i]
-            name = list_widget_names[i]
+        for key in self.list_all_widgets.keys():
+            qwidget = self.list_all_widgets[key]
+            name = f'{key}_insert'
             self._test_insert_one_widget(0, name, qwidget, name)
-            qwidget = self.list_all_widgets[i]
-            self._test_insert_one_widget(0, name + ' spanning', qwidget)
+            qwidget = self.list_all_widgets[key]
+            self._test_insert_one_widget(0, name + '_spanning', qwidget)
+
+    # def _test_add_one_widget(self, name):
+    #     """
+    #     Invokes `insertWidgetToFormLayout`, therefore inserts the qwidget (and the qlabel)
+    #     at position row in the layout. Checks the position of the widget in the form is `row`.
+    #     """
+    #     position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
+    #     self.assertEqual(position, row)
+
+    # def test_add_every_widget(self):
+    #     list_widget_names = [
+    #         'label', 'checkBox', 'comboBox', 'doubleSpinBox',
+    #         'spinBox', 'slider', 'uiSliderWidget', 'radioButton',
+    #         'textEdit', 'plainTextEdit', 'lineEdit', 'button']
+    #     for i in range(0, len(self.list_all_widgets)):
+    #         qwidget = self.list_all_widgets[i]
+    #         name = list_widget_names[i]
+    #         self._test_add_one_widget_to_dictionary(self.widgets, name, qwidget, name)
+    #         qwidget = self.list_all_widgets[i]
+    #         self._test_insert_one_widget(0, name + '_spanning', qwidget)
+
+
 
     def _test_remove_one_widget(self, name):
         """
@@ -185,9 +183,10 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.assertEqual(prenumwidgets, postnumwidgets + 1)
         self.assertEqual(prerowcount, postrowcount + 1)
         self.assertEqual(postrowcount, postnumwidgets)
-
+        self.assertEqual(self.form.getRemovedWidgets()[f'{name}_field'], qwidget)
+        
     def test_remove_every_widget(self):
-        """Remove every widget from `self.form`"""
+        """Remove every widget from the form."""
         list_widgets = [
             'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
             'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
@@ -435,6 +434,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         self.form = FormDialog()
         self.add_every_widget()
+        self.add_every_spanning_widget()
         self.simple_form = FormDialog()
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
@@ -520,13 +520,12 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def test_insert_every_widget_to_vertical_layout(self):
         """Inserts each widget in position 0 of the vertical layout and tests its position in the layout is 0."""
-        for i in range(0, len(self.list_all_widgets)):
-            qwidget = self.list_all_widgets[i]
-            self._test_insert_one_widget_to_vertical_layout(0, qwidget)
+        for key in self.list_all_widgets.keys():
+            self._test_insert_one_widget_to_vertical_layout(0, self.list_all_widgets[key])
     
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
-        initial_label_value = 'Label: '
+        initial_label_value = 'label'
         self.assertEqual(self.form.getWidgetState('label_label')['value'], initial_label_value)
 
         final_label_value = 'final test label'
@@ -590,9 +589,21 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         self.form = FormWidget()
         self.add_every_widget()
+        self.add_every_spanning_widget()
         self.simple_form = FormWidget()
         self.add_two_widgets()
         self.layout = self.form.uiElements['groupBoxFormLayout']
+
+    def test_get_name_and_role_from_key_or_widget(self):
+        for name in self.list_all_widgets.keys():
+            for role in {'field', 'label'}:
+                name_role = name + '_' + role
+                name_c, role_c = self.form._getNameAndRoleFromKey(name_role)
+                self.assertEqual(name_c, name)
+                self.assertEqual(role_c, role)
+                name_c, role_c = self.form._getNameAndRoleFromWidget(self.form.getWidget(name, role))
+                self.assertEqual(name_c, name)
+                self.assertEqual(role_c, role)
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
@@ -660,6 +671,7 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         self.form = FormDockWidget()
         self.add_every_widget()
+        self.add_every_spanning_widget()
         self.simple_form = FormDockWidget()
         self.add_two_widgets()
         self.layout = self.form.widget().uiElements['groupBoxFormLayout']

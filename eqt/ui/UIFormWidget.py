@@ -85,9 +85,9 @@ class UIFormWidget:
             formLayout.insertRow(row, qlabel, qwidget)
         else:
             formLayout.insertRow(row, qwidget)
-        self.addToWidgetDictionary(self.widgets, name, qwidget, qlabel)
+        self._addToWidgetDictionary(self.widgets, name, qwidget, qlabel)
         self._addToWidgetNumberDictionary(name, row)
-        self.addToWidgetDictionary(self.default_widgets, name, qwidget, qlabel)
+        self._addToWidgetDictionary(self.default_widgets, name, qwidget, qlabel)
         self.addToDefaultWidgetStatesDictionary(name)
 
     def _addWidget(self, name, qwidget, qlabel=None):
@@ -103,7 +103,7 @@ class UIFormWidget:
         '''
         self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
 
-    def addToWidgetDictionary(self, dictionary, name, qwidget, qlabel = None):
+    def _addToWidgetDictionary(self, dictionary, name, qwidget, qlabel = None):
         '''Adds the field (and label if present) in the widget dictionary.'''
         dictionary[f'{name}_field'] = qwidget
         if qlabel is not None:
@@ -150,7 +150,7 @@ class UIFormWidget:
                 self.widget_number_dictionary[key] = value - 1
         self.widget_number_dictionary.pop(name) 
 
-    def removeWidgetFromDictionary(self, dictionary, name):
+    def _popWidgetFromDictionary(self, dictionary, name):
         '''
         Removes the item(s) associated with `name` from a dictionary.
 
@@ -202,13 +202,13 @@ class UIFormWidget:
         qwidget = self.getWidget(name, role='field') 
         if f'{name}_label' in self.getWidgets().keys():
             qlabel = self.getWidget(name, role='label') 
-            self.addToWidgetDictionary(self.removed_widgets_dictionary, name, qwidget, qlabel)
+            self._addToWidgetDictionary(self.removed_widgets_dictionary, name, qwidget, qlabel)
             self.getWidget(name, 'label').setParent(None)
         else:
-            self.addToWidgetDictionary(self.removed_widgets_dictionary, name, qwidget)
+            self._addToWidgetDictionary(self.removed_widgets_dictionary, name, qwidget)
         self.getWidget(name, 'field').setParent(None)  
         formLayout.removeRow(self.widget_number_dictionary[name])   
-        self.removeWidgetFromDictionary(self.getWidgets(), name) 
+        self._popWidgetFromDictionary(self.getWidgets(), name) 
         self._popWidgetNumberDictionary(name, widget_number)        
 
     def getWidget(self, name, role='field'):
@@ -495,10 +495,8 @@ class UIFormWidget:
                         if f'{name}_label' in self.removed_widgets_dictionary.keys():
                             qlabel = self.removed_widgets_dictionary[key]
                             self.insertWidgetToFormLayout(widget_number, name, qwidget, qlabel)
-                            print("inserting"+str(name))
                         else:
                             self.insertWidgetToFormLayout(widget_number, name, qwidget)
-                            print("inserting spanning"+str(name))
             else:
                 raise KeyError('No widget associated with the dictionary key `' + key + '`')
             self.applyWidgetState(name, widget_state, role)
@@ -601,6 +599,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
     def getWidgets(self):
         '''returns a dictionary of all the widgets in the form'''
         return self.widget().getWidgets()
+
+    def getWidgetNumber(self, name):
+        '''Returns the widget number by the widget name.'''
+        return self.widget().getWidgetNumber(name)
 
     def getWidgetNumberDictionary(self):
         '''Returns the widget number dictionary.'''

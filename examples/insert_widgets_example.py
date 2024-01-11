@@ -91,8 +91,8 @@ class MainUI(QtWidgets.QMainWindow):
     def onCancel(self):
         if not hasattr(self.dialog.formWidget, 'widget_states'):
             if self.dialog.getWidget('Button insert widgets').isEnabled() == False:
-                self.dialog.formWidget.removeWidgetFromDictionary(self.dialog.formWidget.default_widget_states,'inserted widget')
-                self.dialog.formWidget.removeWidgetFromDictionary(self.dialog.formWidget.default_widget_states,'inserted spanning widget')
+                self.dialog.formWidget._popWidgetFromDictionary(self.dialog.formWidget.default_widget_states,'inserted widget')
+                self.dialog.formWidget._popWidgetFromDictionary(self.dialog.formWidget.default_widget_states,'inserted spanning widget')
             if self.dialog.getWidget('Button insert vertical').isEnabled() == False:
                 self.dialog.removeWidgetFromVerticalLayout(self.dialog.getWidgetFromVerticalLayout(1))
 
