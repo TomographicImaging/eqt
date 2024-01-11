@@ -16,7 +16,7 @@ class MainUI(QtWidgets.QMainWindow):
         buttoninsertvertical.setText("Insert widget in vertical layout")
         self.dialog.addSpanningWidget(buttoninsertvertical, 'Button insert vertical')
         buttoninsertvertical.clicked.connect(lambda: self.insert_vertical())
-
+        
         # create a FormDockWidget
         dock = UIFormWidget.FormDockWidget(parent=self)
         dock.setWindowTitle('Example insert widget')
@@ -47,14 +47,11 @@ class MainUI(QtWidgets.QMainWindow):
 
     def openFormDialog(self):
 
-        # print dictionary of all widgets in dialog
-        #print("\nDictionary of widgets in Form Dialog:\n" + str(self.dialog.getWidgets()))
-        #print("\nDictionary of widget number in Form Dialog:\n" + str(self.dialog.getWidgetNumberDictionary()))
 
         self.dialog.open()
-        self.dialog.saveAllWidgetStates()
-        print(self.dialog.formWidget.widget_states)
-        self.state1=self.dialog.formWidget.widget_states
+        #self.dialog.saveAllWidgetStates()
+        #print(self.dialog.formWidget.widget_states)
+        #self.state1=self.dialog.formWidget.widget_states
 
     def addWidgetsToExampleForm(self, form):
         form.addWidget(QtWidgets.QLineEdit(), "Initial widget row 0: ", 'Initial widget row 0')
@@ -72,11 +69,17 @@ class MainUI(QtWidgets.QMainWindow):
     def insert_vertical(self):
         self.dialog.insertWidgetToVerticalLayout(
             1, QtWidgets.QPushButton("Inserted widget in vertical layout"))
-        print(
-            "\nThe dictionary of widgets does not change after insertion in the vertical layout.")
-        self.dialog.getWidget('Button insert vertical').setEnabled(False)
-        self.dialog.saveAllWidgetStates()
-        print(self.dialog.formWidget.widget_states)
+        #print(
+        #    "\nThe dictionary of widgets does not change after insertion in the vertical layout.")
+        #self.dialog.getWidget('Button insert vertical').setEnabled(False)
+        print('state2'+str(self.state2))
+        self.dialog.applyWidgetStates(self.state2)
+        #self.dialog.saveAllWidgetStates()
+        #print(self.dialog.formWidget.widget_states)
+        #print(self.dialog.getWidgets())
+        #print('removed2'+str(self.dialog.formWidget.getRemovedWidgets()))
+
+        
 
     def insert_form(self, form, button):
         qlabel = QtWidgets.QLabel(form)
@@ -87,12 +90,25 @@ class MainUI(QtWidgets.QMainWindow):
         buttonspanning = QtWidgets.QPushButton(self)
         buttonspanning.setText("Spanning widget inserted in row 2")
         form.insertWidgetToFormLayout(2, 'inserted spanning widget', buttonspanning)
-        self.dialog.formWidget.applyWidgetStates(self.state1)
+        
+        #('\nDictionary of widgets after insertion in the form layout:\n' +
+        #      str(form.getWidgets()))
+        #print("\nDictionary of widget number in the form layout:\n" + str(form.getWidgetNumberDictionary()))
+        self.dialog.addWidget(QtWidgets.QComboBox(), 'combo', 'combo')
 
-        print('\nDictionary of widgets after insertion in the form layout:\n' +
-              str(form.getWidgets()))
-        print("\nDictionary of widget number in the form layout:\n" + str(form.getWidgetNumberDictionary()))
         button.setEnabled(False)
+        self.dialog.saveAllWidgetStates()
+        print('widgetstates'+str(self.dialog.formWidget.widget_states))
+        self.state2=self.dialog.formWidget.widget_states
+        #print(self.state2)
+        #print('state1'+str(self.state1))
+        
+        #print(self.dialog.getWidgets())
+        
+        #self.dialog.applyWidgetStates(self.state1)
+        #print(self.dialog.formWidget.getRemovedWidgets())
+        #print(self.dialog.getWidgets())
+
 
     def onCancel(self):
         if not hasattr(self.dialog.formWidget, 'widget_states'):

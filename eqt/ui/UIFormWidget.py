@@ -89,6 +89,7 @@ class UIFormWidget:
         self._addToWidgetNumberDictionary(name, row)
         self._addToWidgetDictionary(self.default_widgets, name, qwidget, qlabel)
         self.addToDefaultWidgetStatesDictionary(name)
+        print("inserted")
 
     def _addWidget(self, name, qwidget, qlabel=None):
         '''
@@ -445,7 +446,7 @@ class UIFormWidget:
                 if isinstance(widget, QtWidgets.QLabel):
                     widget.setText(value)
                 elif isinstance(widget, QtWidgets.QCheckBox):
-                    widget.setChecked(bool(value))
+                    widget.setChecked(value)
                 elif isinstance(widget, QtWidgets.QComboBox):
                     widget.setCurrentIndex(value)
                 elif isinstance(widget, (UISliderWidget, QtWidgets.QSlider)):
@@ -492,14 +493,18 @@ class UIFormWidget:
                     if role == 'field':
                         widget_number = states[key]['widget_number']
                         qwidget = self.removed_widgets_dictionary[key]
+                        print(qwidget)
+                        
                         if f'{name}_label' in self.removed_widgets_dictionary.keys():
-                            qlabel = self.removed_widgets_dictionary[key]
+                            qlabel = self.removed_widgets_dictionary[f'{name}_label']
+                            print(qlabel)
                             self.insertWidgetToFormLayout(widget_number, name, qwidget, qlabel)
                         else:
                             self.insertWidgetToFormLayout(widget_number, name, qwidget)
             else:
                 raise KeyError('No widget associated with the dictionary key `' + key + '`')
-        self.applyWidgetState()
+
+            self.applyWidgetState(name, widget_state, role)
         # remove extra widgets
         set_to_remove = set()
         if self.widgets.keys() > states.keys():
