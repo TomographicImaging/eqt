@@ -445,7 +445,7 @@ class UIFormWidget:
                 if isinstance(widget, QtWidgets.QLabel):
                     widget.setText(value)
                 elif isinstance(widget, QtWidgets.QCheckBox):
-                    widget.setChecked(value)
+                    widget.setChecked(bool(value))
                 elif isinstance(widget, QtWidgets.QComboBox):
                     widget.setCurrentIndex(value)
                 elif isinstance(widget, (UISliderWidget, QtWidgets.QSlider)):
@@ -499,7 +499,7 @@ class UIFormWidget:
                             self.insertWidgetToFormLayout(widget_number, name, qwidget)
             else:
                 raise KeyError('No widget associated with the dictionary key `' + key + '`')
-            self.applyWidgetState(name, widget_state, role)
+        self.applyWidgetState()
         # remove extra widgets
         set_to_remove = set()
         if self.widgets.keys() > states.keys():
@@ -509,6 +509,7 @@ class UIFormWidget:
                     set_to_remove.add(name)
             for el in set_to_remove:
                 self.removeWidget(el)
+
 
     def saveAllWidgetStates(self):
         '''

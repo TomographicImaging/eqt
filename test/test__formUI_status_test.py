@@ -665,6 +665,34 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
 
+    def test_applyWidgetStates_after_remove_and_insert(self):
+        self.form.saveAllWidgetStates()
+        state1 = self.form.widget_states
+        for key in self.list_all_widgets.keys():
+            qwidget = self.list_all_widgets[key]
+            name = f'{key}_insert'
+            self.form.insertWidgetToFormLayout(0, name, qwidget, name)
+            qwidget = self.list_all_widgets[key]
+            self.form.insertWidgetToFormLayout(0, name + '_spanning', qwidget)
+        self.form.saveAllWidgetStates()
+        state2 = self.form.widget_states
+        self.assertNotEqual(state1, state2)
+        self.form.applyWidgetStates(state1)
+        self.form.saveAllWidgetStates()
+        self.assertEqual(state1, self.form.widget_states)
+        print(state2)
+        for key in state2.keys():
+            if 'comboBox' in key:
+                print(key)
+                for key2 in state2[key].keys():
+                    if key2 == 'value':
+                        print(type(state2[key][key2]))
+                        if key2 is int:
+                            print(key2)
+        self.form.applyWidgetStates(state2)
+        #self.form.saveAllWidgetStates()
+        #self.assertEqual(state2, self.form.widget_states)
+
 
 @skip_ci
 class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
