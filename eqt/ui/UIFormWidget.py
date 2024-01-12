@@ -89,7 +89,6 @@ class UIFormWidget:
         self._addToWidgetNumberDictionary(name, row)
         self._addToWidgetDictionary(self.default_widgets, name, qwidget, qlabel)
         self.addToDefaultWidgetStatesDictionary(name)
-        print("inserted")
 
     def _addWidget(self, name, qwidget, qlabel=None):
         '''
@@ -467,6 +466,7 @@ class UIFormWidget:
 
     def applyWidgetStates(self, states):
         '''
+        Reorders the states dictionary in order of crescend widget number.
         Removes the widgets in the form which are not present in the states. 
         If the widgets in the states are not present in the form, 
         they are retrieved from the removed-widgets dictionary and inserted at position 
@@ -484,6 +484,7 @@ class UIFormWidget:
         '''
         
         # add widgets if necessary
+        states = dict(sorted(states.items(), key = lambda tup: (tup[1]['widget_number'])))
         for key, widget_state in states.items():
             name, role = self._getNameAndRoleFromKey(key)
             if key in self.widgets.keys():
@@ -493,17 +494,14 @@ class UIFormWidget:
                     if role == 'field':
                         widget_number = states[key]['widget_number']
                         qwidget = self.removed_widgets_dictionary[key]
-                        print(qwidget)
                         
                         if f'{name}_label' in self.removed_widgets_dictionary.keys():
                             qlabel = self.removed_widgets_dictionary[f'{name}_label']
-                            print(qlabel)
                             self.insertWidgetToFormLayout(widget_number, name, qwidget, qlabel)
                         else:
                             self.insertWidgetToFormLayout(widget_number, name, qwidget)
             else:
                 raise KeyError('No widget associated with the dictionary key `' + key + '`')
-
             self.applyWidgetState(name, widget_state, role)
         # remove extra widgets
         set_to_remove = set()
@@ -522,6 +520,10 @@ class UIFormWidget:
         To later restore the states, use `restoreAllSavedWidgetStates()`.
         '''
         self.widget_states = self.getAllWidgetStates()
+
+    def getWidgetStates(self):
+        '''Returns the saved widget states.'''
+        return self.widget_states
 
     def restoreAllSavedWidgetStates(self):
         '''
@@ -628,6 +630,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
         To later restore the states, use `restoreAllSavedWidgetStates()`.
         '''
         self.widget().saveAllWidgetStates()
+
+    def getWidgetStates(self):
+        '''Returns the saved widget states.'''
+        self.widget().getWidgetStates()
 
     def restoreAllSavedWidgetStates(self):
         '''
