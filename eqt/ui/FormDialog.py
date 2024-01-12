@@ -206,6 +206,10 @@ class FormDialog(QtWidgets.QDialog):
         '''
         self.formWidget.saveAllWidgetStates()
 
+    def getWidgetStates(self):
+        '''Returns the saved widget states.'''
+        self.formWidget.getWidgetStates()
+
     def restoreAllSavedWidgetStates(self):
         '''
         Restore all widgets in the form to the state saved by `saveAllWidgetStates()`.

@@ -35,6 +35,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
                 'pushButton_value': True}]
         return state
 
+
     @property
     def list_all_widgets(self):
         list_all_widgets = {
@@ -539,12 +540,8 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def test_restoreAllSavedWidgetStates(self):
         """Check that the state of all widgets is restored from the state variable"""
-        state_to_restore = {
-            'checkBox_field': {'value': True, 'enabled': False, 'visible': False},
-            'label_field': {'value': 'applyWidgetStates Test', 'enabled': True, 'visible': False},
-            'checkBox_label': {'value': 'CheckBox Test: ', 'enabled': True, 'visible': False},
-            'label_label': {'value': 'Label Test: ', 'enabled': True, 'visible': False}}
-        self.simple_form.formWidget.widget_states = state_to_restore
+        state_to_restore = self.state_simple_form
+        self.simple_form.formWidget.widget_states = self.state_simple_form
         self.simple_form.restoreAllSavedWidgetStates()
 
         self.assertEqual(
@@ -621,12 +618,8 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
 
     def test_restoreAllSavedWidgetStates(self):
         """Check that the state of all widgets is restored from the state variable"""
-        state_to_restore = {
-            'checkBox_field': {'value': True, 'enabled': False, 'visible': False},
-            'label_field': {'value': 'applyWidgetStates Test', 'enabled': True, 'visible': False},
-            'checkBox_label': {'value': 'CheckBox Test: ', 'enabled': True, 'visible': False},
-            'label_label': {'value': 'Label Test: ', 'enabled': True, 'visible': False}}
-        self.simple_form.widget_states = state_to_restore
+        state_to_restore = self.state_simple_form
+        self.simple_form.widget_states = self.state_simple_form
         self.simple_form.restoreAllSavedWidgetStates()
 
         self.assertEqual(
@@ -666,8 +659,11 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
             state_to_restore['label_label']['visible'])
 
     def test_applyWidgetStates_after_remove_and_insert(self):
+        """Save two states. Checks that the widgets are removed and inserted correctly when the states are applied."""
+        # state 1
         self.form.saveAllWidgetStates()
         state1 = self.form.widget_states
+        # state2 
         for key in self.list_all_widgets.keys():
             qwidget = self.list_all_widgets[key]
             name = f'{key}_insert'
@@ -677,22 +673,14 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.form.saveAllWidgetStates()
         state2 = self.form.widget_states
         self.assertNotEqual(state1, state2)
+        # apply 1
         self.form.applyWidgetStates(state1)
         self.form.saveAllWidgetStates()
         self.assertEqual(state1, self.form.widget_states)
-        print(state2)
-        for key in state2.keys():
-            if 'comboBox' in key:
-                print(key)
-                for key2 in state2[key].keys():
-                    if key2 == 'value':
-                        print(type(state2[key][key2]))
-                        if key2 is int:
-                            print(key2)
+        # apply 2
         self.form.applyWidgetStates(state2)
-        #self.form.saveAllWidgetStates()
-        #self.assertEqual(state2, self.form.widget_states)
-
+        self.form.saveAllWidgetStates()
+        self.assertEqual(state2, self.form.widget_states)
 
 @skip_ci
 class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
@@ -726,12 +714,8 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
 
     def test_restoreAllSavedWidgetStates(self):
         """Check that the state of all widgets is restored from the state variable"""
-        state_to_restore = {
-            'checkBox_field': {'value': True, 'enabled': False, 'visible': False},
-            'label_field': {'value': 'applyWidgetStates Test', 'enabled': True, 'visible': False},
-            'checkBox_label': {'value': 'CheckBox Test: ', 'enabled': True, 'visible': False},
-            'label_label': {'value': 'Label Test: ', 'enabled': True, 'visible': False}}
-        self.simple_form.widget().widget_states = state_to_restore
+        state_to_restore = self.state_simple_form
+        self.simple_form.widget().widget_states = self.state_simple_form
         self.simple_form.restoreAllSavedWidgetStates()
 
         self.assertEqual(

@@ -12,15 +12,16 @@ class MainUI(QtWidgets.QMainWindow):
         # dialog form
         self.dialog = FormDialog(parent=self, title='Example insert widget')
         self.addWidgetsToExampleForm(self.dialog)
+        
         buttoninsertvertical = QtWidgets.QPushButton()
         buttoninsertvertical.setText("Insert widget in vertical layout")
         self.dialog.addSpanningWidget(buttoninsertvertical, 'Button insert vertical')
         buttoninsertvertical.clicked.connect(lambda: self.insert_vertical())
         
-        # create a FormDockWidget
-        dock = UIFormWidget.FormDockWidget(parent=self)
-        dock.setWindowTitle('Example insert widget')
-        self.addWidgetsToExampleForm(dock)
+        # # create a FormDockWidget
+        # dock = UIFormWidget.FormDockWidget(parent=self)
+        # dock.setWindowTitle('Example insert widget')
+        # self.addWidgetsToExampleForm(dock)
 
         
         
@@ -33,7 +34,7 @@ class MainUI(QtWidgets.QMainWindow):
         # create window layout
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
-        layout.addWidget(dock)
+        #layout.addWidget(dock)
         widg = QtWidgets.QWidget()
         widg.setLayout(layout)
         self.setCentralWidget(widg)
@@ -49,9 +50,28 @@ class MainUI(QtWidgets.QMainWindow):
 
 
         self.dialog.open()
-        #self.dialog.saveAllWidgetStates()
+        print('dialog open')
+        self.dialog.saveAllWidgetStates()
         #print(self.dialog.formWidget.widget_states)
-        #self.state1=self.dialog.formWidget.widget_states
+        
+        self.state1=self.dialog.formWidget.widget_states
+        print('state1'+str(self.state1))
+        form = self.dialog
+        qlabel = QtWidgets.QLabel(form)
+        qlabel.setText("Widget inserted in row 0: ")
+        qwidget = QtWidgets.QLineEdit(form)
+        form.insertWidgetToFormLayout(0, 'inserted widget', qwidget, qlabel)
+
+        buttonspanning = QtWidgets.QPushButton(self)
+        buttonspanning.setText("Spanning widget inserted in row 2")
+        form.insertWidgetToFormLayout(2, 'inserted spanning widget', buttonspanning)
+        
+        #('\nDictionary of widgets after insertion in the form layout:\n' +
+        #      str(form.getWidgets()))
+        #print("\nDictionary of widget number in the form layout:\n" + str(form.getWidgetNumberDictionary()))
+        self.dialog.addWidget(QtWidgets.QComboBox(), 'combo', 'combo')
+        
+        
 
     def addWidgetsToExampleForm(self, form):
         form.addWidget(QtWidgets.QLineEdit(), "Initial widget row 0: ", 'Initial widget row 0')
@@ -65,6 +85,14 @@ class MainUI(QtWidgets.QMainWindow):
         buttoninsert.setText("Insert widgets")
         form.addSpanningWidget(buttoninsert, 'Button insert widgets')
         buttoninsert.clicked.connect(lambda: self.insert_form(form, buttoninsert))
+        
+
+        
+
+        #button.setEnabled(False)
+        self.dialog.saveAllWidgetStates()
+        print('widgetstates'+str(self.dialog.formWidget.widget_states))
+        self.state2=self.dialog.formWidget.widget_states
 
     def insert_vertical(self):
         self.dialog.insertWidgetToVerticalLayout(
@@ -72,8 +100,8 @@ class MainUI(QtWidgets.QMainWindow):
         #print(
         #    "\nThe dictionary of widgets does not change after insertion in the vertical layout.")
         #self.dialog.getWidget('Button insert vertical').setEnabled(False)
-        print('state2'+str(self.state2))
-        self.dialog.applyWidgetStates(self.state2)
+        #print('state2'+str(self.state2))
+        self.dialog.applyWidgetStates(self.state1)
         #self.dialog.saveAllWidgetStates()
         #print(self.dialog.formWidget.widget_states)
         #print(self.dialog.getWidgets())
@@ -82,10 +110,10 @@ class MainUI(QtWidgets.QMainWindow):
         
 
     def insert_form(self, form, button):
-        qlabel = QtWidgets.QLabel(form)
-        qlabel.setText("Widget inserted in row 0: ")
-        qwidget = QtWidgets.QLineEdit(form)
-        form.insertWidgetToFormLayout(0, 'inserted widget', qwidget, qlabel)
+        #qlabel = QtWidgets.QLabel(form)
+        #qlabel.setText("Widget inserted in row 0: ")
+        #qwidget = QtWidgets.QLineEdit(form)
+        #form.insertWidgetToFormLayout(0, 'inserted widget', qwidget, qlabel)
 
         buttonspanning = QtWidgets.QPushButton(self)
         buttonspanning.setText("Spanning widget inserted in row 2")
