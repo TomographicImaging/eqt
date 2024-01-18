@@ -212,7 +212,7 @@ class UIFormWidget:
         self._popWidgetNumberDictionary(name, widget_number)        
 
     def getWidget(self, name, role='field'):
-        '''Returns the Widget by the name with which it has been added
+        '''Returns the widget by the name with which it has been added
 
         By default it returns the widget that is the field in the form.
         The user can get the label by specifying the role to be label
@@ -466,7 +466,7 @@ class UIFormWidget:
 
     def applyWidgetStates(self, states):
         '''
-        Reorders the states dictionary in order of crescend widget number.
+        Reorders the states dictionary in ascending widget number.
         Removes the widgets in the form which are not present in the states. 
         If the widgets in the states are not present in the form, 
         they are retrieved from the removed-widgets dictionary and inserted at position 
@@ -476,7 +476,7 @@ class UIFormWidget:
 
         Parameters
         ----------
-        states: nested_dict
+        states: nested_dict        Reorders the states dictionary in ascending widget number.
           Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
                     'name_label': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int}, ...},
                   e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
