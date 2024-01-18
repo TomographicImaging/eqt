@@ -466,6 +466,27 @@ class UIFormWidget:
 
     def applyWidgetStates(self, states):
         '''
+        Applies the given states to the form's widgets. 
+        This assumes the states in the form and the widgets in the states have the same name.
+        If this is false, it raises an error.
+        
+        Parameters
+        ----------
+        states: nested_dict        Reorders the states dictionary in ascending widget number.
+          Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int},
+                    'name_label': {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number' : int}, ...},
+                  e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number' : 1}}.
+        '''
+        if self.widgets.keys() == states.keys():
+            for key, widget_state in states.items():
+                name, role = self._getNameAndRoleFromKey(key)
+                self.applyWidgetState(name, widget_state, role)
+        else:
+            raise KeyError(f'The widgets in the form are {self.widgets.keys()} whereas the widgets in the states are {states.keys()}. These must be equal for the states to be applied to the form.')
+        
+    def adaptFormToStates(self, states):
+        '''
         Reorders the states dictionary in ascending widget number.
         Removes the widgets in the form which are not present in the states. 
         If the widgets in the states are not present in the form, 
@@ -512,7 +533,6 @@ class UIFormWidget:
                     set_to_remove.add(name)
             for el in set_to_remove:
                 self.removeWidget(el)
-
 
     def saveAllWidgetStates(self):
         '''

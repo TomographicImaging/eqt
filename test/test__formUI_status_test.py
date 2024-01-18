@@ -658,8 +658,8 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
 
-    def test_applyWidgetStates_after_remove_and_insert(self):
-        """Save two states. Checks that the widgets are removed and inserted correctly when the states are applied."""
+    def test_adaptFormToStates_after_remove_and_insert(self):
+        """Saves two states. Checks that the widgets are removed and inserted correctly when the states are applied."""
         # state 1
         self.form.saveAllWidgetStates()
         state1 = self.form.widget_states
@@ -674,11 +674,11 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         state2 = self.form.widget_states
         self.assertNotEqual(state1, state2)
         # apply 1
-        self.form.applyWidgetStates(state1)
+        self.form.adaptFormToStates(state1)
         self.form.saveAllWidgetStates()
         self.assertEqual(state1, self.form.widget_states)
         # apply 2
-        self.form.applyWidgetStates(state2)
+        self.form.adaptFormToStates(state2)
         self.form.saveAllWidgetStates()
         self.assertEqual(state2, self.form.widget_states)
 
