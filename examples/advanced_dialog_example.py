@@ -14,8 +14,11 @@ class FormExample(FormWidget):
         pb.setText("Open Advanced Dialog with form layout")
         pb.clicked.connect(lambda: self.openFormDialog())
         self.addSpanningWidget(pb, 'buttadv')
+        pb2 = QtWidgets.QPushButton(self)
+        pb2.setText("b2")
+        self.addSpanningWidget(pb2, 'buttadv2')
         #dialog = AdvancedFormDialog(parent=self, title='Example')
-        dialog = AdvancedFormDialog(parent=None, title='Example')
+        dialog = AdvancedFormDialog(parent=self, title='Example', button_name = 'buttadv')
         
         dialog.Ok.clicked.connect(lambda: self.accepted())
         # Example on how to add elements to the FormDialog
@@ -40,7 +43,6 @@ class FormExample(FormWidget):
         # finally add to the form widget
         dialog.addWidget(qwidget, qlabel, 'input2')
         dialog.addToDictionaryDisplayOnParent('input2')
-        print(dialog.getDisplayOnParentSet())
         dialog.addWidget(QtWidgets.QLabel("Example Vertical Layout Text"), layout="vertical")
 
         # store a reference

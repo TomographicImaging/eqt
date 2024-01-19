@@ -288,15 +288,20 @@ class FormDialog(QtWidgets.QDialog):
         return self.formWidget.applyWidgetStates(state)
 
 class AdvancedFormDialog(FormDialog):
-    def __init__(self, parent=None, title=None):
-        "Creates a form dialog. Adds default button to the vertical layout."""
-        if parent is None:
-            print("parent is actually none")
+    def __init__(self,  parent = None, title = None, button_name = None):
+        """Creates a form dialog. Adds default button to the vertical layout.
+
+        Parameters
+        --------------------
+        button_name : the name of the button opening the advanced form dialog in the parent"""
         if parent is not None:
             self.dialog_parent = parent
             self.display_on_parent_dict = {}
-            print(parent)
+            if button_name is not None:
+                self.button_widget_number = self.dialog_parent.getWidgetNumber(button_name)
         FormDialog.__init__(self, parent, title)
+
+        
 
         # add default button to vertical layout
         button_default = QtWidgets.QPushButton("Set default values")
@@ -321,12 +326,19 @@ class AdvancedFormDialog(FormDialog):
                 self.addWidgetsToParent()
 
     def addWidgetsToParent(self):
+        i = 0
         for name in self.display_on_parent_dict.keys():
+            i += 1
+            if hasattr(self, 'button_widget_number'):
+                widget_number = self.button_widget_number + i
+            else:
+                widget_number = - 1
+
             print(name)
             value = str(self.getWidgetStates()[f'{name}_field']['value'])
             label = str(self.getWidgetStates()[f'{name}_label']['value'])
             if f'{name}_field' not in self.dialog_parent.getWidgets():
-                self.dialog_parent.insertWidgetToFormLayout(-1, name, QtWidgets.QLabel(value), label)
+                self.dialog_parent.insertWidgetToFormLayout(widget_number, name, QtWidgets.QLabel(value), label)
             else:
                 self.dialog_parent.getWidget(name, 'field').setText(value)
 
@@ -352,7 +364,7 @@ class AdvancedFormDialog(FormDialog):
                            Set the parent if you want to add widgets to it.''')
         self.display_on_parent_dict[name] = None
 
-    def getDisplayOnParentSet(self):
+    def getDisplayOnParentDictionary(self):
         return self.display_on_parent_dict
         
 
