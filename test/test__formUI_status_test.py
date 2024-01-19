@@ -35,7 +35,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
                 'pushButton_value': True}]
         return state
 
-
     @property
     def list_all_widgets(self):
         list_all_widgets = {
@@ -579,7 +578,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
-
 
 @skip_ci
 class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):

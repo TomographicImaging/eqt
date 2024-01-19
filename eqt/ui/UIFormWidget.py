@@ -71,7 +71,6 @@ class UIFormWidget:
         qwidget: qwidget
         qlabel: qlabel widget or str
         '''
-        
         if f'{name}_field' in self.widgets.keys():
             raise ValueError(f'The name of widget you are trying to insert, {name}, is used already. Choose another name.')
 
@@ -478,13 +477,13 @@ class UIFormWidget:
                   e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
                   'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number' : 1}}.
         '''
-        if self.widgets.keys() == states.keys():
-            for key, widget_state in states.items():
-                name, role = self._getNameAndRoleFromKey(key)
-                self.applyWidgetState(name, widget_state, role)
-        else:
-            raise KeyError(f'The widgets in the form are {self.widgets.keys()} whereas the widgets in the states are {states.keys()}. These must be equal for the states to be applied to the form.')
-        
+        if self.widgets.keys() != states.keys():
+            raise KeyError(f'''The widgets in the form are {self.widgets.keys()} whereas the widgets in the states are {states.keys()}. 
+                           These must be equal for the states to be applied to the form.''')
+        for key, widget_state in states.items():
+            name, role = self._getNameAndRoleFromKey(key)
+            self.applyWidgetState(name, widget_state, role)
+            
     def adaptFormToStates(self, states):
         '''
         Reorders the states dictionary in ascending widget number.
@@ -544,6 +543,10 @@ class UIFormWidget:
     def getWidgetStates(self):
         '''Returns the saved widget states.'''
         return self.widget_states
+    
+    def getDefaultWidgetStates(self):
+        '''Returns the saved default widget states.'''
+        return self.default_widget_states
 
     def restoreAllSavedWidgetStates(self):
         '''
@@ -653,7 +656,11 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
     def getWidgetStates(self):
         '''Returns the saved widget states.'''
-        self.widget().getWidgetStates()
+        return self.widget().getWidgetStates()
+
+    def getDefaultWidgetStates(self):
+        '''Returns the saved default widget states.'''
+        return self.widget().getDefaultWidgetStates()
 
     def restoreAllSavedWidgetStates(self):
         '''
