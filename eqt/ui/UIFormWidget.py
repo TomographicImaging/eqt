@@ -212,7 +212,7 @@ class UIFormWidget:
         self.getWidget(name, 'field').setParent(None)  
         formLayout.removeRow(self.widget_number_dictionary[name])   
         self._popWidgetFromDictionary(self.getWidgets(), name) 
-        self._popWidgetNumberDictionary(name, widget_number)        
+        self._popWidgetNumberDictionary(name)        
 
     def getWidget(self, name, role='field'):
         '''
