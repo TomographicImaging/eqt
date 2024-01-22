@@ -47,6 +47,7 @@ class UIFormWidget:
             'verticalLayout': verticalLayout, 'groupBox': groupBox,
             'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
+        self.removed_widgets_dictionary = {}
 
     @property
     def num_widgets(self):
@@ -84,20 +85,7 @@ class UIFormWidget:
             formLayout.insertRow(row, qwidget)
         self._addToWidgetDictionary(self.widgets, name, qwidget, qlabel)
         self._addToWidgetNumberDictionary(name, row)
-        self.addToDefaultWidgetStatesDictionary(name)
-
-    def _addWidget(self, name, qwidget, qlabel=None):
-        '''
-        Adds a widget and a label widget, or a spanning widget, at the the end of
-        the form layout. 
-
-        Parameters:
-        ----------
-        name: str
-        qwidget: widget
-        qlabel: qlabel widget or str
-        '''
-        self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
+        self._addToDefaultWidgetStatesDictionary(name)
 
     def _addToWidgetDictionary(self, dictionary, name, qwidget, qlabel = None):
         '''Adds the field, and label if present, in the widget dictionary.'''
@@ -172,11 +160,11 @@ class UIFormWidget:
         qwidget: widget
         qlabel: qlabel widget or str
         '''
-        self._addWidget(name, qwidget, qlabel)
+        self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
     
     def addSpanningWidget(self, qwidget, name):
         '''Adds a spanning qwidget occupying the full row in the form layout.'''
-        self._addWidget(name, qwidget)
+        self.insertWidgetToFormLayout(-1, name, qwidget)
         
     def getNumWidgets(self):
         '''
@@ -186,12 +174,10 @@ class UIFormWidget:
 
     def removeWidget(self, name):
         '''
-        If not present already, creates a dictionary to store the removed qwidgets.
-        Sets the parent of the qwidget, and qlabel if present, to `None` and 
-        stores the widgets in the removed-widgets dictionary.
-        Deletes the row in the form layout.
-        Deletes the qwidget and qlabel from the widgets dictionary.
-        Deletes the widget number from the widget-number dictionary.
+        Removes the widget with name `name` from the widgets in the form layout. In particular,
+        it deletes the row in the form layout, the qwidget and qlabel from the widgets dictionary 
+        and the widget number from the widget-number dictionary. Sets the parent of the qwidget, and qlabel if present, 
+        to `None` allowing to store the removed widget in the removed-widgets dictionary.
     
         Parameters:
         --------------
@@ -199,8 +185,6 @@ class UIFormWidget:
             name of the widget to be removed
         '''
         formLayout = self.uiElements['groupBoxFormLayout']
-        if not hasattr(self, 'removed_widgets_dictionary'):
-            self.removed_widgets_dictionary = {}
         widget_number = self.getWidgetNumber(name)
         qwidget = self.getWidget(name, role='field') 
         if f'{name}_label' in self.getWidgets().keys():
@@ -267,16 +251,16 @@ class UIFormWidget:
             qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
             qlabel.setText(txt)
         qlabel.setStyleSheet("font-weight: bold")
-        self._addWidget(name, qlabel)
+        self.insertWidgetToFormLayout(-1, name, qlabel)
 
     def addSeparator(self, name):
         # Adds horizontal separator to the form
         frame = QtWidgets.QFrame()
         frame.setFrameShape(QtWidgets.QFrame.HLine)
         frame.setFrameShadow(QtWidgets.QFrame.Raised)
-        self._addWidget(name, frame)
+        self.insertWidgetToFormLayout(-1, name, frame)
 
-    def addToDefaultWidgetStatesDictionary(self, name):
+    def _addToDefaultWidgetStatesDictionary(self, name):
         '''
         If not present already, creates an attribute dictionary of default widget states. The entries are in the
         format: {'value': str | bool | int, 'enabled': bool, 'visible': bool, 'widget_number': int}.
@@ -434,9 +418,8 @@ class UIFormWidget:
         try:
             if name_role in self.widgets.keys():
                 widget = self.widgets[name_role]
-            elif hasattr(self, 'removed_widgets_dictionary'):
-                if name_role in self.removed_widgets_dictionary.keys():
-                    widget = self.removed_widgets_dictionary[name_role]
+            elif name_role in self.removed_widgets_dictionary.keys():
+                widget = self.removed_widgets_dictionary[name_role]
         except KeyError:
             raise KeyError('No widget associated with the dictionary key `'+name_role+'`')
         #apply state

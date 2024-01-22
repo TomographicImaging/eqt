@@ -67,14 +67,21 @@ class FormDialog(QtWidgets.QDialog):
     def groupBox(self):
         return self.formWidget.groupBox
 
-    def addWidget(self, qwidget, qlabel=None, name=None, layout='form'):
+    def addWidget(self, qwidget, qlabel = None, name = None, layout = 'form'):
         '''
-        layout = 'vertical' - adds to the Vertical layout below the form.
-        `qlabel` and `name` are unsupported when layout is vertical.
+        Adds a widget to the layout. In particular, adds a qwidget and a qlabel widget 
+        in the same row of the form layout if layout is 'form' and adds a spanning widget 
+        to the vertical layout if layout is 'vertical'.
 
-        layout = 'form' - adds to the FormLayout
-            Name and qlabel must be passed to add to the form layout .
-            Adds a qwidget and a qlabel widget in the same row of the form layout.  
+        Parameters
+        ----------------
+        qwidget : widget
+        qlabel : qlabel widget or str
+            only supported when layout is 'form'
+        name : str
+            only supported when layout is 'form'
+        layout : 'form' or 'vertical' 
+                'form' - adds to the FormLayout, 'vertical' - adds to the Vertical layout below the form.
         '''
         if layout == 'vertical':
             if name is not None or qlabel is not None:
