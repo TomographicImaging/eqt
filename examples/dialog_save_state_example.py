@@ -23,7 +23,7 @@ class MainUI(QtWidgets.QMainWindow):
 
         # create dialog to be opened later:
         dialog = FormDialog(parent=self, title='Example')
-    
+
         # ## Example on how to add elements to the
         dialog.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         dialog.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')

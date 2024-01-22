@@ -39,27 +39,27 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
     def list_all_widgets(self):
         list_all_widgets = {
             'label': QtWidgets.QLabel('test label'),
-            'checkBox' : QtWidgets.QCheckBox('test checkbox'),
-            'comboBox' : QtWidgets.QComboBox(),
-            'doubleSpinBox' : QtWidgets.QDoubleSpinBox(),
-            'spinBox' : QtWidgets.QSpinBox(),
-            'slider' : QtWidgets.QSlider(),
-            'uiSliderWidget' : UISliderWidget(QtWidgets.QLabel()),
-            'radioButton' : QtWidgets.QRadioButton('test radio button'),
-            'textEdit' : QtWidgets.QTextEdit('test text edit'),
-            'plainTextEdit' : QtWidgets.QPlainTextEdit('test plain text edit'),
-            'lineEdit' : QtWidgets.QLineEdit('test line edit'),
-            'button' : QtWidgets.QPushButton('test push button')}
+            'checkBox': QtWidgets.QCheckBox('test checkbox'), 'comboBox': QtWidgets.QComboBox(),
+            'doubleSpinBox': QtWidgets.QDoubleSpinBox(), 'spinBox': QtWidgets.QSpinBox(),
+            'slider': QtWidgets.QSlider(), 'uiSliderWidget': UISliderWidget(QtWidgets.QLabel()),
+            'radioButton': QtWidgets.QRadioButton('test radio button'),
+            'textEdit': QtWidgets.QTextEdit('test text edit'),
+            'plainTextEdit': QtWidgets.QPlainTextEdit('test plain text edit'),
+            'lineEdit': QtWidgets.QLineEdit('test line edit'),
+            'button': QtWidgets.QPushButton('test push button')}
         return list_all_widgets
-   
+
     @property
     def state_simple_form(self):
         state_simple_form = {
-            'label_field': {'value': 'test label', 'enabled': True, 'visible': False, 'widget_number': 0},
-            'label_label': {'value': 'Label: ', 'enabled': True, 'visible': False, 'widget_number': 0},
-            'checkBox_field': {'value': False, 'enabled': True, 'visible': False,'widget_number': 1},
-            'checkBox_label': {'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_number': 1}
-            }
+            'label_field': {
+                'value': 'test label', 'enabled': True, 'visible': False,
+                'widget_number': 0}, 'label_label': {
+                    'value': 'Label: ', 'enabled': True, 'visible': False,
+                    'widget_number': 0}, 'checkBox_field': {
+                        'value': False, 'enabled': True, 'visible': False, 'widget_number': 1},
+            'checkBox_label': {
+                'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_number': 1}}
         return state_simple_form
 
     def add_every_widget(self):
@@ -129,7 +129,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     def test_insert_every_widget(self):
         """
-        Inserts each widget, and then each spanning widget, in position 0 of the form layout. 
+        Inserts each widget, and then each spanning widget, in position 0 of the form layout.
         Tests the position of the widgets in the layout is 0.
         """
         for key in self.list_all_widgets.keys():
@@ -162,7 +162,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.assertEqual(prerowcount, postrowcount + 1)
         self.assertEqual(postrowcount, postnumwidgets)
         self.assertEqual(self.form.getRemovedWidgets()[f'{name}_field'], qwidget)
-        
+
     def test_remove_every_widget(self):
         """Remove every widget from the form."""
         list_widgets = [
@@ -387,19 +387,25 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     def test_applyWidgetState(self):
         self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_field'])
-        self.assertEqual(self.simple_form.getWidgetState('checkBox'), self.state_simple_form['checkBox_field'])
+        self.assertEqual(self.simple_form.getWidgetState('checkBox'),
+                         self.state_simple_form['checkBox_field'])
 
     def test_applyWidgetState_using_role_parameter_field(self):
-        self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_field'], role='field')
-        self.assertEqual(self.simple_form.getWidgetState('checkBox', 'field'), self.state_simple_form['checkBox_field'])
+        self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_field'],
+                                          role='field')
+        self.assertEqual(self.simple_form.getWidgetState('checkBox', 'field'),
+                         self.state_simple_form['checkBox_field'])
 
     def test_applyWidgetState_using_role_parameter_label(self):
-        self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_label'], role='label')
-        self.assertEqual(self.simple_form.getWidgetState('checkBox', 'label'), self.state_simple_form['checkBox_label'])
+        self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_label'],
+                                          role='label')
+        self.assertEqual(self.simple_form.getWidgetState('checkBox', 'label'),
+                         self.state_simple_form['checkBox_label'])
 
     def test_applyWidgetState_using_role_parameter_default(self):
         self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_field'])
-        self.assertEqual(self.simple_form.getWidgetState('checkBox'), self.state_simple_form['checkBox_field'])
+        self.assertEqual(self.simple_form.getWidgetState('checkBox'),
+                         self.state_simple_form['checkBox_field'])
 
     def test_getAllWidgetStates(self):
         """Check that the state of all widgets is returned"""
@@ -449,38 +455,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.click_Cancel()
         self.assertEqual(states1, self.form.getAllWidgetStates())
 
-    def click_Ok(self):
-        QTest.mouseClick(self.form.Ok, Qt.LeftButton)
-
-    def click_Cancel(self):
-        QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
-
-    def test_dialog_buttons_default_behaviour(self):
-        # create the states dictionary
-        self.set_state(1)
-        states1 = self.form.getAllWidgetStates()
-        self.set_state(0)
-        states0 = self.form.getAllWidgetStates()
-        # check state 0 and 1 are not saved when Cancel is pressed
-        self.click_Cancel()
-        self.assertNotEqual(states0, self.form.getAllWidgetStates())
-        self.assertNotEqual(states1, self.form.getAllWidgetStates())
-        # save state 0
-        self.set_state(0)
-        self.assertEqual(states0, self.form.getAllWidgetStates())
-        self.click_Ok()
-        self.assertEqual(states0, self.form.getAllWidgetStates())
-        # save state 1
-        self.set_state(1)
-        self.assertEqual(states1, self.form.getAllWidgetStates())
-        self.click_Ok()
-        self.assertEqual(states1, self.form.getAllWidgetStates())
-        # change to state 0 without saving
-        self.set_state(0)
-        self.assertEqual(states0, self.form.getAllWidgetStates())
-        self.click_Cancel()
-        self.assertEqual(states1, self.form.getAllWidgetStates())
-
     def test_form_init_title(self):
         """Tests if the FormDialog is created correctly with or without the title argument."""
         FormDialog()
@@ -489,7 +463,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def _test_insert_one_widget_to_vertical_layout(self, row, qwidget):
         """
-        Invokes `insertWidgetToVerticalLayout`, therefore inserts the qwidget at position 
+        Invokes `insertWidgetToVerticalLayout`, therefore inserts the qwidget at position
         row in the layout. Checks the position of the widget in the form is `row`.
         """
         self.form.insertWidgetToVerticalLayout(row, qwidget)
@@ -497,10 +471,13 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(position, row)
 
     def test_insert_every_widget_to_vertical_layout(self):
-        """Inserts each widget in position 0 of the vertical layout and tests its position in the layout is 0."""
+        """
+        Inserts each widget in position 0 of the vertical layout and tests its position in
+        the layout is 0.
+        """
         for key in self.list_all_widgets.keys():
             self._test_insert_one_widget_to_vertical_layout(0, self.list_all_widgets[key])
-    
+
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
         initial_label_value = 'label'
@@ -557,6 +534,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
 
+
 @skip_ci
 class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
@@ -568,14 +546,18 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.layout = self.form.uiElements['groupBoxFormLayout']
 
     def test_get_name_and_role_from_key_or_widget(self):
-        """Checks that the method `_getNameAndRoleFromKey` returns the correct name and role in all widgets."""
+        """
+        Checks that the method `_getNameAndRoleFromKey` returns the correct name and role in
+        all widgets.
+        """
         for name in self.list_all_widgets.keys():
             for role in {'field', 'label'}:
                 name_role = name + '_' + role
                 name_c, role_c = self.form._getNameAndRoleFromKey(name_role)
                 self.assertEqual(name_c, name)
                 self.assertEqual(role_c, role)
-                name_c, role_c = self.form._getNameAndRoleFromWidget(self.form.getWidget(name, role))
+                name_c, role_c = self.form._getNameAndRoleFromWidget(
+                    self.form.getWidget(name, role))
                 self.assertEqual(name_c, name)
                 self.assertEqual(role_c, role)
 
@@ -634,6 +616,7 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
+
 
 @skip_ci
 class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
