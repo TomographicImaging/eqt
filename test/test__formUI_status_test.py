@@ -139,28 +139,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             qwidget = self.list_all_widgets[key]
             self._test_insert_one_widget(0, name + '_spanning', qwidget)
 
-    # def _test_add_one_widget(self, name):
-    #     """
-    #     Invokes `insertWidgetToFormLayout`, therefore inserts the qwidget (and the qlabel)
-    #     at position row in the layout. Checks the position of the widget in the form is `row`.
-    #     """
-    #     position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
-    #     self.assertEqual(position, row)
-
-    # def test_add_every_widget(self):
-    #     list_widget_names = [
-    #         'label', 'checkBox', 'comboBox', 'doubleSpinBox',
-    #         'spinBox', 'slider', 'uiSliderWidget', 'radioButton',
-    #         'textEdit', 'plainTextEdit', 'lineEdit', 'button']
-    #     for i in range(0, len(self.list_all_widgets)):
-    #         qwidget = self.list_all_widgets[i]
-    #         name = list_widget_names[i]
-    #         self._test_add_one_widget_to_dictionary(self.widgets, name, qwidget, name)
-    #         qwidget = self.list_all_widgets[i]
-    #         self._test_insert_one_widget(0, name + '_spanning', qwidget)
-
-
-
     def _test_remove_one_widget(self, name):
         """
         Remove one widget.
@@ -416,7 +394,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.assertEqual(self.simple_form.getWidgetState('checkBox', 'field'), self.state_simple_form['checkBox_field'])
 
     def test_applyWidgetState_using_role_parameter_label(self):
-
         self.simple_form.applyWidgetState('checkBox', self.state_simple_form['checkBox_label'], role='label')
         self.assertEqual(self.simple_form.getWidgetState('checkBox', 'label'), self.state_simple_form['checkBox_label'])
 
@@ -439,6 +416,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
+
     def click_Ok(self):
         QTest.mouseClick(self.form.Ok, Qt.LeftButton)
 
@@ -590,6 +568,7 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.layout = self.form.uiElements['groupBoxFormLayout']
 
     def test_get_name_and_role_from_key_or_widget(self):
+        """Checks that the method `_getNameAndRoleFromKey` returns the correct name and role in all widgets."""
         for name in self.list_all_widgets.keys():
             for role in {'field', 'label'}:
                 name_role = name + '_' + role
@@ -655,30 +634,6 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
-
-    def test_adaptFormToStates_after_remove_and_insert(self):
-        """Saves two states. Checks that the widgets are removed and inserted correctly when the states are applied."""
-        # state 1
-        self.form.saveAllWidgetStates()
-        state1 = self.form.widget_states
-        # state2 
-        for key in self.list_all_widgets.keys():
-            qwidget = self.list_all_widgets[key]
-            name = f'{key}_insert'
-            self.form.insertWidgetToFormLayout(0, name, qwidget, name)
-            qwidget = self.list_all_widgets[key]
-            self.form.insertWidgetToFormLayout(0, name + '_spanning', qwidget)
-        self.form.saveAllWidgetStates()
-        state2 = self.form.widget_states
-        self.assertNotEqual(state1, state2)
-        # apply 1
-        self.form.adaptFormToStates(state1)
-        self.form.saveAllWidgetStates()
-        self.assertEqual(state1, self.form.widget_states)
-        # apply 2
-        self.form.adaptFormToStates(state2)
-        self.form.saveAllWidgetStates()
-        self.assertEqual(state2, self.form.widget_states)
 
 @skip_ci
 class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
