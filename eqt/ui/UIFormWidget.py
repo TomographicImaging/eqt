@@ -57,17 +57,24 @@ class UIFormWidget:
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''
-        Inserts a widget and a label widget, or a spanning widget if 'qlabel' is None, to the form
-        layout in the position specified by row. If row is out of bounds, the widget is added at
-        the end. It adds to the widget dictionary, the widget number dictionary, and the default
-        widget states dictionary.
+        Inserts a labelled widget, or a spanning widget, to the form layout.
+        The position in the form is specified by row. If row is out of bounds, the widget
+        is added at the end of the form. The entries associated with the widget are added
+        to the widget dictionary, the widget-number dictionary, and the default-widget-states
+        dictionary.
 
         Parameters:
         ----------
         row: int
+            The position in the form where the widget is added.
         name: str
-        qwidget: qwidget
+            The string associated to the qwidget and qlabel.
+        qwidget: widget
+            The widget to be added on the right hand side of the form or as a spanning widget.
         qlabel: qlabel widget or str
+            The qlabel widget, or a str from which a qlabel widget is created, to be added
+            on the left hand side of the form. If qlabel is `None` the widget spans the full
+            width of the form.
         '''
         if f'{name}_field' in self.widgets.keys():
             raise ValueError(f'''The name of widget you are trying to insert, {name},
@@ -151,19 +158,32 @@ class UIFormWidget:
 
     def addWidget(self, qwidget, qlabel, name):
         '''
-        Adds a widget and a label widget, or a spanning widget, at the the end of
+        Adds a widget and a label widget at the the end of
         the form layout.
 
         Parameters:
         ----------
-        name: str
         qwidget: widget
+            The widget to be added on the right hand side of the form.
         qlabel: qlabel widget or str
+            The qlabel widget, or a str from which a qlabel widget is created, to be added
+            on the left hand side of the form.
+        name: str
+            The string associated to the qwidget and qlabel.
         '''
         self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
 
     def addSpanningWidget(self, qwidget, name):
-        '''Adds a spanning qwidget occupying the full row in the form layout.'''
+        '''
+        Adds a spanning qwidget occupying the full row in the form layout.
+
+        Parameters:
+        ----------
+        qwidget: widget
+            The widget to be added on the form.
+        name: str
+            The string associated to the qwidget.
+        '''
         self.insertWidgetToFormLayout(-1, name, qwidget)
 
     def getNumWidgets(self):
@@ -458,9 +478,9 @@ class UIFormWidget:
 
     def applyWidgetStates(self, states):
         '''
-        Applies the given states to the form's widgets.
-        This assumes the states in the form and the widgets in the states have the same name.
-        If this is false, it raises an error.
+        Applies the given states to the form's widgets. It raises an error if the keys in the
+        dicitonary of states and the keys in the dictionary of widgets in the form are not the
+        same.
 
         Parameters
         ----------
@@ -526,11 +546,33 @@ class FormDockWidget(QtWidgets.QDockWidget):
             self.setObjectName(title)
 
     def addWidget(self, qwidget, qlabel, name):
-        '''Adds a qwidget and a qlabel widget in the same row of the form layout.'''
+        '''
+        Adds a widget and a label widget at the the end of
+        the form layout.
+
+        Parameters:
+        ----------
+        qwidget: widget
+            The widget to be added on the right hand side of the form.
+        qlabel: qlabel widget or str
+            The qlabel widget, or a str from which a qlabel widget is created, to be added
+            on the left hand side of the form.
+        name: str
+            The string associated to the qwidget and qlabel.
+        '''
         self.widget().addWidget(qwidget, qlabel, name)
 
     def addSpanningWidget(self, qwidget, name):
-        '''Adds a spanning qwidget occupying the full row in the form layout.'''
+        '''
+        Adds a spanning qwidget occupying the full row in the form layout.
+
+        Parameters:
+        ----------
+        qwidget: widget
+            The widget to be added on the form.
+        name: str
+            The string associated to the qwidget.
+        '''
         self.widget().addSpanningWidget(qwidget, name)
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
@@ -544,8 +586,14 @@ class FormDockWidget(QtWidgets.QDockWidget):
         ----------
         row: int
         name: str
-        qwidget: qwidget
+            The string associated to the qwidget and qlabel.
+        qwidget: widget
+            The widget to be added on the right hand side of the form or as a spanning widget.
         qlabel: qlabel widget or str
+            The qlabel widget, or a str from which a qlabel widget is created, to be added
+            on the left hand side of the form. If qlabel is `None` the widget spans the full
+            width of the form.
+
         '''
         self.widget().insertWidgetToFormLayout(row, name, qwidget, qlabel)
 
@@ -686,11 +734,11 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
         return self.widget().applyWidgetState(name, state, role)
 
-    def applyWidgetStates(self, state):
+    def applyWidgetStates(self, states):
         '''
-        Applies the given states to the form's widgets.
-        This assumes the states in the form and the widgets in the states have the same name.
-        If this is false, it raises an error.
+        Applies the given states to the form's widgets. It raises an error if the keys in the
+        dicitonary of states and the keys in the dictionary of widgets in the form are not the
+        same.
 
         Parameters
         ----------
@@ -701,7 +749,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
             e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
             'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number' : 1}}.
         '''
-        return self.widget().applyWidgetStates(state)
+        return self.widget().applyWidgetStates(states)
 
 
 class UIFormFactory(QtWidgets.QWidget):

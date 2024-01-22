@@ -118,17 +118,24 @@ class FormDialog(QtWidgets.QDialog):
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''
-        Inserts a widget and a label widget, or a spanning widget if 'qlabel' is None, to the form
-        layout in the position specified by row. If row is out of bounds, the widget is added at
-        the end. It adds to the widget dictionary, the widget number dictionary, and the default
-        widget states dictionary.
+        Inserts a labelled widget, or a spanning widget, to the form layout.
+        The position in the form is specified by row. If row is out of bounds, the widget
+        is added at the end of the form. The entries associated with the widget are added
+        to the widget dictionary, the widget-number dictionary, and the default-widget-states
+        dictionary.
 
         Parameters:
         ----------
         row: int
+            The position in the form where the widget is added.
         name: str
-        qwidget: qwidget
+            The string associated to the qwidget and qlabel.
+        qwidget: widget
+            The widget to be added on the right hand side of the form or as a spanning widget.
         qlabel: qlabel widget or str
+            The qlabel widget, or a str from which a qlabel widget is created, to be added
+            on the left hand side of the form. If qlabel is `None` the widget spans the full
+            width of the form.
         '''
         self.formWidget.insertWidgetToFormLayout(row, name, qwidget, qlabel)
 
@@ -284,11 +291,11 @@ class FormDialog(QtWidgets.QDialog):
         '''
         return self.formWidget.applyWidgetState(name, state, role)
 
-    def applyWidgetStates(self, state):
+    def applyWidgetStates(self, states):
         '''
-        Applies the given states to the form's widgets.
-        This assumes the states in the form and the widgets in the states have the same name.
-        If this is false, it raises an error.
+        Applies the given states to the form's widgets. It raises an error if the keys in the
+        dicitonary of states and the keys in the dictionary of widgets in the form are not the
+        same.
 
         Parameters
         ----------
@@ -299,4 +306,4 @@ class FormDialog(QtWidgets.QDialog):
             e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
             'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number' : 1}}.
         '''
-        return self.formWidget.applyWidgetStates(state)
+        return self.formWidget.applyWidgetStates(states)
