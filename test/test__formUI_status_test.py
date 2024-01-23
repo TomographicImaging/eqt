@@ -127,6 +127,25 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
         self.assertEqual(position, row)
 
+    def _test_add_one_widget(self, name, qwidget, qlabel):
+        """
+        Invokes `addWidget`, therefore inserts the qwidget and the qlabel
+        at the end of the layout. Checks the position of the widget in the form is the last one.
+        """
+        self.form.addWidget(qwidget, qlabel, name)
+        position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
+        self.assertEqual(position, self.form.getNumWidgets() - 1)
+
+    def _test_add_one_spanning_widget(self, name, qwidget):
+        """
+        Invokes `addSpanningWidget`, therefore inserts the qwidget 
+        at the end of the layout. Checks the position of the widget in the form is the last one.
+        """
+        name = f'{name}_spanning'
+        self.form.addSpanningWidget(qwidget, name)
+        position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
+        self.assertEqual(position, self.form.getNumWidgets() - 1)
+
     def test_insert_every_widget(self):
         """
         Inserts each widget, and then each spanning widget, in position 0 of the form layout.
@@ -138,6 +157,18 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             self._test_insert_one_widget(0, name, qwidget, name)
             qwidget = self.list_all_widgets[key]
             self._test_insert_one_widget(0, name + '_spanning', qwidget)
+
+    def test_add_every_widget(self):
+        """
+        Adds each widget, and then each spanning widget, in the end of the form layout.
+        Tests the position of the widgets in the layout is the last one.
+        """
+        for key in self.list_all_widgets.keys():
+            qwidget = self.list_all_widgets[key]
+            name = f'{key}_added'
+            self._test_add_one_widget(name, qwidget, name)
+            qwidget = self.list_all_widgets[key]
+            self._test_add_one_spanning_widget(name + '_spanning', qwidget)
 
     def _test_remove_one_widget(self, name):
         """
@@ -470,6 +501,33 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         position = self.vertical_layout.indexOf(qwidget)
         self.assertEqual(position, row)
 
+    def _test_add_one_widget_to_vertical_layout(self, qwidget):
+        """
+        Invokes `addWidget` with vertical layout. Therefore adds the qwidget 
+        at the end of the layout. Checks that the widget inserted is the inputted one and 
+        its position in the layout corresponds to the number of widgets in the layout before insertion.
+        """
+        num_widgets = self.vertical_layout.count()
+        self.form.addWidget(qwidget, layout = 'vertical')
+        index = self.form.getIndexFromVerticalLayout(qwidget)
+        self.assertEqual(index, num_widgets)
+        widget= self.vertical_layout.itemAt(num_widgets).widget()
+        self.assertEqual(qwidget, widget)
+
+
+    def _test_add_one_spanning_widget_to_vertical_layout(self, qwidget):
+        """
+        Invokes `addSpanningWidget` with vertical layout. Therefore adds the qwidget 
+        at the end of the layout. Checks that the widget inserted is the inputted one and 
+        its position in the layout corresponds to the number of widgets in the layout before insertion.
+        """
+        num_widgets = self.vertical_layout.count()
+        self.form.addSpanningWidget(qwidget, layout = 'vertical')
+        index = self.form.getIndexFromVerticalLayout(qwidget)
+        self.assertEqual(index, num_widgets)
+        widget= self.vertical_layout.itemAt(num_widgets).widget()
+        self.assertEqual(qwidget, widget)
+
     def test_insert_every_widget_to_vertical_layout(self):
         """
         Inserts each widget in position 0 of the vertical layout and tests its position in
@@ -477,6 +535,14 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         """
         for key in self.list_all_widgets.keys():
             self._test_insert_one_widget_to_vertical_layout(0, self.list_all_widgets[key])
+
+    def test_add_every_widget_to_vertical_layout(self):
+        """
+        Adds each widget and each spanning widget at the end of the vertical layout and tests them.
+        """
+        for key in self.list_all_widgets.keys():
+            self._test_add_one_widget_to_vertical_layout(self.list_all_widgets[key])
+            self._test_add_one_spanning_widget_to_vertical_layout(self.list_all_widgets[key])
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
