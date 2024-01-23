@@ -157,6 +157,20 @@ class FormDialog(QtWidgets.QDialog):
         Returns the widget in the vertical layout located at position index.'''
         return self.formWidget.uiElements['verticalLayout'].itemAt(index).widget()
 
+    def getIndexFromVerticalLayout(self, widget):
+        '''
+        Returns the index of the widget in the vertical layout.
+        Parameters
+        -------------
+        widget : qwidget
+            The widget in the layout.
+        Return
+        ------------
+        int
+            The index of the widget in the layout.
+        '''
+        return self.formWidget.uiElements['verticalLayout'].indexOf(widget)
+
     def removeWidget(self, name):
         '''
         If not present already, creates a dictionary to store the removed qwidgets.
@@ -311,11 +325,17 @@ class FormDialog(QtWidgets.QDialog):
 
 class AdvancedFormDialog(FormDialog):
     def __init__(self,  parent = None, title = None, button_name = None):
-        """Creates a form dialog. Adds default button to the vertical layout.
+        """Creates a form dialog. Adds a default button to the vertical layout,
+        located between the form layout and the buttons `ok` and `cancel`, and connects it.
 
         Parameters
         --------------------
-        button_name : the name of the button opening the advanced form dialog in the parent"""
+        parent :  qwidget or None
+            The parent widget of the advanced form dialog
+        title :  str or None
+            The title of the advanced form dialog.
+        button_name : str or None
+            the name of the button opening the advanced form dialog in the parent"""
         if parent is not None:
             self.dialog_parent = parent
             self.display_on_parent_dict = {}
@@ -323,12 +343,10 @@ class AdvancedFormDialog(FormDialog):
                 self.button_widget_number = self.dialog_parent.getWidgetNumber(button_name)
         FormDialog.__init__(self, parent, title)
 
-        
-
         # add default button to vertical layout
-        button_default = QtWidgets.QPushButton("Set default values")
-        self.insertWidgetToVerticalLayout(1, button_default)
-        button_default.clicked.connect(lambda: self.setDefaultValues())
+        self.default_button = QtWidgets.QPushButton("Set default values")
+        self.insertWidgetToVerticalLayout(1, self.default_button)
+        self.default_button.clicked.connect(lambda: self.setDefaultValues())
         
     def _onOk(self):
         '''Called when the dialog's "Ok" button is clicked.
@@ -343,11 +361,11 @@ class AdvancedFormDialog(FormDialog):
        
         if hasattr(self, 'display_on_parent_dict'):
             if self.getWidgetStates() == self.getDefaultWidgetStates():
-                self.removeWidgetsFromParent()
+                self._removeWidgetsFromParent()
             else:
-                self.addWidgetsToParent()
+                self._addWidgetsToParent()
 
-    def addWidgetsToParent(self):
+    def _addWidgetsToParent(self):
         i = 0
         for name in self.display_on_parent_dict.keys():
             i += 1
@@ -356,15 +374,14 @@ class AdvancedFormDialog(FormDialog):
             else:
                 widget_number = - 1
 
-            print(name)
             value = str(self.getWidgetStates()[f'{name}_field']['value'])
-            label = str(self.getWidgetStates()[f'{name}_label']['value'])
             if f'{name}_field' not in self.dialog_parent.getWidgets():
+                label = str(self.getWidgetStates()[f'{name}_label']['value'])
                 self.dialog_parent.insertWidgetToFormLayout(widget_number, name, QtWidgets.QLabel(value), label)
             else:
                 self.dialog_parent.getWidget(name, 'field').setText(value)
 
-    def removeWidgetsFromParent(self):
+    def _removeWidgetsFromParent(self):
         for name in self.display_on_parent_dict.keys():
             if f'{name}_field' in self.dialog_parent.getWidgets():
                 self.dialog_parent.removeWidget(name)
