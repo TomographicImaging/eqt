@@ -165,10 +165,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     def test_remove_every_widget(self):
         """Remove every widget from the form."""
-        list_widgets = [
-            'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
-            'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
-        for name in list_widgets:
+        for name in self.list_all_widgets.keys():
             self._test_remove_one_widget(name)
 
     def test_getWidgetState_returns_visibility(self):
