@@ -599,12 +599,11 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
     def removeWidget(self, name):
         '''
-        If not present already, creates a dictionary to store the removed qwidgets.
-        Sets the parent of the qwidget, and qlabel if present, to `None` and
-        stores the widgets in the removed-widgets dictionary.
-        Deletes the row in the form layout.
-        Deletes the qwidget and qlabel from the widgets dictionary.
-        Deletes the widget number from the widget-number dictionary.
+        Removes the widget with name `name` from the widgets in the form layout. In particular,
+        it deletes the row in the form layout, the qwidget and qlabel from the widgets dictionary
+        and the widget number from the widget-number dictionary. Sets the parent of the qwidget,
+        and qlabel if present, to `None` allowing to store the removed widget in the
+        removed-widgets dictionary.
 
         Parameters:
         --------------
