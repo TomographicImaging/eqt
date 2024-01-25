@@ -118,6 +118,44 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.form.getWidget('button').setCheckable(True)
         self.form.getWidget('button').setChecked(state[i]['button_value'])
 
+    def set_spanning_state(self, i):
+        """
+        Applies the values saved in `self.exampleState` at position `i` to the spanning widgets in the form.
+
+        Parameters
+        ----------------
+        i: int
+        """
+        state = self.exampleState
+        # set the states
+        # QLabel
+        self.form.getWidget('label_spanning').setText(state[i]['label_value'])
+        # QCheckBox
+        self.form.getWidget('checkBox_spanning').setChecked(state[i]['checkBox_value'])
+        # QComboBox
+        combobox_list = ['test', 'test2']
+        self.form.getWidget('comboBox_spanning').addItems(combobox_list)
+        self.form.getWidget('comboBox_spanning').setCurrentIndex(state[i]['comboBox_value'])
+        # QDoubleSpinBox
+        self.form.getWidget('doubleSpinBox_spanning').setValue(state[i]['doubleSpinBox_value'])
+        # QSpinBox
+        self.form.getWidget('spinBox_spanning').setValue(state[i]['spinBox_value'])
+        # QSlider
+        self.form.getWidget('slider_spanning').setValue(state[i]['slider_value'])
+        # UISlider
+        self.form.getWidget('uiSliderWidget_spanning').setValue(state[i]['uiSliderWidget_value'])
+        # QRadioButton
+        self.form.getWidget('radioButton_spanning').setChecked(state[i]['radioButton_value'])
+        # QTextEdit
+        self.form.getWidget('textEdit_spanning').setText(state[i]['textEdit_value'])
+        # QPlainTextEdit
+        self.form.getWidget('plainTextEdit_spanning').setPlainText(state[i]['plainTextEdit_value'])
+        # QLineEdit
+        self.form.getWidget('lineEdit_spanning').setText(state[i]['lineEdit_value'])
+        # QPushButton
+        self.form.getWidget('button_spanning').setCheckable(True)
+        self.form.getWidget('button_spanning').setChecked(state[i]['button_value'])
+
     def _test_insert_one_widget(self, row, name, qwidget, qlabel=None):
         """
         Invokes `insertWidgetToFormLayout`, therefore inserts the qwidget (and the qlabel)
@@ -700,7 +738,6 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
 
         self.form_without_parent = AdvancedFormDialog()
         self.add_every_widget()
-        self.add_every_spanning_widget()
         for key in self.list_all_widgets.keys():
             self.form.addToDictionaryDisplayOnParent(key)
         self.simple_form = AdvancedFormDialog()
@@ -721,34 +758,57 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.assertEqual(index, 1)
 
     def test_dialog_ok_button_behaviour(self):
-        # change states and click ok
-        self.set_state(0)
+        #click ok first
+        parent_initial_states = self.form_parent.getAllWidgetStates()
+        self.form.open()
         self.click_Ok()
-        self.form_parent.saveAllWidgetStates()
-        parent_states = self.form_parent.getWidgetStates() 
+        parent_states = self.form_parent.getAllWidgetStates()
+        self.assertEqual(parent_states,parent_initial_states)
+        # change states and click ok
+        for i in [0,1]:
+            self.set_state(i)
+            self.form.open()
+            self.click_Ok()
+            parent_states = self.form_parent.getAllWidgetStates()
+            for key in self.list_all_widgets.keys():
+                self.assertEqual(parent_states[f'{key}_field']['value'], str(self.exampleState[i][f'{key}_value']))
+                self.assertEqual(parent_states[f'{key}_label']['value'], key)
+        # click default and then ok
+        self.form.open()
+        self.click_default_button()
+        self.click_Ok()
+        parent_states = self.form_parent.getAllWidgetStates()
+        self.assertEqual(parent_states,parent_initial_states)
+    
+    def test_dialog_cancel_button_behaviour(self):
+        #click cancel first
+        parent_initial_states = self.form_parent.getAllWidgetStates()
+        self.form.open()
+        self.click_Cancel()
+        parent_states = self.form_parent.getAllWidgetStates()
+        self.assertEqual(parent_states,parent_initial_states)
+        # change states and click Cancel
+        self.set_state(0)
+        self.form.open()
+        self.click_Cancel()
+        parent_states = self.form_parent.getAllWidgetStates()
+        self.assertEqual(parent_states,parent_initial_states)
+        # change states and click Ok then chance states and click cancel
+        self.set_state(0)
+        self.form.open()
+        self.click_Ok()
+        self.set_state(1)
+        self.form.open()
+        self.click_Cancel()
+        parent_states = self.form_parent.getAllWidgetStates()
         for key in self.list_all_widgets.keys():
             self.assertEqual(parent_states[f'{key}_field']['value'], str(self.exampleState[0][f'{key}_value']))
             self.assertEqual(parent_states[f'{key}_label']['value'], key)
-        #print(parent_states)
-        print(self.form.getDefaultWidgetStates())
-
-        # click default and then ok
+        # click default and then Cancel
+        self.form.open()
         self.click_default_button()
-        self.click_Ok()
-        print(self.form.getWidgetStates())
-        self.form_parent.saveAllWidgetStates()
-        parent_states = self.form_parent.getWidgetStates() 
-        #print(parent_states)
-        
-            
-       #     print(parent_states[f'{key}_field'])
-        # # save state 1
-        # self.set_state(1)
-        # self.assertEqual(states1, self.form.getAllWidgetStates())
-        # self.click_Ok()
-        # self.assertEqual(states1, self.form.getAllWidgetStates())
-        # # change to state 0 without saving
-        # self.set_state(0)
-        # self.assertEqual(states0, self.form.getAllWidgetStates())
-        # self.click_Cancel()
-        # self.assertEqual(states1, self.form.getAllWidgetStates())
+        self.click_Cancel()
+        parent_states = self.form_parent.getAllWidgetStates()
+        for key in self.list_all_widgets.keys():
+            self.assertEqual(parent_states[f'{key}_field']['value'], str(self.exampleState[0][f'{key}_value']))
+            self.assertEqual(parent_states[f'{key}_label']['value'], key)
