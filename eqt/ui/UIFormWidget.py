@@ -354,7 +354,7 @@ class UIFormWidget:
             try:
                 widget = self.widgets[name_role]
             except KeyError:
-                raise KeyError('No widget associated with the dictionary key `' + name_role)
+                raise KeyError(f'No widget associated with the dictionary key `{name_role}`.')
         else:
             name, role = self._getNameAndRoleFromWidget(widget)
         widget_state = {}
@@ -446,7 +446,7 @@ class UIFormWidget:
             elif name_role in self.removed_widgets_dictionary.keys():
                 widget = self.removed_widgets_dictionary[name_role]
         except KeyError:
-            raise KeyError('No widget associated with the dictionary key `' + name_role + '`')
+            raise KeyError(f'No widget associated with the dictionary key `{name_role}`.')
         # apply state
         for key, value in state.items():
             if key == 'enabled':
