@@ -59,7 +59,8 @@ class UIFormWidget:
         '''
         Inserts a labelled widget, or a spanning widget, to the form layout.
         The position in the form is specified by row. If row is out of bounds, the widget
-        is added at the end of the form. The entries associated with the widget are added
+        is added at the end of the form. An error is raised if `name` is already in use
+        by another widget in the form. The entries associated with the widget are added
         to the widget dictionary, the widget-number dictionary, and the default-widget-states
         dictionary.
 
@@ -577,14 +578,17 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
     def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
         '''
-        Inserts a widget and a label widget, or a spanning widget if 'qlabel' is None, to the form
-        layout in the position specified by row. If row is out of bounds, the widget is added at
-        the end. It adds to the widget dictionary, the widget number dictionary, and the default
-        widget states dictionary.
+        Inserts a labelled widget, or a spanning widget, to the form layout.
+        The position in the form is specified by row. If row is out of bounds, the widget
+        is added at the end of the form. An error is raised if `name` is already in use
+        by another widget in the form. The entries associated with the widget are added
+        to the widget dictionary, the widget-number dictionary, and the default-widget-states
+        dictionary.
 
         Parameters:
         ----------
         row: int
+            The position in the form where the widget is added.
         name: str
             The string associated to the qwidget and qlabel.
         qwidget: widget
@@ -593,7 +597,6 @@ class FormDockWidget(QtWidgets.QDockWidget):
             The qlabel widget, or a str from which a qlabel widget is created, to be added
             on the left hand side of the form. If qlabel is `None` the widget spans the full
             width of the form.
-
         '''
         self.widget().insertWidgetToFormLayout(row, name, qwidget, qlabel)
 
