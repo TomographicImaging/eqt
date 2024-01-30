@@ -1,10 +1,9 @@
 # Version x.x.x
-- Adds the methods to insert widgets in the forms, their unit tests, and the example file.
-  `_addWidget` is removed and substituted by an insert method.
-  Adds a dictionary of removed widgets.
-  Adds the widget-number dictionary and saves the widget number as a value in the widget-states dictionary.
-  Adds a method to get the name and role of a widget from a dictionary key.
-  Changes the attribute representing the number of widgets in the form to be the property corresponding to the number of rows in the form. (#109)
+- Adds methods to insert widgets in the forms & tests/example
+  Removes `_addWidget`
+  Adds `getWidgetNumber`and updates states dictionary and related methods
+  Adds `getNameAndRole*`.
+  Changes `num_widgets` to be a property (#109)
 - Reinstates changelog (#99)
 - Adds `title` to `FormDockWidget` & update tests/examples (#102)
 - Stops `pre-commit` committing corrections to user PRs (#112)
