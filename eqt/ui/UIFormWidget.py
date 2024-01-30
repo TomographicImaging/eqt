@@ -58,7 +58,7 @@ class UIFormWidget:
         The position in the form is specified by row. If row is out of bounds, the widget
         is added at the end of the form. An error is raised if `name` is already in use
         by another widget in the form. The entries associated with the widget are added
-        to the widget dictionary, the widget-number dictionary, and the default-widget-states
+        to the widget dictionary and the default-widget-states
         dictionary.
 
         Parameters:
@@ -550,7 +550,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         The position in the form is specified by row. If row is out of bounds, the widget
         is added at the end of the form. An error is raised if `name` is already in use
         by another widget in the form. The entries associated with the widget are added
-        to the widget dictionary, the widget-number dictionary, and the default-widget-states
+        to the widget dictionary and the default-widget-states
         dictionary.
 
         Parameters:
