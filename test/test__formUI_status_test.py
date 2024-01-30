@@ -161,7 +161,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.assertEqual(prenumwidgets, postnumwidgets + 1)
         self.assertEqual(prerowcount, postrowcount + 1)
         self.assertEqual(postrowcount, postnumwidgets)
-        self.assertEqual(self.form.getRemovedWidgets()[f'{name}_field'], qwidget)
 
     def test_remove_every_widget(self):
         """Remove every widget from the form."""

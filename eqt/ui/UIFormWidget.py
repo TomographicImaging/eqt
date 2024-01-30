@@ -39,13 +39,10 @@ class UIFormWidget:
         # Add elements to layout
         verticalLayout.addWidget(groupBox)
 
-        # number of widgets currently present in the groupBoxFormLayout
-        self.widget_number_dictionary = {}
         self.uiElements = {
             'verticalLayout': verticalLayout, 'groupBox': groupBox,
             'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
-        self.removed_widgets_dictionary = {}
 
     @property
     def num_widgets(self):
@@ -92,7 +89,6 @@ class UIFormWidget:
         else:
             formLayout.insertRow(row, qwidget)
         self._addToWidgetDictionary(self.widgets, name, qwidget, qlabel)
-        self._addToWidgetNumberDictionary(name, row)
         self._addToDefaultWidgetStatesDictionary(name)
 
     def _addToWidgetDictionary(self, dictionary, name, qwidget, qlabel=None):
@@ -101,61 +97,42 @@ class UIFormWidget:
         if qlabel is not None:
             dictionary[f'{name}_label'] = qlabel
 
-    def _addToWidgetNumberDictionary(self, name, widget_number):
-        '''
-        Adds one item in the widget-number dictionary whose key is name and value is
-        the current widget number (i.e. row) in the form layout.
-        As one widget is inserted, the widget numbers associated to the other widgets
-        in the layout are updated.
-
-        Parameters:
-        ---------------
-        name: string
-            name of the widget
-        widget_number : int
-            position of the widget in the form layout, i.e. row, in the current state
-        '''
-        if widget_number == -1:
-            self.widget_number_dictionary[name] = self.num_widgets - 1
-        else:
-            for key, value in self.widget_number_dictionary.items():
-                if value >= widget_number:
-                    self.widget_number_dictionary[key] = value + 1
-            self.widget_number_dictionary[name] = widget_number
-
-    def _popWidgetNumberDictionary(self, name):
-        '''
-        Removes one item in the widget-number dictionary whose key is name.
-        As one widget is removed, the widget numbers associated to the other widgets
-        in the layout are updated.
-
-        Parameters:
-        ---------------
-        name: string
-            name of the widget
-        '''
-        widget_number = self.getWidgetNumber(name)
-        for key, value in self.widget_number_dictionary.items():
-            if value > widget_number:
-                self.widget_number_dictionary[key] = value - 1
-        self.widget_number_dictionary.pop(name)
-
     def _popWidgetFromDictionary(self, dictionary, name):
         '''
         Removes the item(s) associated with `name` from a dictionary.
 
         Parameters:
         -----------------
-        dictionary :  dict
-        name: str
-            Format: {name}
+        dictionary : dict
+            The dictionary from which to remove the items.
+        name : str
+            The name of the item(s) to be removed.
+
+        Returns:
+        -------
+        qwidget : QWidget 
+            The removed widget associated with `name`, if it exists in the dictionary.
+
+        qlabel : QLabel, optional
+            The removed label associated with `name`, if it exists in the dictionary.
+
+        Raises:
+        ------
+        KeyError
+            If no widget associated with the dictionary key `name` or `{name}_field` is found.
+
         '''
         if name in dictionary.keys():
-            dictionary.pop(name)
-        if f'{name}_field' in dictionary.keys():
-            dictionary.pop(f'{name}_field')
+            qwidget = dictionary.pop(name)
+        elif f'{name}_field' in dictionary.keys():
+            qwidget = dictionary.pop(f'{name}_field')
+        else:
+            raise KeyError(f'No widget associated with the dictionary key `{name}` or `{name}_field`.')
         if f'{name}_label' in dictionary.keys():
-            dictionary.pop(f'{name}_label')
+            qlabel = dictionary.pop(f'{name}_label')
+            return qwidget, qlabel
+        else:
+            return qwidget
 
     def addWidget(self, qwidget, qlabel, name):
         '''
@@ -195,29 +172,32 @@ class UIFormWidget:
 
     def removeWidget(self, name):
         '''
-        Removes the widget with name `name` from the widgets in the form layout. In particular,
-        it deletes the row in the form layout, the qwidget and qlabel from the widgets dictionary
-        and the widget number from the widget-number dictionary. Sets the parent of the qwidget,
-        and qlabel if present, to `None` allowing to store the removed widget in the
-        removed-widgets dictionary.
+        Removes the widget with the specified name from the form layout.
+        This method delete the qwidget, and qlabel if present, from the widgets dictionary
+        and sets their parent to `None`.
 
         Parameters:
         --------------
         name : str
-            name of the widget to be removed
+            The name of the widget to be removed.
+
+        Returns:
+        --------------
+        tuple or QWidget
+            If the widget has a corresponding label, a tuple containing the widget and label is returned.
+            Otherwise, only the widget is returned.
         '''
-        formLayout = self.uiElements['groupBoxFormLayout']
-        qwidget = self.getWidget(name, role='field')
+        widget_number = self.getWidgetNumber(name)
         if f'{name}_label' in self.getWidgets().keys():
-            qlabel = self.getWidget(name, role='label')
-            self._addToWidgetDictionary(self.removed_widgets_dictionary, name, qwidget, qlabel)
             self.getWidget(name, 'label').setParent(None)
-        else:
-            self._addToWidgetDictionary(self.removed_widgets_dictionary, name, qwidget)
+            qwidget, qlabel = self._popWidgetFromDictionary(self.getWidgets(), name)
+            self.uiElements['groupBoxFormLayout'].removeRow(widget_number)
+            return qwidget, qlabel
         self.getWidget(name, 'field').setParent(None)
-        formLayout.removeRow(self.widget_number_dictionary[name])
-        self._popWidgetFromDictionary(self.getWidgets(), name)
-        self._popWidgetNumberDictionary(name)
+        qwidget = self._popWidgetFromDictionary(self.getWidgets(), name)
+        self.uiElements['groupBoxFormLayout'].removeRow(widget_number)
+        return qwidget
+
 
     def getWidget(self, name, role='field'):
         '''
@@ -231,13 +211,11 @@ class UIFormWidget:
             return self.widgets[f'{name}_{role}']
         raise ValueError(f'Unexpected role: expected any of {allowed_roles}, got {role}')
 
-    def getWidgetNumber(self, name):
-        '''Returns the widget number by the widget name.'''
-        return self.widget_number_dictionary[f'{name}']
-
-    def getWidgetNumberDictionary(self):
-        '''Returns the widget number dictionary.'''
-        return self.widget_number_dictionary
+    def getWidgetNumber(self, name, role = 'field'):
+        '''
+        Returns the widget number by the widget name. This is the row of the widget in the form layout.
+        '''
+        return self.uiElements['groupBoxFormLayout'].getWidgetPosition(self.getWidget(name, role))[0]
 
     def setWidgetVisible(self, name, visible):
         '''
@@ -261,10 +239,6 @@ class UIFormWidget:
     def getWidgets(self):
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.widgets
-
-    def getRemovedWidgets(self):
-        '''Returns the dictionary of the removed widgets previously present in the form.'''
-        return self.removed_widgets_dictionary
 
     def addTitle(self, qlabel, name):
         if isinstance(qlabel, str):
@@ -379,7 +353,7 @@ class UIFormWidget:
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
 
-        widget_state['widget_number'] = self.widget_number_dictionary[name]
+        widget_state['widget_number'] = self.getWidgetNumber(name, role)
         return widget_state
 
     def _getNameAndRoleFromKey(self, key):
@@ -442,10 +416,7 @@ class UIFormWidget:
 
         # retrieve widget
         try:
-            if name_role in self.widgets.keys():
-                widget = self.widgets[name_role]
-            elif name_role in self.removed_widgets_dictionary.keys():
-                widget = self.removed_widgets_dictionary[name_role]
+            widget = self.widgets[name_role]
         except KeyError:
             raise KeyError(f'No widget associated with the dictionary key `{name_role}`.')
         # apply state
@@ -473,9 +444,6 @@ class UIFormWidget:
                     widget.setChecked(value)
                 elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
-                elif key == 'widget_number':
-                    if value != self.widget_number_dictionary[name]:
-                        self.widget_number_dictionary[name] = value
 
     def applyWidgetStates(self, states):
         '''
@@ -602,16 +570,20 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
     def removeWidget(self, name):
         '''
-        Removes the widget with name `name` from the widgets in the form layout. In particular,
-        it deletes the row in the form layout, the qwidget and qlabel from the widgets dictionary
-        and the widget number from the widget-number dictionary. Sets the parent of the qwidget,
-        and qlabel if present, to `None` allowing to store the removed widget in the
-        removed-widgets dictionary.
+        Removes the widget with the specified name from the form layout.
+        This method delete the qwidget, and qlabel if present, from the widgets dictionary
+        and sets their parent to `None`.
 
         Parameters:
         --------------
         name : str
-            name of the widget to be removed
+            The name of the widget to be removed.
+
+        Returns:
+        --------------
+        tuple or QWidget
+            If the widget has a corresponding label, a tuple containing the widget and label is returned.
+            Otherwise, only the widget is returned.
         '''
         self.widget().removeWidget(name)
 
@@ -634,17 +606,11 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.widget().getWidgets()
 
-    def getWidgetNumber(self, name):
-        '''Returns the widget number by the widget name.'''
-        return self.widget().getWidgetNumber(name)
-
-    def getWidgetNumberDictionary(self):
-        '''Returns the widget number dictionary.'''
-        return self.widget().getWidgetNumberDictionary()
-
-    def getRemovedWidgets(self):
-        '''Returns the dictionary of the removed widgets previously present in the form.'''
-        return self.widget().getRemovedWidgets()
+    def getWidgetNumber(self, name, role = 'field'):
+        '''
+        Returns the widget number by the widget name. This is the row of the widget in the form layout.
+        '''
+        return self.widget().getWidgetNumber(name, role)
 
     def setWidgetVisible(self, name, visible):
         '''

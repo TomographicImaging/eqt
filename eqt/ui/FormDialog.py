@@ -160,16 +160,20 @@ class FormDialog(QtWidgets.QDialog):
 
     def removeWidget(self, name):
         '''
-        Removes the widget with name `name` from the widgets in the form layout. In particular,
-        it deletes the row in the form layout, the qwidget and qlabel from the widgets dictionary
-        and the widget number from the widget-number dictionary. Sets the parent of the qwidget,
-        and qlabel if present, to `None` allowing to store the removed widget in the
-        removed-widgets dictionary.
+        Removes the widget with the specified name from the form layout.
+        This method delete the qwidget, and qlabel if present, from the widgets dictionary
+        and sets their parent to `None`.
 
         Parameters:
         --------------
         name : str
-            name of the widget to be removed
+            The name of the widget to be removed.
+
+        Returns:
+        --------------
+        tuple or QWidget
+            If the widget has a corresponding label, a tuple containing the widget and label is returned.
+            Otherwise, only the widget is returned.
         '''
         self.formWidget.removeWidget(name)
 
@@ -192,17 +196,11 @@ class FormDialog(QtWidgets.QDialog):
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.formWidget.getWidgets()
 
-    def getRemovedWidgets(self):
-        '''Returns the dictionary of the removed widgets previously present in the form.'''
-        return self.formWidget.getRemovedWidgets()
-
-    def getWidgetNumber(self, name):
-        '''Returns the widget number by the widget name.'''
-        return self.formWidget.getWidgetNumber(name)
-
-    def getWidgetNumberDictionary(self):
-        '''Returns the widget number dictionary.'''
-        return self.formWidget.getWidgetNumberDictionary()
+    def getWidgetNumber(self, name, role = 'field'):
+        '''
+        Returns the widget number by the widget name. This is the row of the widget in the form layout.
+        '''
+        return self.formWidget.getWidgetNumber(name, role)
 
     def setWidgetVisible(self, name, visible):
         '''
