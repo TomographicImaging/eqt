@@ -172,8 +172,8 @@ class FormDialog(QtWidgets.QDialog):
         Returns:
         --------------
         tuple or QWidget
-            If the widget has a corresponding label, a tuple containing the widget and label is returned.
-            Otherwise, only the widget is returned.
+            If the widget has a corresponding label, a tuple containing the widget
+            and label is returned. Otherwise, only the widget is returned.
         '''
         self.formWidget.removeWidget(name)
 
@@ -196,9 +196,10 @@ class FormDialog(QtWidgets.QDialog):
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.formWidget.getWidgets()
 
-    def getWidgetNumber(self, name, role = 'field'):
+    def getWidgetNumber(self, name, role='field'):
         '''
-        Returns the widget number by the widget name. This is the row of the widget in the form layout.
+        Returns the widget number by the widget name.
+        This is the row of the widget in the form layout.
         '''
         return self.formWidget.getWidgetNumber(name, role)
 

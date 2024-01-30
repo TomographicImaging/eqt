@@ -110,7 +110,7 @@ class UIFormWidget:
 
         Returns:
         -------
-        qwidget : QWidget 
+        qwidget : QWidget
             The removed widget associated with `name`, if it exists in the dictionary.
 
         qlabel : QLabel, optional
@@ -127,7 +127,8 @@ class UIFormWidget:
         elif f'{name}_field' in dictionary.keys():
             qwidget = dictionary.pop(f'{name}_field')
         else:
-            raise KeyError(f'No widget associated with the dictionary key `{name}` or `{name}_field`.')
+            raise KeyError(
+                f'No widget associated with the dictionary key `{name}` or `{name}_field`.')
         if f'{name}_label' in dictionary.keys():
             qlabel = dictionary.pop(f'{name}_label')
             return qwidget, qlabel
@@ -184,8 +185,8 @@ class UIFormWidget:
         Returns:
         --------------
         tuple or QWidget
-            If the widget has a corresponding label, a tuple containing the widget and label is returned.
-            Otherwise, only the widget is returned.
+            If the widget has a corresponding label, a tuple containing the widget
+            and label is returned. Otherwise, only the widget is returned.
         '''
         widget_number = self.getWidgetNumber(name)
         if f'{name}_label' in self.getWidgets().keys():
@@ -197,7 +198,6 @@ class UIFormWidget:
         qwidget = self._popWidgetFromDictionary(self.getWidgets(), name)
         self.uiElements['groupBoxFormLayout'].removeRow(widget_number)
         return qwidget
-
 
     def getWidget(self, name, role='field'):
         '''
@@ -211,11 +211,13 @@ class UIFormWidget:
             return self.widgets[f'{name}_{role}']
         raise ValueError(f'Unexpected role: expected any of {allowed_roles}, got {role}')
 
-    def getWidgetNumber(self, name, role = 'field'):
+    def getWidgetNumber(self, name, role='field'):
         '''
-        Returns the widget number by the widget name. This is the row of the widget in the form layout.
+        Returns the widget number by the widget name.
+        This is the row of the widget in the form layout.
         '''
-        return self.uiElements['groupBoxFormLayout'].getWidgetPosition(self.getWidget(name, role))[0]
+        return self.uiElements['groupBoxFormLayout'].getWidgetPosition(self.getWidget(name,
+                                                                                      role))[0]
 
     def setWidgetVisible(self, name, visible):
         '''
@@ -582,8 +584,8 @@ class FormDockWidget(QtWidgets.QDockWidget):
         Returns:
         --------------
         tuple or QWidget
-            If the widget has a corresponding label, a tuple containing the widget and label is returned.
-            Otherwise, only the widget is returned.
+            If the widget has a corresponding label, a tuple containing the widget
+            and label is returned. Otherwise, only the widget is returned.
         '''
         self.widget().removeWidget(name)
 
@@ -606,9 +608,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.widget().getWidgets()
 
-    def getWidgetNumber(self, name, role = 'field'):
+    def getWidgetNumber(self, name, role='field'):
         '''
-        Returns the widget number by the widget name. This is the row of the widget in the form layout.
+        Returns the widget number by the widget name.
+        This is the row of the widget in the form layout.
         '''
         return self.widget().getWidgetNumber(name, role)
 
