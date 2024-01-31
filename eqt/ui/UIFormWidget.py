@@ -455,12 +455,12 @@ class UIFormWidget:
 
         Parameters
         ----------
-        states: nested_dict
+        states: dict
             Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
             'widget_number' : int}, 'name_label': {'value': str | bool | int, 'enabled': bool,
             'visible': bool, 'widget_number' : int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
-            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number' : 1}}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
         '''
         if self.widgets.keys() != states.keys():
             raise KeyError(f'''The widgets in the form are {self.widgets.keys()} whereas
@@ -713,12 +713,12 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        states: nested_dict
+        states: dict
             Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}, 'name_label': {'value': str | bool | int, 'enabled': bool,
-            'visible': bool, 'widget_number' : int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
-            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number' : 1}}.
+                     'widget_number' : int}, 'name_label': {'value': str | bool | int,
+                     'enabled': bool, 'visible': bool, 'widget_number' : int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
         '''
         return self.widget().applyWidgetStates(states)
 
