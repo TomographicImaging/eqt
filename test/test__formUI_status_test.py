@@ -65,13 +65,13 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
     def add_every_widget(self):
         """Generate every widget and add it to the form."""
         form = self.form
-        for key in self.list_all_widgets.keys():
+        for key in self.list_all_widgets:
             form.addWidget(self.list_all_widgets[key], key, key)
 
     def add_every_spanning_widget(self):
         """Generate every spanning widget and add it to the form."""
         form = self.form
-        for key in self.list_all_widgets.keys():
+        for key in self.list_all_widgets:
             form.addSpanningWidget(self.list_all_widgets[key], f'{key}_spanning')
 
     def add_two_widgets(self):
@@ -132,8 +132,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         Inserts each widget, and then each spanning widget, in position 0 of the form layout.
         Tests the position of the widgets in the layout is 0.
         """
-        for key in self.list_all_widgets.keys():
-            qwidget = self.list_all_widgets[key]
+        for key, qwidget in self.list_all_widgets.items():
             name = f'{key}_insert'
             self._test_insert_one_widget(0, name, qwidget, name)
             qwidget = self.list_all_widgets[key]
@@ -164,7 +163,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     def test_remove_every_widget(self):
         """Remove every widget from the form."""
-        for name in self.list_all_widgets.keys():
+        for name in self.list_all_widgets:
             self._test_remove_one_widget(name)
 
     def test_getWidgetState_returns_visibility(self):
@@ -471,7 +470,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         Inserts each widget in position 0 of the vertical layout and tests its position in
         the layout is 0.
         """
-        for key in self.list_all_widgets.keys():
+        for key in self.list_all_widgets:
             self._test_insert_one_widget_to_vertical_layout(0, self.list_all_widgets[key])
 
     def test_getWidgetState_returns_QLabel_value(self):
@@ -546,7 +545,7 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         Checks that the method `_getNameAndRoleFromKey` returns the correct name and role in
         all widgets.
         """
-        for name in self.list_all_widgets.keys():
+        for name in self.list_all_widgets:
             for role in {'field', 'label'}:
                 name_role = name + '_' + role
                 name_c, role_c = self.form._getNameAndRoleFromKey(name_role)

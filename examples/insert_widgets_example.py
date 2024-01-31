@@ -15,7 +15,7 @@ class MainUI(QtWidgets.QMainWindow):
         buttoninsertvertical = QtWidgets.QPushButton()
         buttoninsertvertical.setText("Insert widget in vertical layout")
         self.dialog.addSpanningWidget(buttoninsertvertical, 'Button insert vertical')
-        buttoninsertvertical.clicked.connect(lambda: self.insert_vertical())
+        buttoninsertvertical.clicked.connect(self.insert_vertical)
 
         # create a FormDockWidget
         dock = UIFormWidget.FormDockWidget(parent=self)
@@ -25,7 +25,7 @@ class MainUI(QtWidgets.QMainWindow):
         # create button for Form Dialog
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Form Dialog")
-        pb.clicked.connect(lambda: self.openFormDialog())
+        pb.clicked.connect(self.openFormDialog)
 
         # create window layout
         layout = QtWidgets.QHBoxLayout()
@@ -82,10 +82,10 @@ class MainUI(QtWidgets.QMainWindow):
                     self.dialog.getWidgetFromVerticalLayout(1))
 
             if self.dialog.getWidget('Button insert widgets').isEnabled() is False:
-                self.dialog.formWidget._popWidgetFromDictionary(
-                    self.dialog.formWidget.default_widget_states, 'inserted widget')
-                self.dialog.formWidget._popWidgetFromDictionary(
-                    self.dialog.formWidget.default_widget_states, 'inserted spanning widget')
+                self.dialog.formWidget._popWidget(self.dialog.formWidget.default_widget_states,
+                                                  'inserted widget')
+                self.dialog.formWidget._popWidget(self.dialog.formWidget.default_widget_states,
+                                                  'inserted spanning widget')
                 self.dialog.formWidget.removeWidget('inserted widget')
                 self.dialog.formWidget.removeWidget('inserted spanning widget')
         else:
