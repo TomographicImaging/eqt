@@ -68,7 +68,7 @@ class UIFormWidget:
         to the widget dictionary and the default-widget-states
         dictionary.
 
-        Parameters:
+        Parameters
         ----------
         row: int
             The position in the form where the widget is added.
@@ -109,26 +109,24 @@ class UIFormWidget:
         '''
         Removes the item(s) associated with `name` from a dictionary.
 
-        Parameters:
-        -----------------
-        dictionary : dict
+        Parameters
+        ----------
+        dictionary: dict
             The dictionary from which to remove the items.
-        name : str
+        name: str
             The name of the item(s) to be removed.
 
-        Returns:
+        Returns
         -------
-        qwidget : QWidget
+        qwidget: QWidget
             The removed widget associated with `name`, if it exists in the dictionary.
-
-        qlabel : QLabel, optional
+        qlabel: QLabel, optional
             The removed label associated with `name`, if it exists in the dictionary.
 
-        Raises:
+        Raises
         ------
         KeyError
             If no widget associated with the dictionary key `name` or `{name}_field` is found.
-
         '''
         if name in dictionary:
             qwidget = dictionary.pop(name)
@@ -147,7 +145,7 @@ class UIFormWidget:
         Adds a widget and a label widget at the the end of
         the form layout.
 
-        Parameters:
+        Parameters
         ----------
         qwidget: widget
             The widget to be added on the right hand side of the form.
@@ -163,7 +161,7 @@ class UIFormWidget:
         '''
         Adds a spanning qwidget occupying the full row in the form layout.
 
-        Parameters:
+        Parameters
         ----------
         qwidget: widget
             The widget to be added on the form.
@@ -184,13 +182,13 @@ class UIFormWidget:
         This method delete the qwidget, and qlabel if present, from the widgets dictionary
         and sets their parent to `None`.
 
-        Parameters:
-        --------------
-        name : str
+        Parameters
+        ----------
+        name: str
             The name of the widget to be removed.
 
-        Returns:
-        --------------
+        Returns
+        -------
         tuple or QWidget
             If the widget has a corresponding label, a tuple containing the widget
             and label is returned. Otherwise, only the widget is returned.
@@ -511,7 +509,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         Adds a widget and a label widget at the the end of
         the form layout.
 
-        Parameters:
+        Parameters
         ----------
         qwidget: widget
             The widget to be added on the right hand side of the form.
@@ -527,7 +525,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
         Adds a spanning qwidget occupying the full row in the form layout.
 
-        Parameters:
+        Parameters
         ----------
         qwidget: widget
             The widget to be added on the form.
@@ -545,7 +543,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         to the widget dictionary and the default-widget-states
         dictionary.
 
-        Parameters:
+        Parameters
         ----------
         row: int
             The position in the form where the widget is added.
@@ -566,9 +564,9 @@ class FormDockWidget(QtWidgets.QDockWidget):
         This method delete the qwidget, and qlabel if present, from the widgets dictionary
         and sets their parent to `None`.
 
-        Parameters:
-        --------------
-        name : str
+        Parameters
+        ----------
+        name: str
             The name of the widget to be removed.
 
         Returns:

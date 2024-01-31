@@ -130,7 +130,7 @@ class FormDialog(QtWidgets.QDialog):
         to the widget dictionary and the default-widget-states
         dictionary.
 
-        Parameters:
+        Parameters
         ----------
         row: int
             The position in the form where the widget is added.
