@@ -412,6 +412,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.form = FormDialog()
         self.add_every_widget()
         self.add_every_spanning_widget()
+        self.add_every_widget_to_vertical_layout()
         self.simple_form = FormDialog()
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
@@ -422,6 +423,11 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def click_Cancel(self):
         QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
+
+    def add_every_widget_to_vertical_layout(self):
+        """Add every widget to the vertical layout."""
+        for key in self.list_all_widgets:
+            self.form.addWidget(self.list_all_widgets[key], qlabel=None, name=None, layout='vertical')
 
     def test_dialog_buttons_default_behaviour(self):
         # create the states dictionary
@@ -471,6 +477,26 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         """
         for key in self.list_all_widgets:
             self._test_insert_one_widget_to_vertical_layout(0, self.list_all_widgets[key])
+
+    def _test_remove_one_widget_from_vertical_layout(self, widget):
+        """
+        Removes one widget from the vertical layout.
+        Checks the number of items in the layout before and after deletion are consistent.
+
+        Parameters
+        ----------
+        widget: qwidget to be removed
+        """
+        qwidget = self.form.getWidgetFromVerticalLayout(2)
+        prerowcount = self.vertical_layout.count()
+        self.form.removeWidget(qwidget)
+        postrowcount = self.vertical_layout.count()
+        self.assertEqual(prerowcount, postrowcount + 1)
+
+    def test_remove_every_widget_from_vertical_layout(self):
+        """Remove every widget from the vertical layout."""
+        for widget in self.list_all_widgets.items():
+            self._test_remove_one_widget_from_vertical_layout(widget)
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
