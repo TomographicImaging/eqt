@@ -186,6 +186,7 @@ class FormDialog(QtWidgets.QDialog):
     def getWidget(self, name, role='field'):
         '''
         Returns the widget by the name with which it has been added.
+
         By default it returns the widget that is the field in the form.
         The user can get the label by specifying the role to be label.
         Raises ValueError if the role is not field or label.
