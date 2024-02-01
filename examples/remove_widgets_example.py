@@ -41,6 +41,12 @@ class MainUI(QtWidgets.QMainWindow):
         dialog = FormDialog(parent=self, title='Example remove widget')
         dialog.Ok.clicked.connect(lambda: self.remove(dialog, dialog.Ok))
         self.addWidgetsToExampleForm(dialog)
+        buttonremovevertical = QtWidgets.QPushButton()
+        buttonremovevertical.setText("Remove widget in vertical layout")
+        dialog.addSpanningWidget(buttonremovevertical, 'Button remove vertical')
+        vertical_button = QtWidgets.QPushButton("Widget in vertical layout")
+        buttonremovevertical.clicked.connect(lambda: self.remove_vertical(vertical_button))
+        dialog.insertWidgetToVerticalLayout(1, vertical_button)
         dialog.addSpanningWidget(
             QtWidgets.QLabel(
                 "Press `Ok` to remove the user selected widget and `Cancel` to close the dialog:"),
@@ -108,6 +114,11 @@ class MainUI(QtWidgets.QMainWindow):
         form.addSpanningWidget(buttonspanning, 'Button Remove Spanning')
         buttonspanning.clicked.connect(lambda: self.remove(form, buttonspanning, 'input_title'))
 
+    def remove_vertical(self, button):
+        widget = self.dialog.removeWidget(button)
+        print(f'\nRemoved widget in the vertical layout is {widget}.')
+        self.dialog.getWidget('Button remove vertical').setEnabled(False)
+
     def rejected(self):
         print("\nDialog closed.")
 
@@ -115,8 +126,9 @@ class MainUI(QtWidgets.QMainWindow):
         if userselection is False:
             userselection = form.getWidget('userinput').currentText()
             form.getWidget('userinput').removeItem(form.getWidget('userinput').currentIndex())
-        print("\nRemove " + userselection)
-        form.removeWidget(userselection)
+        
+        widget = form.removeWidget(userselection)
+        print(f'\nRemove {userselection} returning {widget}.')
         if form.getWidget('userinput').currentIndex() == -1:
             button.setEnabled(False)
         if button == form.getWidget('Button Remove w1') or button == form.getWidget(

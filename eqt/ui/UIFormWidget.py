@@ -186,15 +186,15 @@ class UIFormWidget:
             If the widget has a corresponding label, a tuple containing the widget
             and label is returned. Otherwise, only the widget is returned.
         '''
-        widget_number = self.getWidgetNumber(name)
+        widget_row = self.getWidgetRow(name)
+        self.getWidget(name, 'field').setParent(None)
         if f'{name}_label' in self.widgets:
             self.getWidget(name, 'label').setParent(None)
             qwidget, qlabel = self._popWidget(self.widgets, name)
-            self.uiElements['groupBoxFormLayout'].removeRow(widget_number)
+            self.uiElements['groupBoxFormLayout'].removeRow(widget_row)
             return qwidget, qlabel
-        self.getWidget(name, 'field').setParent(None)
         qwidget = self._popWidget(self.widgets, name)
-        self.uiElements['groupBoxFormLayout'].removeRow(widget_number)
+        self.uiElements['groupBoxFormLayout'].removeRow(widget_row)
         return qwidget
 
     def getWidget(self, name, role='field'):
@@ -209,9 +209,9 @@ class UIFormWidget:
             return self.widgets[f'{name}_{role}']
         raise ValueError(f'Unexpected role: expected any of {allowed_roles}, got {role}')
 
-    def getWidgetNumber(self, name, role='field'):
+    def getWidgetRow(self, name, role='field'):
         '''
-        Returns the widget number by the widget name.
+        Returns the widget row in the form layout by the widget name.
         This is the row of the widget in the form layout.
         '''
         return self.uiElements['groupBoxFormLayout'].getWidgetPosition(self.getWidget(name,
@@ -268,9 +268,9 @@ class UIFormWidget:
         -------
         dict
             Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number': int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
-            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
+            'widget_row': int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_row': 0},
+            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
         all_widget_states = {}
         for key, widget in self.widgets.items():
@@ -294,8 +294,8 @@ class UIFormWidget:
         -------
         state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}.
-            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
+            'widget_row' : int}.
+            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_row' : 0}.
             This can be used to restore the state of the widget using `setWidgetState()`.
         '''
         if widget is None:
@@ -338,7 +338,7 @@ class UIFormWidget:
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
 
-        widget_state['widget_number'] = self.getWidgetNumber(name, role)
+        widget_state['widget_row'] = self.getWidgetRow(name, role)
         return widget_state
 
     def _getNameAndRoleFromKey(self, key):
@@ -388,8 +388,8 @@ class UIFormWidget:
             The role of the widget to apply the state to.
         state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}.
-            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
+            'widget_row' : int}.
+            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_row' : 0}.
         '''
         if role is not None:
             if role in ['label', 'field']:
@@ -440,10 +440,10 @@ class UIFormWidget:
         ----------
         states : dict
             Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}, 'name_label': {'value': str | bool | int, 'enabled': bool,
-            'visible': bool, 'widget_number' : int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
-                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
+            'widget_row' : int}, 'name_label': {'value': str | bool | int, 'enabled': bool,
+            'visible': bool, 'widget_row' : int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_row': 0},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
         if set(self.widgets) != set(states):
             raise KeyError("states={set(states)} do not match form widgets ({set(self.widgets)})")
@@ -568,7 +568,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
             If the widget has a corresponding label, a tuple containing the widget
             and label is returned. Otherwise, only the widget is returned.
         '''
-        self.widget().removeWidget(name)
+        return self.widget().removeWidget(name)
 
     def getNumWidgets(self):
         '''
@@ -589,12 +589,12 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.widget().getWidgets()
 
-    def getWidgetNumber(self, name, role='field'):
+    def getWidgetRow(self, name, role='field'):
         '''
-        Returns the widget number by the widget name.
+        Returns the widget row in the form layout by the widget name.
         This is the row of the widget in the form layout.
         '''
-        return self.widget().getWidgetNumber(name, role)
+        return self.widget().getWidgetRow(name, role)
 
     def setWidgetVisible(self, name, visible):
         '''
@@ -638,9 +638,9 @@ class FormDockWidget(QtWidgets.QDockWidget):
         -------
         dict
             Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number': int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
-            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
+            'widget_row': int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_row': 0},
+            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
         return self.widget().getAllWidgetStates()
 
@@ -661,8 +661,8 @@ class FormDockWidget(QtWidgets.QDockWidget):
         -------
         state: dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}.
-            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
+            'widget_row' : int}.
+            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_row' : 0}.
             This can be used to restore the state of the widget using `setWidgetState()`.
         '''
         return self.widget().getWidgetState(widget, role)
@@ -680,8 +680,8 @@ class FormDockWidget(QtWidgets.QDockWidget):
             The role of the widget to apply the state to.
         state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}.
-            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
+            'widget_row' : int}.
+            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_row' : 0}.
         '''
         return self.widget().applyWidgetState(name, state, role)
 
@@ -695,10 +695,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
         ----------
         states : dict
             Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-                     'widget_number' : int}, 'name_label': {'value': str | bool | int,
-                     'enabled': bool, 'visible': bool, 'widget_number' : int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
-                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
+                     'widget_row' : int}, 'name_label': {'value': str | bool | int,
+                     'enabled': bool, 'visible': bool, 'widget_row' : int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_row': 0},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
         return self.widget().applyWidgetStates(states)
 

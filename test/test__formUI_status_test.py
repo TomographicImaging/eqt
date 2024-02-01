@@ -54,12 +54,12 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         state_simple_form = {
             'label_field': {
                 'value': 'test label', 'enabled': True, 'visible': False,
-                'widget_number': 0}, 'label_label': {
+                'widget_row': 0}, 'label_label': {
                     'value': 'Label: ', 'enabled': True, 'visible': False,
-                    'widget_number': 0}, 'checkBox_field': {
-                        'value': False, 'enabled': True, 'visible': False, 'widget_number': 1},
+                    'widget_row': 0}, 'checkBox_field': {
+                        'value': False, 'enabled': True, 'visible': False, 'widget_row': 1},
             'checkBox_label': {
-                'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_number': 1}}
+                'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_row': 1}}
         return state_simple_form
 
     def add_every_widget(self):

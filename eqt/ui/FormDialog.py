@@ -146,28 +146,24 @@ class FormDialog(QtWidgets.QDialog):
         '''
         self.formWidget.uiElements['verticalLayout'].insertWidget(row, qwidget)
 
-    def removeWidgetFromVerticalLayout(self, qwidget):
-        '''
-        Removes a widget from the vertical layout.
-        '''
-        self.formWidget.uiElements['verticalLayout'].removeWidget(qwidget)
-        qwidget.setParent(None)
 
     def getWidgetFromVerticalLayout(self, index):
         '''
         Returns the widget in the vertical layout located at position index.'''
         return self.formWidget.uiElements['verticalLayout'].itemAt(index).widget()
 
-    def removeWidget(self, name):
+    def removeWidget(self, widget):
         '''
-        Removes the widget with the specified name from the form layout.
-        This method delete the qwidget, and qlabel if present, from the widgets dictionary
+        Removes the specified widget from the form layout.
+        If `widget` is the name of the widget, this method deletes the qwidget, and qlabel if present, from the widgets dictionary
         and sets their parent to `None`.
+        If `widget` is a qwidget, this method removes a widget from the vertical layout.
 
         Parameters
         ----------
-        name : str
-            The name of the widget to be removed.
+        widget : str or qwidget
+            The name of the widget to be removed in the form layout or
+            the qwidget to be removed in the vertical layout.
 
         Returns
         -------
@@ -175,7 +171,12 @@ class FormDialog(QtWidgets.QDialog):
             If the widget has a corresponding label, a tuple containing the widget
             and label is returned. Otherwise, only the widget is returned.
         '''
-        self.formWidget.removeWidget(name)
+        if isinstance(widget, str):
+            return self.formWidget.removeWidget(widget)
+        elif isinstance(widget, QtWidgets.QWidget):
+            self.formWidget.uiElements['verticalLayout'].removeWidget(widget)
+            widget.setParent(None)
+            return widget
 
     def getNumWidgets(self):
         '''
@@ -196,12 +197,12 @@ class FormDialog(QtWidgets.QDialog):
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.formWidget.getWidgets()
 
-    def getWidgetNumber(self, name, role='field'):
+    def getWidgetRow(self, name, role='field'):
         '''
-        Returns the widget number by the widget name.
+        Returns the widget row in the form layout by the widget name.
         This is the row of the widget in the form layout.
         '''
-        return self.formWidget.getWidgetNumber(name, role)
+        return self.formWidget.getWidgetRow(name, role)
 
     def setWidgetVisible(self, name, visible):
         '''
@@ -244,9 +245,9 @@ class FormDialog(QtWidgets.QDialog):
         -------
         dict
             Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number': int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
-            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
+            'widget_row': int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_row': 0},
+            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
         return self.formWidget.getAllWidgetStates()
 
@@ -267,8 +268,8 @@ class FormDialog(QtWidgets.QDialog):
         -------
         state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}.
-            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
+            'widget_row' : int}.
+            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_row' : 0}.
             This can be used to restore the state of the widget using `setWidgetState()`.
         '''
         return self.formWidget.getWidgetState(widget, role)
@@ -286,8 +287,8 @@ class FormDialog(QtWidgets.QDialog):
             The role of the widget to apply the state to.
         state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}.
-            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
+            'widget_row' : int}.
+            e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_row' : 0}.
         '''
         return self.formWidget.applyWidgetState(name, state, role)
 
@@ -301,9 +302,9 @@ class FormDialog(QtWidgets.QDialog):
         ----------
         states : dict
             Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int}, 'name_label': {'value': str | bool | int, 'enabled': bool,
-            'visible': bool, 'widget_number' : int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
-                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
+            'widget_row' : int}, 'name_label': {'value': str | bool | int, 'enabled': bool,
+            'visible': bool, 'widget_row' : int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_row': 0},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
         return self.formWidget.applyWidgetStates(states)
