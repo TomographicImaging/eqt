@@ -283,16 +283,16 @@ class UIFormWidget:
 
         Parameters
         ----------
-        widget: QWidget or str
+        widget : QWidget or str
             The widget or its name (or its name + '_field' or '_label', when role is None) to get
             the state of.
-        role: str, optional, default None, values: 'label', 'field', None.
+        role : str, optional, default None, values: 'label', 'field', None.
             The role of the widget to apply the state to. This is used only if `widget` is the
             widget name string.
 
         Returns
         -------
-        state: dict
+        state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
             'widget_number' : int}.
             e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
@@ -348,7 +348,7 @@ class UIFormWidget:
 
         Parameters
         -------------
-        key: str
+        key : str
             Format: name or name_field or name_label
         '''
         if key.endswith('_field'):
@@ -368,7 +368,7 @@ class UIFormWidget:
 
         Parameters
         -------------
-        widget: qwidget
+        widget : qwidget
         '''
         for key, value in self.widgets.items():
             if value == widget:
@@ -382,11 +382,11 @@ class UIFormWidget:
 
         Parameters
         ----------
-        name: str
+        name : str
             The name of the widget to apply the state to.
-        role: str, optional, default None, values: 'label', 'field', None.
+        role : str, optional, default None, values: 'label', 'field', None.
             The role of the widget to apply the state to.
-        state: dict
+        state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
             'widget_number' : int}.
             e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
@@ -504,12 +504,12 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        qwidget: widget
+        qwidget : widget
             The widget to be added on the right hand side of the form.
-        qlabel: qlabel widget or str
+        qlabel : qlabel widget or str
             The qlabel widget, or a str from which a qlabel widget is created, to be added
             on the left hand side of the form.
-        name: str
+        name : str
             The string associated to the qwidget and qlabel.
         '''
         self.widget().addWidget(qwidget, qlabel, name)
@@ -520,9 +520,9 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        qwidget: widget
+        qwidget : widget
             The widget to be added on the form.
-        name: str
+        name : str
             The string associated to the qwidget.
         '''
         self.widget().addSpanningWidget(qwidget, name)
@@ -538,13 +538,13 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        row: int
+        row : int
             The position in the form where the widget is added.
-        name: str
+        name : str
             The string associated to the qwidget and qlabel.
-        qwidget: widget
+        qwidget : widget
             The widget to be added on the right hand side of the form or as a spanning widget.
-        qlabel: qlabel widget or str
+        qlabel : qlabel widget or str
             The qlabel widget, or a str from which a qlabel widget is created, to be added
             on the left hand side of the form. If qlabel is `None` the widget spans the full
             width of the form.
@@ -559,7 +559,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        name: str
+        name : str
             The name of the widget to be removed.
 
         Returns
@@ -602,9 +602,9 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        name: str
+        name : str
             The name of the widget to set visible/invisible
-        visible: bool
+        visible : bool
             True to set the widget visible, False to hide it
         '''
         self.widget().setWidgetVisible(name, visible)
@@ -637,11 +637,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
         Returns
         -------
         dict
-          Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-          'widget_number': int},
-                   ...},
-          e.g. {{'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
-                 'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
+            Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
+            'widget_number': int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
+            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
         '''
         return self.widget().getAllWidgetStates()
 
@@ -651,10 +650,10 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        widget: QWidget or str
+        widget : QWidget or str
             The widget or its name (or its name + '_field' or '_label', when role is None) to get
             the state of.
-        role: str, optional, default None, values: 'label', 'field', None.
+        role : str, optional, default None, values: 'label', 'field', None.
             The role of the widget to apply the state to. This is used only if `widget` is the
             widget name string.
 
@@ -675,11 +674,11 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        name: str
+        name : str
             The name of the widget to apply the state to.
-        role: str, optional, default None, values: 'label', 'field', None.
+        role : str, optional, default None, values: 'label', 'field', None.
             The role of the widget to apply the state to.
-        state: dict
+        state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
             'widget_number' : int}.
             e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
@@ -694,7 +693,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
 
         Parameters
         ----------
-        states: dict
+        states : dict
             Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
                      'widget_number' : int}, 'name_label': {'value': str | bool | int,
                      'enabled': bool, 'visible': bool, 'widget_number' : int}, ...}.

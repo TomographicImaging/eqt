@@ -205,14 +205,14 @@ class FormDialog(QtWidgets.QDialog):
 
     def setWidgetVisible(self, name, visible):
         '''
-        Sets the visibility of the widget associated with name, and that of its label if present.
+        Sets the visibility of the widget and associated label with the given name.
 
         Parameters
         ----------
-        visible: bool
-            True to set the widget visible, False to hide it
-        name: str
+        name : str
             The name of the widget to set visible/invisible
+        visible : bool
+            True to set the widget visible, False to hide it
         '''
         self.formWidget.setWidgetVisible(name, visible)
 
@@ -243,10 +243,10 @@ class FormDialog(QtWidgets.QDialog):
         Returns
         -------
         dict
-          Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-          'widget_number': int}, ...},
-          e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
-                 'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
+            Format: {'widget_name': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
+            'widget_number': int}, ...}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
+            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
         '''
         return self.formWidget.getAllWidgetStates()
 
@@ -256,18 +256,18 @@ class FormDialog(QtWidgets.QDialog):
 
         Parameters
         ----------
-        widget: QWidget or str
+        widget : QWidget or str
             The widget or its name (or its name + '_field' or '_label', when role is None) to get
             the state of.
-        role: str, optional, default None, values: 'label', 'field', None.
+        role : str, optional, default None, values: 'label', 'field', None.
             The role of the widget to apply the state to. This is used only if `widget` is the
             widget name string.
 
         Returns
         -------
-        dict
+        state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int},
+            'widget_number' : int}.
             e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
             This can be used to restore the state of the widget using `setWidgetState()`.
         '''
@@ -280,13 +280,13 @@ class FormDialog(QtWidgets.QDialog):
 
         Parameters
         ----------
-        name: str
+        name : str
             The name of the widget to apply the state to.
-        role: str, optional, default None, values: 'label', 'field', None.
+        role : str, optional, default None, values: 'label', 'field', None.
             The role of the widget to apply the state to.
-        state: dict
+        state : dict
             Format: {'value': str | bool | int, 'enabled': bool, 'visible': bool,
-            'widget_number' : int},
+            'widget_number' : int}.
             e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0}.
         '''
         return self.formWidget.applyWidgetState(name, state, role)
@@ -299,11 +299,11 @@ class FormDialog(QtWidgets.QDialog):
 
         Parameters
         ----------
-        states: nested_dict
+        states : dict
             Format: {'name_field': {'value': str | bool | int, 'enabled': bool, 'visible': bool,
             'widget_number' : int}, 'name_label': {'value': str | bool | int, 'enabled': bool,
             'visible': bool, 'widget_number' : int}, ...}.
-            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number' : 0},
-            'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number' : 1}}.
+            e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_number': 0},
+                  'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_number': 1}}.
         '''
         return self.formWidget.applyWidgetStates(states)
