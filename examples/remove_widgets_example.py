@@ -126,7 +126,7 @@ class MainUI(QtWidgets.QMainWindow):
         if userselection is False:
             userselection = form.getWidget('userinput').currentText()
             form.getWidget('userinput').removeItem(form.getWidget('userinput').currentIndex())
-        
+
         widget = form.removeWidget(userselection)
         print(f'\nRemove {userselection} returning {widget}.')
         if form.getWidget('userinput').currentIndex() == -1:

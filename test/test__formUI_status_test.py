@@ -55,9 +55,8 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             'label_field': {
                 'value': 'test label', 'enabled': True, 'visible': False,
                 'widget_row': 0}, 'label_label': {
-                    'value': 'Label: ', 'enabled': True, 'visible': False,
-                    'widget_row': 0}, 'checkBox_field': {
-                        'value': False, 'enabled': True, 'visible': False, 'widget_row': 1},
+                    'value': 'Label: ', 'enabled': True, 'visible': False, 'widget_row': 0},
+            'checkBox_field': {'value': False, 'enabled': True, 'visible': False, 'widget_row': 1},
             'checkBox_label': {
                 'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_row': 1}}
         return state_simple_form

@@ -94,10 +94,10 @@ class UIFormWidget:
 
         else:
             formLayout.insertRow(row, qwidget)
-        
+
         self.widgets[f'{name}_field'] = qwidget
         self.default_widget_states[f'{name}_field'] = self.getWidgetState(name, 'field')
-            
+
     def _popWidget(self, dictionary, name):
         '''
         Removes the item(s) associated with `name` from a dictionary.

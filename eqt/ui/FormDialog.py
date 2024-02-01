@@ -81,8 +81,8 @@ class FormDialog(QtWidgets.QDialog):
         name : str
             only supported when layout is 'form'
         layout : 'form' or 'vertical'
-                'form' - adds to the `groupBoxFormLayout`, 'vertical' - adds to the `verticalLayout` below
-                the form.
+                'form' - adds to the `groupBoxFormLayout`,
+                'vertical' - adds to the `verticalLayout` below the form.
         '''
         if layout == 'vertical':
             if name is not None or qlabel is not None:
@@ -146,7 +146,6 @@ class FormDialog(QtWidgets.QDialog):
         '''
         self.formWidget.uiElements['verticalLayout'].insertWidget(row, qwidget)
 
-
     def getWidgetFromVerticalLayout(self, index):
         '''
         Returns the widget in the vertical layout located at position index.'''
@@ -155,8 +154,8 @@ class FormDialog(QtWidgets.QDialog):
     def removeWidget(self, widget):
         '''
         Removes the specified widget from the form layout.
-        If `widget` is the name of the widget, this method deletes the qwidget, and qlabel if present, from the widgets dictionary
-        and sets their parent to `None`.
+        If `widget` is the name of the widget, this method deletes the qwidget, and qlabel if
+        present, from the widgets dictionary and sets their parent to `None`.
         If `widget` is a qwidget, this method removes a widget from the vertical layout.
 
         Parameters
