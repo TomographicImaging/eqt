@@ -15,7 +15,7 @@ class MainUI(QtWidgets.QMainWindow):
         buttoninsertvertical = QtWidgets.QPushButton()
         buttoninsertvertical.setText("Insert widget in vertical layout")
         self.dialog.addSpanningWidget(buttoninsertvertical, 'Button insert vertical')
-        buttoninsertvertical.clicked.connect(self.insert_vertical)
+        buttoninsertvertical.clicked.connect(lambda: self.insert_vertical())
 
         # create a FormDockWidget
         dock = UIFormWidget.FormDockWidget(parent=self)
@@ -71,8 +71,6 @@ class MainUI(QtWidgets.QMainWindow):
         form.insertWidgetToFormLayout(2, 'inserted spanning widget', buttonspanning)
         print('\nDictionary of widgets after insertion in the form layout:\n' +
               str(form.getWidgets()))
-        print("\nDictionary of widget number in the form layout:\n" +
-              str(form.getWidgetNumberDictionary()))
         button.setEnabled(False)
 
     def onCancel(self):
