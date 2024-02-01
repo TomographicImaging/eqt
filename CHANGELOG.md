@@ -1,7 +1,7 @@
 # Version x.x.x
 - Adds methods to insert widgets in the forms & tests/example
   Removes `_addWidget`
-  Adds `getWidgetNumber`and updates states dictionary and related methods
+  Adds `getWidgetRow`and updates states dictionary and related methods
   Adds `getNameAndRole*`.
   Changes `num_widgets` to be a property (#109)
 - Reinstates changelog (#99)
