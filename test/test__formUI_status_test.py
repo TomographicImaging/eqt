@@ -119,10 +119,10 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     def _test_insert_one_widget(self, row, name, qwidget, qlabel=None):
         """
-        Invokes `insertWidgetToFormLayout`, therefore inserts the qwidget (and the qlabel)
+        Invokes `insertWidget`, therefore inserts the qwidget (and the qlabel)
         at position row in the layout. Checks the position of the widget in the form is `row`.
         """
-        self.form.insertWidgetToFormLayout(row, f'{name}', qwidget, qlabel)
+        self.form.insertWidget(row, f'{name}', qwidget, qlabel)
         position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
         self.assertEqual(position, row)
 
@@ -412,7 +412,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.form = FormDialog()
         self.add_every_widget()
         self.add_every_spanning_widget()
-        self.add_every_widget_to_vertical_layout()
         self.simple_form = FormDialog()
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
@@ -489,12 +488,13 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         """
         qwidget = self.form.getWidgetFromVerticalLayout(2)
         prerowcount = self.vertical_layout.count()
-        self.form.removeWidget(qwidget)
+        self.form.removeWidgetFromVerticalLayout(qwidget)
         postrowcount = self.vertical_layout.count()
         self.assertEqual(prerowcount, postrowcount + 1)
 
     def test_remove_every_widget_from_vertical_layout(self):
         """Remove every widget from the vertical layout."""
+        self.add_every_widget_to_vertical_layout()
         for widget in self.list_all_widgets.items():
             self._test_remove_one_widget_from_vertical_layout(widget)
 

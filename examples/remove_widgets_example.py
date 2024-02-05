@@ -115,7 +115,7 @@ class MainUI(QtWidgets.QMainWindow):
         buttonspanning.clicked.connect(lambda: self.remove(form, buttonspanning, 'input_title'))
 
     def remove_vertical(self, button):
-        widget = self.dialog.removeWidget(button)
+        widget = self.dialog.removeWidgetFromVerticalLayout(button)
         print(f'\nRemoved widget in the vertical layout is {widget}.')
         self.dialog.getWidget('Button remove vertical').setEnabled(False)
 

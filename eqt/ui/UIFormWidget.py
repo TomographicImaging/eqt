@@ -56,7 +56,7 @@ class UIFormWidget:
     def groupBox(self):
         return self.uiElements['groupBox']
 
-    def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
+    def insertWidget(self, row, name, qwidget, qlabel=None):
         '''
         Inserts a labelled widget, or a spanning widget, to the form layout.
         The position in the form is specified by row. If row is out of bounds, the widget
@@ -148,7 +148,7 @@ class UIFormWidget:
         name : str
             The string associated to the qwidget and qlabel.
         '''
-        self.insertWidgetToFormLayout(-1, name, qwidget, qlabel)
+        self.insertWidget(-1, name, qwidget, qlabel)
 
     def addSpanningWidget(self, qwidget, name):
         '''
@@ -161,7 +161,7 @@ class UIFormWidget:
         name : str
             The string associated to the qwidget.
         '''
-        self.insertWidgetToFormLayout(-1, name, qwidget)
+        self.insertWidget(-1, name, qwidget)
 
     def getNumWidgets(self):
         '''
@@ -246,14 +246,14 @@ class UIFormWidget:
             qlabel = QtWidgets.QLabel(self.uiElements['groupBox'])
             qlabel.setText(txt)
         qlabel.setStyleSheet("font-weight: bold")
-        self.insertWidgetToFormLayout(-1, name, qlabel)
+        self.insertWidget(-1, name, qlabel)
 
     def addSeparator(self, name):
         # Adds horizontal separator to the form
         frame = QtWidgets.QFrame()
         frame.setFrameShape(QtWidgets.QFrame.HLine)
         frame.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.insertWidgetToFormLayout(-1, name, frame)
+        self.insertWidget(-1, name, frame)
 
     def setDefaultWidgetStatesVisibleTrue(self):
         '''
@@ -527,7 +527,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
         self.widget().addSpanningWidget(qwidget, name)
 
-    def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
+    def insertWidget(self, row, name, qwidget, qlabel=None):
         '''
         Inserts a labelled widget, or a spanning widget, to the form layout.
         The position in the form is specified by row. If row is out of bounds, the widget
@@ -549,7 +549,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
             on the left hand side of the form. If qlabel is `None` the widget spans the full
             width of the form.
         '''
-        self.widget().insertWidgetToFormLayout(row, name, qwidget, qlabel)
+        self.widget().insertWidget(row, name, qwidget, qlabel)
 
     def removeWidget(self, name):
         '''

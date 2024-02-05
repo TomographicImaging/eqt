@@ -116,7 +116,7 @@ class FormDialog(QtWidgets.QDialog):
             raise ValueError(
                 f"layout {layout} is not recognised, must be set to 'form' or 'vertical'")
 
-    def insertWidgetToFormLayout(self, row, name, qwidget, qlabel=None):
+    def insertWidget(self, row, name, qwidget, qlabel=None):
         '''
         Inserts a labelled widget, or a spanning widget, to the form layout.
         The position in the form is specified by row. If row is out of bounds, the widget
@@ -138,7 +138,7 @@ class FormDialog(QtWidgets.QDialog):
             on the left hand side of the form. If qlabel is `None` the widget spans the full
             width of the form.
         '''
-        self.formWidget.insertWidgetToFormLayout(row, name, qwidget, qlabel)
+        self.formWidget.insertWidget(row, name, qwidget, qlabel)
 
     def insertWidgetToVerticalLayout(self, row, qwidget):
         '''
@@ -153,16 +153,14 @@ class FormDialog(QtWidgets.QDialog):
 
     def removeWidget(self, widget):
         '''
-        Removes the specified widget from the form layout.
-        If `widget` is the name of the widget, this method deletes the qwidget, and qlabel if
-        present, from the widgets dictionary and sets their parent to `None`.
-        If `widget` is a qwidget, this method removes a widget from the vertical layout.
+        Removes the widget with the specified name from the form layout.
+        This method delete the qwidget, and qlabel if present, from the widgets dictionary
+        and sets their parent to `None`.
 
         Parameters
         ----------
-        widget : str or qwidget
-            The name of the widget to be removed in the form layout or
-            the qwidget to be removed in the vertical layout.
+        name : str
+            The name of the widget to be removed.
 
         Returns
         -------
@@ -170,12 +168,15 @@ class FormDialog(QtWidgets.QDialog):
             If the widget has a corresponding label, a tuple containing the widget
             and label is returned. Otherwise, only the widget is returned.
         '''
-        if isinstance(widget, str):
-            return self.formWidget.removeWidget(widget)
-        elif isinstance(widget, QtWidgets.QWidget):
-            self.formWidget.uiElements['verticalLayout'].removeWidget(widget)
-            widget.setParent(None)
-            return widget
+        return self.formWidget.removeWidget(widget)
+        
+    def removeWidgetFromVerticalLayout(self, widget):
+        '''
+        Removes a widget from the vertical layout.
+        '''
+        self.formWidget.uiElements['verticalLayout'].removeWidget(widget)
+        widget.setParent(None)
+        return widget
 
     def getNumWidgets(self):
         '''

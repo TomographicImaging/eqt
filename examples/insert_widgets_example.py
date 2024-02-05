@@ -65,10 +65,10 @@ class MainUI(QtWidgets.QMainWindow):
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("Widget inserted in row 0: ")
         qwidget = QtWidgets.QLineEdit(form)
-        form.insertWidgetToFormLayout(0, 'inserted widget', qwidget, qlabel)
+        form.insertWidget(0, 'inserted widget', qwidget, qlabel)
         buttonspanning = QtWidgets.QPushButton(self)
         buttonspanning.setText("Spanning widget inserted in row 2")
-        form.insertWidgetToFormLayout(2, 'inserted spanning widget', buttonspanning)
+        form.insertWidget(2, 'inserted spanning widget', buttonspanning)
         print('\nDictionary of widgets after insertion in the form layout:\n' +
               str(form.getWidgets()))
         button.setEnabled(False)
