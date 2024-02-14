@@ -372,8 +372,8 @@ class UIFormWidget:
         '''
         for key, value in self.widgets.items():
             if value == widget:
-                name, role = self._getNameAndRoleFromKey(key)
-        return name, role
+                return self._getNameAndRoleFromKey(key)
+        raise KeyError(f'There is no widget {widget} in the form.')
 
     def applyWidgetState(self, name, state, role=None):
         '''
