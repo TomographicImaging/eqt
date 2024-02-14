@@ -6,7 +6,7 @@ from PySide2 import QtWidgets
 from PySide2.QtCore import Qt
 from PySide2.QtTest import QTest
 
-from eqt.ui.FormDialog import FormDialog, AdvancedFormDialog
+from eqt.ui.FormDialog import AdvancedFormDialog, FormDialog
 from eqt.ui.UIFormWidget import FormDockWidget, FormWidget
 from eqt.ui.UISliderWidget import UISliderWidget
 
@@ -17,6 +17,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
     """Common tests for all Form types"""
     @abc.abstractmethod
     def setUp(self):
+        self.form = None # stop mypy [attr-defined] error
         raise NotImplementedError
 
     @property
@@ -25,14 +26,14 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         state = [{
             'label_value': 'Test label state 0', 'checkBox_value': False, 'comboBox_value': 0,
             'doubleSpinBox_value': 10.0, 'spinBox_value': 10, 'slider_value': 10,
-            'uiSliderWidget_value': 10, 'radioButton_value': False, 'textEdit_value': 'test edit 0',
-            'plainTextEdit_value': 'test plain 0', 'lineEdit_value': 'test line 0',
-            'button_value': False}, {
+            'uiSliderWidget_value': 10, 'radioButton_value': False,
+            'textEdit_value': 'test edit 0', 'plainTextEdit_value': 'test plain 0',
+            'lineEdit_value': 'test line 0', 'button_value': False}, {
                 'label_value': 'Test label state 1', 'checkBox_value': True, 'comboBox_value': 1,
                 'doubleSpinBox_value': 1.0, 'spinBox_value': 1, 'slider_value': 1,
-                'uiSliderWidget_value': 1, 'radioButton_value': True, 'textEdit_value': 'test edit 1',
-                'plainTextEdit_value': 'test plain 1', 'lineEdit_value': 'test line 1',
-                'button_value': True}]
+                'uiSliderWidget_value': 1, 'radioButton_value': True,
+                'textEdit_value': 'test edit 1', 'plainTextEdit_value': 'test plain 1',
+                'lineEdit_value': 'test line 1', 'button_value': True}]
         return state
 
     @property
@@ -79,13 +80,9 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         form.addWidget(QtWidgets.QLabel('test label'), 'Label: ', 'label')
         form.addWidget(QtWidgets.QCheckBox('test checkbox'), 'CheckBox: ', 'checkBox')
 
-    def set_state(self, i):
+    def set_state(self, i: int):
         """
         Applies the values saved in `self.exampleState` at position `i` to the widgets in the form.
-
-        Parameters
-        ----------------
-        i: int
         """
         state = self.exampleState
         # set the states
@@ -117,13 +114,10 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.form.getWidget('button').setCheckable(True)
         self.form.getWidget('button').setChecked(state[i]['button_value'])
 
-    def set_spanning_state(self, i):
+    def set_spanning_state(self, i: int):
         """
-        Applies the values saved in `self.exampleState` at position `i` to the spanning widgets in the form.
-
-        Parameters
-        ----------------
-        i: int
+        Applies the values saved in `self.exampleState` at position `i`
+        to the spanning widgets in the form.
         """
         state = self.exampleState
         # set the states
@@ -749,13 +743,15 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
 
+
 @skip_ci
 class AdvancedFormDialogStatusTest(FormDialogStatusTest):
     def setUp(self):
         self.form_parent = FormWidget()
-        self.form_parent.addSpanningWidget(QtWidgets.QPushButton("Open Advanced Dialog"), 'butt_adv')
-        self.form = AdvancedFormDialog(parent = self.form_parent, title = 'Advanced form dialog',
-                                button_name = 'butt_adv')
+        self.form_parent.addSpanningWidget(QtWidgets.QPushButton("Open Advanced Dialog"),
+                                           'butt_adv')
+        self.form = AdvancedFormDialog(parent=self.form_parent, title='Advanced form dialog',
+                                       button_name='butt_adv')
 
         self.form_without_parent = AdvancedFormDialog()
         self.add_every_widget()
@@ -765,7 +761,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
-        
+
     def click_default_button(self):
         QTest.mouseClick(self.form.default_button, Qt.LeftButton)
 
@@ -775,45 +771,47 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         the ok and cancel buttons."""
         index = self.form.getIndexFromVerticalLayout(self.form.default_button)
         self.assertEqual(index, 1)
-        index = self.form_without_parent.getIndexFromVerticalLayout(self.form_without_parent.default_button)
+        index = self.form_without_parent.getIndexFromVerticalLayout(
+            self.form_without_parent.default_button)
         self.assertEqual(index, 1)
 
     def test_dialog_ok_button_behaviour(self):
-        #click ok first
+        # click ok first
         parent_initial_states = self.form_parent.getAllWidgetStates()
         self.form.open()
         self.click_Ok()
         parent_states = self.form_parent.getAllWidgetStates()
-        self.assertEqual(parent_states,parent_initial_states)
+        self.assertEqual(parent_states, parent_initial_states)
         # change states and click ok
-        for i in [0,1]:
+        for i in [0, 1]:
             self.set_state(i)
             self.form.open()
             self.click_Ok()
             parent_states = self.form_parent.getAllWidgetStates()
             for key in self.list_all_widgets:
-                self.assertEqual(parent_states[f'{key}_field']['value'], str(self.exampleState[i][f'{key}_value']))
+                self.assertEqual(parent_states[f'{key}_field']['value'],
+                                 str(self.exampleState[i][f'{key}_value']))
                 self.assertEqual(parent_states[f'{key}_label']['value'], key)
         # click default and then ok
         self.form.open()
         self.click_default_button()
         self.click_Ok()
         parent_states = self.form_parent.getAllWidgetStates()
-        self.assertEqual(parent_states,parent_initial_states)
-    
+        self.assertEqual(parent_states, parent_initial_states)
+
     def test_dialog_cancel_button_behaviour(self):
-        #click cancel first
+        # click cancel first
         parent_initial_states = self.form_parent.getAllWidgetStates()
         self.form.open()
         self.click_Cancel()
         parent_states = self.form_parent.getAllWidgetStates()
-        self.assertEqual(parent_states,parent_initial_states)
+        self.assertEqual(parent_states, parent_initial_states)
         # change states and click Cancel
         self.set_state(0)
         self.form.open()
         self.click_Cancel()
         parent_states = self.form_parent.getAllWidgetStates()
-        self.assertEqual(parent_states,parent_initial_states)
+        self.assertEqual(parent_states, parent_initial_states)
         # change states and click Ok then chance states and click cancel
         self.set_state(0)
         self.form.open()
@@ -823,7 +821,8 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.click_Cancel()
         parent_states = self.form_parent.getAllWidgetStates()
         for key in self.list_all_widgets.keys():
-            self.assertEqual(parent_states[f'{key}_field']['value'], str(self.exampleState[0][f'{key}_value']))
+            self.assertEqual(parent_states[f'{key}_field']['value'],
+                             str(self.exampleState[0][f'{key}_value']))
             self.assertEqual(parent_states[f'{key}_label']['value'], key)
         # click default and then Cancel
         self.form.open()
@@ -831,5 +830,6 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.click_Cancel()
         parent_states = self.form_parent.getAllWidgetStates()
         for key in self.list_all_widgets.keys():
-            self.assertEqual(parent_states[f'{key}_field']['value'], str(self.exampleState[0][f'{key}_value']))
+            self.assertEqual(parent_states[f'{key}_field']['value'],
+                             str(self.exampleState[0][f'{key}_value']))
             self.assertEqual(parent_states[f'{key}_label']['value'], key)

@@ -325,7 +325,7 @@ class FormDialog(QtWidgets.QDialog):
 
 
 class AdvancedFormDialog(FormDialog):
-    def __init__(self,  parent = None, title = None, button_name = None):
+    def __init__(self, parent=None, title=None, button_name=None):
         """Creates a form dialog. Adds a default button to the vertical layout,
         located between the form layout and the buttons `ok` and `cancel`, and connects it.
 
@@ -348,18 +348,21 @@ class AdvancedFormDialog(FormDialog):
         self.default_button = QtWidgets.QPushButton("Set default values")
         self.insertWidgetToVerticalLayout(1, self.default_button)
         self.default_button.clicked.connect(lambda: self.setDefaultValues())
-        
+
     def _onOk(self):
-        '''Called when the dialog's "Ok" button is clicked.
+        """
+        Called when the dialog's "Ok" button is clicked.
         It is redifined from Form Dialog.
-        When the ok button in the advanced configuration dialog is clicked, 
-        the selected parameters are visualised in the parent only if they are not the default values.
-        Saves the widget states and calls `onOk`'''
+        When the ok button in the advanced configuration dialog is clicked,
+        the selected parameters are visualised in the parent only
+        if they are not the default values.
+        Saves the widget states and calls `onOk`
+        """
         self.saveAllWidgetStates()
         self.onOk()
         self.formWidget.setDefaultWidgetStatesVisibleTrue()
         self.close()
-       
+
         if hasattr(self, 'display_on_parent_dict'):
             if self.getWidgetStates() == self.getDefaultWidgetStates():
                 self._removeWidgetsFromParent()
@@ -373,7 +376,7 @@ class AdvancedFormDialog(FormDialog):
             if hasattr(self, 'button_widget_row'):
                 widget_row = self.button_widget_row + i
             else:
-                widget_row = - 1
+                widget_row = -1
 
             value = str(self.getWidgetStates()[f'{name}_field']['value'])
             if f'{name}_field' not in self.dialog_parent.getWidgets():
@@ -396,15 +399,16 @@ class AdvancedFormDialog(FormDialog):
         self.applyWidgetStates(self.formWidget.default_widget_states)
 
     def addToDictionaryDisplayOnParent(self, name):
-        """Raises an error if the parent is None.
-        Otherwise, adds they name in the dictionary with value 'None'. 
-        The dictionary is used to preserve the ordering of the widgets between the dialog and the parent."""
+        """
+        Raises an error if the parent is None.
+        Otherwise, adds they name in the dictionary with value 'None'.
+        The dictionary is used to preserve the ordering of the widgets
+        between the dialog and the parent.
+        """
         if not hasattr(self, 'dialog_parent'):
-            raise KeyError('''The advanced-dialog-form parent is None. 
+            raise KeyError('''The advanced-dialog-form parent is None.
                            Set the parent if you want to add widgets to it.''')
         self.display_on_parent_dict[name] = None
 
     def getDisplayOnParentDictionary(self):
         return self.display_on_parent_dict
-        
-        
