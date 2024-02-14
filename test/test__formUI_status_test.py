@@ -541,7 +541,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         """
         Adds each widget and each spanning widget at the end of the vertical layout and tests them.
         """
-        for key in self.list_all_widgets.keys():
+        for key in self.list_all_widgets:
             self._test_add_one_widget_to_vertical_layout(self.list_all_widgets[key])
             self._test_add_one_spanning_widget_to_vertical_layout(self.list_all_widgets[key])
 
