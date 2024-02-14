@@ -169,7 +169,7 @@ class FormDialog(QtWidgets.QDialog):
             and label is returned. Otherwise, only the widget is returned.
         '''
         return self.formWidget.removeWidget(widget)
-        
+
     def removeWidgetFromVerticalLayout(self, widget):
         '''
         Removes a widget from the vertical layout.
