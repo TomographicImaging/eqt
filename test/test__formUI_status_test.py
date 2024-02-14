@@ -62,6 +62,12 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
                 'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_row': 1}}
         return state_simple_form
 
+    def click_Ok(self):
+        QTest.mouseClick(self.form.Ok, Qt.LeftButton)
+
+    def click_Cancel(self):
+        QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
+
     def add_every_widget(self):
         """Generate every widget and add it to the form."""
         form = self.form
@@ -449,12 +455,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
 
-    def click_Ok(self):
-        QTest.mouseClick(self.form.Ok, Qt.LeftButton)
-
-    def click_Cancel(self):
-        QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
-
     def add_every_widget_to_vertical_layout(self):
         """Add every widget to the vertical layout."""
         for key in self.list_all_widgets:
@@ -745,7 +745,7 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
 
 
 @skip_ci
-class AdvancedFormDialogStatusTest(FormDialogStatusTest):
+class AdvancedFormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         self.form_parent = FormWidget()
         self.form_parent.addSpanningWidget(QtWidgets.QPushButton("Open Advanced Dialog"),
