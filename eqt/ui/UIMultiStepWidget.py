@@ -51,25 +51,18 @@ class UIMultiStepWidget(object):
         self.widgets = {}
 
     def updateStep(self, go_to="next"):
-        steps = list(self.widgets.keys())
+        steps = list(self.widgets)
         step_widgets = list(self.widgets.values())
         current_step_index = steps.index(self.current_step)
 
         if go_to == 'next':
             self.prev_button.setEnabled(True)
             next_index = current_step_index + 1
-            if next_index == len(steps) - 1:
-                self.next_button.setEnabled(False)
-            else:
-                self.next_button.setEnabled(True)
-
-        if go_to == 'prev':
+            self.next_button.setEnabled(next_index == len(steps) - 1)
+        elif go_to == 'prev':
             self.next_button.setEnabled(True)
             next_index = current_step_index - 1
-            if next_index == 0:
-                self.prev_button.setEnabled(False)
-            else:
-                self.prev_button.setEnabled(True)
+            self.prev_button.setEnabled(next_index == 0)
 
         self.current_step = steps[next_index]
 
