@@ -240,10 +240,6 @@ class UIFormWidget:
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.widgets
 
-    def getRemovedWidgets(self):
-        '''Returns the dictionary of the removed widgets previously present in the form.'''
-        return self.removed_widgets_dictionary
-
     def addTitle(self, qlabel, name):
         if isinstance(qlabel, str):
             txt = qlabel
@@ -433,9 +429,6 @@ class UIFormWidget:
                     widget.setChecked(value)
                 elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
-                elif key == 'widget_number':
-                    if value != self.widget_number_dictionary[name]:
-                        self.widget_number_dictionary[name] = value
 
     def applyWidgetStates(self, states):
         '''
