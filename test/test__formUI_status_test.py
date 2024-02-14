@@ -128,7 +128,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     def _test_add_one_spanning_widget(self, name, qwidget):
         """
-        Invokes `addSpanningWidget`, therefore inserts the qwidget 
+        Invokes `addSpanningWidget`, therefore inserts the qwidget
         at the end of the layout. Checks the position of the widget in the form is the last one.
         """
         name = f'{name}_spanning'
@@ -503,28 +503,30 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 
     def _test_add_one_widget_to_vertical_layout(self, qwidget):
         """
-        Invokes `addWidget` with vertical layout. Therefore adds the qwidget 
-        at the end of the layout. Checks that the widget inserted is the inputted one and 
-        its position in the layout corresponds to the number of widgets in the layout before insertion.
+        Invokes `addWidget` with vertical layout. Therefore adds the qwidget
+        at the end of the layout. Checks that the widget inserted is the inputted one and
+        its position in the layout corresponds to the number of widgets in the layout
+        before insertion.
         """
         num_widgets = self.vertical_layout.count()
-        self.form.addWidget(qwidget, layout = 'vertical')
+        self.form.addWidget(qwidget, layout='vertical')
         index = self.form.getIndexFromVerticalLayout(qwidget)
         self.assertEqual(index, num_widgets)
-        widget= self.vertical_layout.itemAt(num_widgets).widget()
+        widget = self.vertical_layout.itemAt(num_widgets).widget()
         self.assertEqual(qwidget, widget)
 
     def _test_add_one_spanning_widget_to_vertical_layout(self, qwidget):
         """
-        Invokes `addSpanningWidget` with vertical layout. Therefore adds the qwidget 
-        at the end of the layout. Checks that the widget inserted is the inputted one and 
-        its position in the layout corresponds to the number of widgets in the layout before insertion.
+        Invokes `addSpanningWidget` with vertical layout. Therefore adds the qwidget
+        at the end of the layout. Checks that the widget inserted is the inputted one and
+        its position in the layout corresponds to the number of widgets in the layout
+        before insertion.
         """
         num_widgets = self.vertical_layout.count()
-        self.form.addSpanningWidget(qwidget, layout = 'vertical')
+        self.form.addSpanningWidget(qwidget, layout='vertical')
         index = self.form.getIndexFromVerticalLayout(qwidget)
         self.assertEqual(index, num_widgets)
-        widget= self.vertical_layout.itemAt(num_widgets).widget()
+        widget = self.vertical_layout.itemAt(num_widgets).widget()
         self.assertEqual(qwidget, widget)
 
     def test_insert_every_widget_to_vertical_layout(self):
@@ -542,7 +544,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         for key in self.list_all_widgets.keys():
             self._test_add_one_widget_to_vertical_layout(self.list_all_widgets[key])
             self._test_add_one_spanning_widget_to_vertical_layout(self.list_all_widgets[key])
-        
+
     def _test_remove_one_widget_from_vertical_layout(self, widget):
         """
         Removes one widget from the vertical layout.
