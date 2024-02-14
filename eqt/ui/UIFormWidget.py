@@ -21,9 +21,6 @@ class UIFormWidget:
     |                                                          |
     +----------------------------------------------------------+
     '''
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def createForm(self):
         # Add vertical layout to dock contents
         verticalLayout = QtWidgets.QVBoxLayout(self)
@@ -71,7 +68,7 @@ class UIFormWidget:
             The position in the form where the widget is added.
         name : str
             The string associated to the qwidget and qlabel.
-        qwidget : widget
+        qwidget : QWidget
             The widget to be added on the right hand side of the form or as a spanning widget.
         qlabel : qlabel widget or str
             The qlabel widget, or a str from which a qlabel widget is created, to be added
@@ -91,7 +88,6 @@ class UIFormWidget:
             formLayout.insertRow(row, qlabel, qwidget)
             self.widgets[f'{name}_label'] = qlabel
             self.default_widget_states[f'{name}_label'] = self.getWidgetState(name, 'label')
-
         else:
             formLayout.insertRow(row, qwidget)
 
@@ -140,7 +136,7 @@ class UIFormWidget:
 
         Parameters
         ----------
-        qwidget : widget
+        qwidget : QWidget
             The widget to be added on the right hand side of the form.
         qlabel : qlabel widget or str
             The qlabel widget, or a str from which a qlabel widget is created, to be added
@@ -272,10 +268,7 @@ class UIFormWidget:
             e.g. {'widget1': {'value': 1, 'enabled': True, 'visible': True, 'widget_row': 0},
             'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
-        all_widget_states = {}
-        for key, widget in self.widgets.items():
-            all_widget_states[key] = self.getWidgetState(widget)
-        return all_widget_states
+        return {key: self.getWidgetState(widget) for key, widget in self.widgets.items()}
 
     def getWidgetState(self, widget, role=None):
         '''
@@ -317,9 +310,9 @@ class UIFormWidget:
                 raise KeyError(f'No widget associated with the dictionary key `{name_role}`.')
         else:
             name, role = self._getNameAndRoleFromWidget(widget)
-        widget_state = {}
-        widget_state['enabled'] = widget.isEnabled()
-        widget_state['visible'] = widget.isVisible()
+        widget_state = {
+            'enabled': widget.isEnabled(), 'visible': widget.isVisible(),
+            'widget_row': self.getWidgetRow(name, role)}
 
         if isinstance(widget, QtWidgets.QLabel):
             widget_state['value'] = widget.text()
@@ -337,8 +330,6 @@ class UIFormWidget:
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
-
-        widget_state['widget_row'] = self.getWidgetRow(name, role)
         return widget_state
 
     def _getNameAndRoleFromKey(self, key):
@@ -352,15 +343,10 @@ class UIFormWidget:
             Format: name or name_field or name_label
         '''
         if key.endswith('_field'):
-            name = key.removesuffix('_field')
-            role = 'field'
+            return key.removesuffix('_field'), 'field'
         elif key.endswith('_label'):
-            name = key.removesuffix('_label')
-            role = 'label'
-        else:
-            name = key
-            role = 'field'
-        return name, role
+            return key.removesuffix('_label'), 'label'
+        return key, 'field'
 
     def _getNameAndRoleFromWidget(self, widget):
         '''
@@ -392,7 +378,7 @@ class UIFormWidget:
             e.g. {'value': 1, 'enabled': True, 'visible': True, 'widget_row' : 0}.
         '''
         if role is not None:
-            if role in ['label', 'field']:
+            if role in ('label', 'field'):
                 name_role = name + '_' + role
             else:
                 raise ValueError(f'Role must be either "label", "field" or None. Got {role}.')
@@ -400,10 +386,7 @@ class UIFormWidget:
             name_role = f'{name}_field'
 
         # retrieve widget
-        try:
-            widget = self.widgets[name_role]
-        except KeyError:
-            raise KeyError(f'No widget associated with the dictionary key `{name_role}`.')
+        widget = self.widgets[name_role]
         # apply state
         for key, value in state.items():
             if key == 'enabled':
@@ -446,7 +429,7 @@ class UIFormWidget:
                   'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
         if set(self.widgets) != set(states):
-            raise KeyError("states={set(states)} do not match form widgets ({set(self.widgets)})")
+            raise KeyError(f"states={set(states)} do not match form widgets ({set(self.widgets)})")
         for key, widget_state in states.items():
             name, role = self._getNameAndRoleFromKey(key)
             self.applyWidgetState(name, widget_state, role)
@@ -488,10 +471,10 @@ class FormWidget(QtWidgets.QWidget, UIFormWidget):
 
 
 class FormDockWidget(QtWidgets.QDockWidget):
-    def __init__(self, parent=None, title=None):
+    def __init__(self, parent=None, title=''):
         if title is None:
             title = ''
-        QtWidgets.QDockWidget.__init__(self, title, parent)
+        super().__init__(self, title, parent)
         widget = FormWidget(parent)
         self.setWidget(widget)
         if title is not None:
@@ -542,7 +525,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
             The position in the form where the widget is added.
         name : str
             The string associated to the qwidget and qlabel.
-        qwidget : widget
+        qwidget : QWidget
             The widget to be added on the right hand side of the form or as a spanning widget.
         qlabel : qlabel widget or str
             The qlabel widget, or a str from which a qlabel widget is created, to be added
