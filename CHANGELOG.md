@@ -1,4 +1,5 @@
 # Version x.x.x
+- Adds unit test to add widget methods.
 - Adds methods to insert widgets in the forms & tests/example
   Removes `_addWidget`
   Adds `getWidgetRow`and updates states dictionary and related methods
