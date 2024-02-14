@@ -426,7 +426,8 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def add_every_widget_to_vertical_layout(self):
         """Add every widget to the vertical layout."""
         for key in self.list_all_widgets:
-            self.form.addWidget(self.list_all_widgets[key], qlabel=None, name=None, layout='vertical')
+            self.form.addWidget(self.list_all_widgets[key], qlabel=None, name=None,
+                                layout='vertical')
 
     def test_dialog_buttons_default_behaviour(self):
         # create the states dictionary
