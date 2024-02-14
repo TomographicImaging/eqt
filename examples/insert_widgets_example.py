@@ -25,7 +25,7 @@ class MainUI(QtWidgets.QMainWindow):
         # create button for Form Dialog
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Form Dialog")
-        pb.clicked.connect(lambda: self.openFormDialog())
+        pb.clicked.connect(self.openFormDialog)
 
         # create window layout
         layout = QtWidgets.QHBoxLayout()
@@ -65,14 +65,12 @@ class MainUI(QtWidgets.QMainWindow):
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("Widget inserted in row 0: ")
         qwidget = QtWidgets.QLineEdit(form)
-        form.insertWidgetToFormLayout(0, 'inserted widget', qwidget, qlabel)
+        form.insertWidget(0, 'inserted widget', qwidget, qlabel)
         buttonspanning = QtWidgets.QPushButton(self)
         buttonspanning.setText("Spanning widget inserted in row 2")
-        form.insertWidgetToFormLayout(2, 'inserted spanning widget', buttonspanning)
+        form.insertWidget(2, 'inserted spanning widget', buttonspanning)
         print('\nDictionary of widgets after insertion in the form layout:\n' +
               str(form.getWidgets()))
-        print("\nDictionary of widget number in the form layout:\n" +
-              str(form.getWidgetNumberDictionary()))
         button.setEnabled(False)
 
     def onCancel(self):
@@ -82,10 +80,10 @@ class MainUI(QtWidgets.QMainWindow):
                     self.dialog.getWidgetFromVerticalLayout(1))
 
             if self.dialog.getWidget('Button insert widgets').isEnabled() is False:
-                self.dialog.formWidget._popWidgetFromDictionary(
-                    self.dialog.formWidget.default_widget_states, 'inserted widget')
-                self.dialog.formWidget._popWidgetFromDictionary(
-                    self.dialog.formWidget.default_widget_states, 'inserted spanning widget')
+                self.dialog.formWidget._popWidget(self.dialog.formWidget.default_widget_states,
+                                                  'inserted widget')
+                self.dialog.formWidget._popWidget(self.dialog.formWidget.default_widget_states,
+                                                  'inserted spanning widget')
                 self.dialog.formWidget.removeWidget('inserted widget')
                 self.dialog.formWidget.removeWidget('inserted spanning widget')
         else:

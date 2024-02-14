@@ -47,13 +47,8 @@ Version 1.33.7
 <body>
 ```
 
-The `<body>` will be used in the changelog (below).
+The `<body>` should be taken from the changelog (below).
 
 #### Changelog
 
-See <https://github.com/TomographicImaging/eqt/releases>, or offline:
-
-```sh
-git config --global alias.changelog 'for-each-ref --sort=-*authordate --format="# %(contents:subject)%0a%(contents:body)" refs/tags'
-git changelog
-```
+See [CHANGELOG.md](./CHANGELOG.md).
