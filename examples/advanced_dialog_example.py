@@ -28,8 +28,8 @@ class FormExample(FormWidget):
         qwidget = QtWidgets.QLineEdit(dialog.groupBox)
         qwidget.setClearButtonEnabled(True)
         # finally add to the form widget
-        dialog.insertWidgetToFormLayout(0, 'input_title', QtWidgets.QLabel("Input Values: "))
-        dialog.insertWidgetToFormLayout(1, 'input1', qwidget, qlabel)
+        dialog.insertWidget(0, 'input_title', QtWidgets.QLabel("Input Values: "))
+        dialog.insertWidget(1, 'input1', qwidget, qlabel)
         dialog.addToDictionaryDisplayOnParent('input1')
 
         # add input 2 as QComboBox
