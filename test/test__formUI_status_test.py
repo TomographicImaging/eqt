@@ -791,7 +791,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
             self.form.open()
             self.click_Ok()
             parent_states = self.form_parent.getAllWidgetStates()
-            for key in self.list_all_widgets.keys():
+            for key in self.list_all_widgets:
                 self.assertEqual(parent_states[f'{key}_field']['value'], str(self.exampleState[i][f'{key}_value']))
                 self.assertEqual(parent_states[f'{key}_label']['value'], key)
         # click default and then ok

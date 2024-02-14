@@ -341,7 +341,7 @@ class AdvancedFormDialog(FormDialog):
             self.dialog_parent = parent
             self.display_on_parent_dict = {}
             if button_name is not None:
-                self.button_widget_number = self.dialog_parent.getWidgetNumber(button_name)
+                self.button_widget_row = self.dialog_parent.getWidgetRow(button_name)
         FormDialog.__init__(self, parent, title)
 
         # add default button to vertical layout
@@ -370,15 +370,15 @@ class AdvancedFormDialog(FormDialog):
         i = 0
         for name in self.display_on_parent_dict.keys():
             i += 1
-            if hasattr(self, 'button_widget_number'):
-                widget_number = self.button_widget_number + i
+            if hasattr(self, 'button_widget_row'):
+                widget_row = self.button_widget_row + i
             else:
-                widget_number = - 1
+                widget_row = - 1
 
             value = str(self.getWidgetStates()[f'{name}_field']['value'])
             if f'{name}_field' not in self.dialog_parent.getWidgets():
                 label = str(self.getWidgetStates()[f'{name}_label']['value'])
-                self.dialog_parent.insertWidgetToFormLayout(widget_number, name, QtWidgets.QLabel(value), label)
+                self.dialog_parent.insertWidget(widget_row, name, QtWidgets.QLabel(value), label)
             else:
                 self.dialog_parent.getWidget(name, 'field').setText(value)
 
