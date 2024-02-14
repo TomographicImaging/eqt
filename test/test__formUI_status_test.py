@@ -54,24 +54,23 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         state_simple_form = {
             'label_field': {
                 'value': 'test label', 'enabled': True, 'visible': False,
-                'widget_number': 0}, 'label_label': {
-                    'value': 'Label: ', 'enabled': True, 'visible': False,
-                    'widget_number': 0}, 'checkBox_field': {
-                        'value': False, 'enabled': True, 'visible': False, 'widget_number': 1},
+                'widget_row': 0}, 'label_label': {
+                    'value': 'Label: ', 'enabled': True, 'visible': False, 'widget_row': 0},
+            'checkBox_field': {'value': False, 'enabled': True, 'visible': False, 'widget_row': 1},
             'checkBox_label': {
-                'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_number': 1}}
+                'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_row': 1}}
         return state_simple_form
 
     def add_every_widget(self):
         """Generate every widget and add it to the form."""
         form = self.form
-        for key in self.list_all_widgets.keys():
+        for key in self.list_all_widgets:
             form.addWidget(self.list_all_widgets[key], key, key)
 
     def add_every_spanning_widget(self):
         """Generate every spanning widget and add it to the form."""
         form = self.form
-        for key in self.list_all_widgets.keys():
+        for key in self.list_all_widgets:
             form.addSpanningWidget(self.list_all_widgets[key], f'{key}_spanning')
 
     def add_two_widgets(self):
@@ -118,15 +117,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.form.getWidget('button').setCheckable(True)
         self.form.getWidget('button').setChecked(state[i]['pushButton_value'])
 
-    def _test_insert_one_widget(self, row, name, qwidget, qlabel=None):
-        """
-        Invokes `insertWidgetToFormLayout`, therefore inserts the qwidget (and the qlabel)
-        at position row in the layout. Checks the position of the widget in the form is `row`.
-        """
-        self.form.insertWidgetToFormLayout(row, f'{name}', qwidget, qlabel)
-        position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
-        self.assertEqual(position, row)
-
     def _test_add_one_widget(self, name, qwidget, qlabel):
         """
         Invokes `addWidget`, therefore inserts the qwidget and the qlabel
@@ -146,33 +136,41 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
         self.assertEqual(position, self.form.getNumWidgets() - 1)
 
-    def test_insert_every_widget(self):
-        """
-        Inserts each widget, and then each spanning widget, in position 0 of the form layout.
-        Tests the position of the widgets in the layout is 0.
-        """
-        for key in self.list_all_widgets.keys():
-            qwidget = self.list_all_widgets[key]
-            name = f'{key}_insert'
-            self._test_insert_one_widget(0, name, qwidget, name)
-            qwidget = self.list_all_widgets[key]
-            self._test_insert_one_widget(0, name + '_spanning', qwidget)
-
     def test_add_every_widget(self):
         """
         Adds each widget, and then each spanning widget, in the end of the form layout.
         Tests the position of the widgets in the layout is the last one.
         """
-        for key in self.list_all_widgets.keys():
+        for key in self.list_all_widgets:
             qwidget = self.list_all_widgets[key]
             name = f'{key}_added'
             self._test_add_one_widget(name, qwidget, name)
             qwidget = self.list_all_widgets[key]
             self._test_add_one_spanning_widget(name + '_spanning', qwidget)
 
+    def _test_insert_one_widget(self, row, name, qwidget, qlabel=None):
+        """
+        Invokes `insertWidget`, therefore inserts the qwidget (and the qlabel)
+        at position row in the layout. Checks the position of the widget in the form is `row`.
+        """
+        self.form.insertWidget(row, f'{name}', qwidget, qlabel)
+        position = self.layout.getWidgetPosition(self.form.getWidget(name, 'field'))[0]
+        self.assertEqual(position, row)
+
+    def test_insert_every_widget(self):
+        """
+        Inserts each widget, and then each spanning widget, in position 0 of the form layout.
+        Tests the position of the widgets in the layout is 0.
+        """
+        for key, qwidget in self.list_all_widgets.items():
+            name = f'{key}_insert'
+            self._test_insert_one_widget(0, name, qwidget, name)
+            qwidget = self.list_all_widgets[key]
+            self._test_insert_one_widget(0, name + '_spanning', qwidget)
+
     def _test_remove_one_widget(self, name):
         """
-        Remove one widget.
+        Removes one widget.
         Checks the number of widgets in the form before and after deletion are consistent.
         Checks the number of rows in the layout and number of widgets in the form are
         consistent.
@@ -192,14 +190,10 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.assertEqual(prenumwidgets, postnumwidgets + 1)
         self.assertEqual(prerowcount, postrowcount + 1)
         self.assertEqual(postrowcount, postnumwidgets)
-        self.assertEqual(self.form.getRemovedWidgets()[f'{name}_field'], qwidget)
 
     def test_remove_every_widget(self):
         """Remove every widget from the form."""
-        list_widgets = [
-            'label', 'checkBox', 'comboBox', 'doubleSpinBox', 'spinBox', 'slider',
-            'uiSliderWidget', 'radioButton', 'textEdit', 'plainTextEdit', 'lineEdit', 'button']
-        for name in list_widgets:
+        for name in self.list_all_widgets:
             self._test_remove_one_widget(name)
 
     def test_getWidgetState_returns_visibility(self):
@@ -460,6 +454,12 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def click_Cancel(self):
         QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
 
+    def add_every_widget_to_vertical_layout(self):
+        """Add every widget to the vertical layout."""
+        for key in self.list_all_widgets:
+            self.form.addWidget(self.list_all_widgets[key], qlabel=None, name=None,
+                                layout='vertical')
+
     def test_dialog_buttons_default_behaviour(self):
         # create the states dictionary
         self.set_state(1)
@@ -514,7 +514,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         widget= self.vertical_layout.itemAt(num_widgets).widget()
         self.assertEqual(qwidget, widget)
 
-
     def _test_add_one_spanning_widget_to_vertical_layout(self, qwidget):
         """
         Invokes `addSpanningWidget` with vertical layout. Therefore adds the qwidget 
@@ -533,7 +532,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         Inserts each widget in position 0 of the vertical layout and tests its position in
         the layout is 0.
         """
-        for key in self.list_all_widgets.keys():
+        for key in self.list_all_widgets:
             self._test_insert_one_widget_to_vertical_layout(0, self.list_all_widgets[key])
 
     def test_add_every_widget_to_vertical_layout(self):
@@ -543,6 +542,27 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         for key in self.list_all_widgets.keys():
             self._test_add_one_widget_to_vertical_layout(self.list_all_widgets[key])
             self._test_add_one_spanning_widget_to_vertical_layout(self.list_all_widgets[key])
+        
+    def _test_remove_one_widget_from_vertical_layout(self, widget):
+        """
+        Removes one widget from the vertical layout.
+        Checks the number of items in the layout before and after deletion are consistent.
+
+        Parameters
+        ----------
+        widget: qwidget to be removed
+        """
+        qwidget = self.form.getWidgetFromVerticalLayout(2)
+        prerowcount = self.vertical_layout.count()
+        self.form.removeWidgetFromVerticalLayout(qwidget)
+        postrowcount = self.vertical_layout.count()
+        self.assertEqual(prerowcount, postrowcount + 1)
+
+    def test_remove_every_widget_from_vertical_layout(self):
+        """Remove every widget from the vertical layout."""
+        self.add_every_widget_to_vertical_layout()
+        for widget in self.list_all_widgets.items():
+            self._test_remove_one_widget_from_vertical_layout(widget)
 
     def test_getWidgetState_returns_QLabel_value(self):
         """Check that the value of the QLabel is saved to the state"""
@@ -616,7 +636,7 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
         Checks that the method `_getNameAndRoleFromKey` returns the correct name and role in
         all widgets.
         """
-        for name in self.list_all_widgets.keys():
+        for name in self.list_all_widgets:
             for role in {'field', 'label'}:
                 name_role = name + '_' + role
                 name_c, role_c = self.form._getNameAndRoleFromKey(name_role)
