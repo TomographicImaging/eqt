@@ -240,10 +240,6 @@ class UIFormWidget:
         '''Returns a dictionary of the widgets currently present in the form.'''
         return self.widgets
 
-    def getRemovedWidgets(self):
-        '''Returns the dictionary of the removed widgets previously present in the form.'''
-        return self.removed_widgets_dictionary
-
     def addTitle(self, qlabel, name):
         if isinstance(qlabel, str):
             txt = qlabel
