@@ -745,7 +745,7 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
 
 
 @skip_ci
-class AdvancedFormDialogStatusTest(FormsCommonTests, unittest.TestCase):
+class AdvancedFormDialogStatusTest(FormDialogStatusTest):
     def setUp(self):
         self.form_parent = FormWidget()
         self.form_parent.addSpanningWidget(QtWidgets.QPushButton("Open Advanced Dialog"),
