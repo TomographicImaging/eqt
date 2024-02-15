@@ -11,14 +11,14 @@ class FormExample(FormWidget):
         FormWidget.__init__(self, parent)
 
         pb = QtWidgets.QPushButton(self)
-        pb.setText("Open Advanced Dialog with form layout")
+        pb.setText("Open Advanced Dialog")
         pb.clicked.connect(lambda: self.openFormDialog())
         self.addSpanningWidget(pb, 'buttadv')
         pb2 = QtWidgets.QPushButton(self)
         pb2.setText("b2")
         self.addSpanningWidget(pb2, 'buttadv2')
-        # dialog = AdvancedFormDialog(parent=self, title='Example')
-        dialog = AdvancedFormDialog(parent=self, title='Example', button_name='buttadv')
+        dialog = AdvancedFormDialog(parent=self, title='Example', parent_button_name='buttadv')
+
 
         dialog.Ok.clicked.connect(lambda: self.accepted())
         # Example on how to add elements to the FormDialog

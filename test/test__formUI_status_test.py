@@ -17,6 +17,10 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
     """Common tests for all Form types"""
     @abc.abstractmethod
     def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+        """
         self.form = None # stop mypy [attr-defined] error
         raise NotImplementedError
 
@@ -441,6 +445,10 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 @skip_ci
 class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+        """
         self.form = FormDialog()
         self.add_every_widget()
         self.add_every_spanning_widget()
@@ -450,9 +458,19 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
 
     def click_Ok(self):
+        """
+        Clicks the ok button on the form.
+
+        This method simulates a mouse click on the ok button in the form.
+        """
         QTest.mouseClick(self.form.Ok, Qt.LeftButton)
 
     def click_Cancel(self):
+        """
+        Clicks the cancel button on the form.
+
+        This method simulates a mouse click on the cancel button in the form.
+        """
         QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
 
     def add_every_widget_to_vertical_layout(self):
@@ -591,6 +609,10 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
 @skip_ci
 class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+        """
         self.form = FormWidget()
         self.add_every_widget()
         self.add_every_spanning_widget()
@@ -674,6 +696,10 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
 @skip_ci
 class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+        """
         self.form = FormDockWidget()
         self.add_every_widget()
         self.add_every_spanning_widget()
@@ -747,22 +773,34 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
 @skip_ci
 class AdvancedFormDialogStatusTest(FormDialogStatusTest):
     def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+        """
         self.form_parent = FormWidget()
         self.form_parent.addSpanningWidget(QtWidgets.QPushButton("Open Advanced Dialog"),
                                            'butt_adv')
         self.form = AdvancedFormDialog(parent=self.form_parent, title='Advanced form dialog',
-                                       button_name='butt_adv')
-
-        self.form_without_parent = AdvancedFormDialog()
-        self.add_every_widget()
-        for key in self.list_all_widgets.keys():
-            self.form.addToDictionaryDisplayOnParent(key)
-        self.simple_form = AdvancedFormDialog()
-        self.add_two_widgets()
+                                       parent_button_name='butt_adv')
+                    
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
+        self.add_every_widget()
+        for key in self.list_all_widgets:
+            self.form.addToDictionaryDisplayOnParent(key)
+
+        self.form_without_parent = AdvancedFormDialog()
+            
+        self.simple_form = AdvancedFormDialog()
+        self.add_two_widgets()
+
 
     def click_default_button(self):
+        """
+        Clicks the default button on the form.
+
+        This method simulates a mouse click on the default button of the form.
+        """
         QTest.mouseClick(self.form.default_button, Qt.LeftButton)
 
     def test_position_default_button(self):
@@ -776,6 +814,14 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.assertEqual(index, 1)
 
     def test_dialog_ok_button_behaviour(self):
+        """
+        Test the behavior of the Ok button on the advanced dialog.
+
+        This test case verifies the button's behavior in different scenarios:
+        1. Click the Ok button without changing any states and verify that the parent widget states remain unchanged.
+        2. Change the states and click the OK button, then verify that the parent widget states are updated correctly.
+        3. Click the default button and then the OK button, and verify that the parent widget states are restored to their initial values.
+        """
         # click ok first
         parent_initial_states = self.form_parent.getAllWidgetStates()
         self.form.open()
@@ -788,10 +834,10 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
             self.form.open()
             self.click_Ok()
             parent_states = self.form_parent.getAllWidgetStates()
-            for key in self.list_all_widgets:
-                self.assertEqual(parent_states[f'{key}_field']['value'],
-                                 str(self.exampleState[i][f'{key}_value']))
-                self.assertEqual(parent_states[f'{key}_label']['value'], key)
+            for name in self.list_all_widgets:
+                self.assertEqual(parent_states[f'{name}_field']['value'],
+                                 str(self.exampleState[i][f'{name}_value']))
+                self.assertEqual(parent_states[f'{name}_label']['value'], name)
         # click default and then ok
         self.form.open()
         self.click_default_button()
@@ -800,6 +846,18 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.assertEqual(parent_states, parent_initial_states)
 
     def test_dialog_cancel_button_behaviour(self):
+        """
+        Test the behavior of the Cancel button on the advanced dialog.
+
+        This test case verifies the button's behavior in different scenarios:
+        1. Open the dialog, click the Cancel button without changing any states and verify that the
+            parent-widget states remain unchanged.
+        2. Open the dialog, update the widgets and click the Cancel button. Verify that the parent-widget states remain unchanged.
+        3. Open the dialog, update the widgets and click the Ok button. Then reopen the dialog, change the states and click the Cancel button.
+            Verify that the parent widget states are those set before reopening the dialog.
+        4. Open the dialog, click the default button and then the Cancel button. Verify that the parent widget 
+            states remain unchanged.
+        """
         # click cancel first
         parent_initial_states = self.form_parent.getAllWidgetStates()
         self.form.open()
@@ -807,23 +865,23 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         parent_states = self.form_parent.getAllWidgetStates()
         self.assertEqual(parent_states, parent_initial_states)
         # change states and click Cancel
-        self.set_state(0)
         self.form.open()
+        self.set_state(0)
         self.click_Cancel()
         parent_states = self.form_parent.getAllWidgetStates()
         self.assertEqual(parent_states, parent_initial_states)
         # change states and click Ok then chance states and click cancel
+        self.form.open()
         self.set_state(0)
-        self.form.open()
         self.click_Ok()
-        self.set_state(1)
         self.form.open()
+        self.set_state(1)
         self.click_Cancel()
         parent_states = self.form_parent.getAllWidgetStates()
-        for key in self.list_all_widgets.keys():
-            self.assertEqual(parent_states[f'{key}_field']['value'],
-                             str(self.exampleState[0][f'{key}_value']))
-            self.assertEqual(parent_states[f'{key}_label']['value'], key)
+        for name in self.list_all_widgets:
+            self.assertEqual(parent_states[f'{name}_field']['value'],
+                             str(self.exampleState[0][f'{name}_value']))
+            self.assertEqual(parent_states[f'{name}_label']['value'], name)
         # click default and then Cancel
         self.form.open()
         self.click_default_button()
