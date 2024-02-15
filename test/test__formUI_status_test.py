@@ -62,12 +62,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
                 'value': 'CheckBox: ', 'enabled': True, 'visible': False, 'widget_row': 1}}
         return state_simple_form
 
-    def click_Ok(self):
-        QTest.mouseClick(self.form.Ok, Qt.LeftButton)
-
-    def click_Cancel(self):
-        QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
-
     def add_every_widget(self):
         """Generate every widget and add it to the form."""
         form = self.form
@@ -454,6 +448,12 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
+
+    def click_Ok(self):
+        QTest.mouseClick(self.form.Ok, Qt.LeftButton)
+
+    def click_Cancel(self):
+        QTest.mouseClick(self.form.Cancel, Qt.LeftButton)
 
     def add_every_widget_to_vertical_layout(self):
         """Add every widget to the vertical layout."""
