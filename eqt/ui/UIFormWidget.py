@@ -46,6 +46,7 @@ class UIFormWidget:
             'verticalLayout': verticalLayout, 'groupBox': groupBox,
             'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
+        self.widget_states = {}
         self.default_widget_states = {}
 
     @property
@@ -472,7 +473,7 @@ class UIFormWidget:
         `saveAllWidgetStates` was previously invoked. If there are no previously saved states,
         `default_widget_states` are used instead, after being made visible.
         '''
-        if not hasattr(self, 'widget_states'):
+        if not self.widget_states:
             self.setDefaultWidgetStatesVisibleTrue()
             self.applyWidgetStates(self.default_widget_states)
         else:
