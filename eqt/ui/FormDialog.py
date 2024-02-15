@@ -238,9 +238,9 @@ class FormDialog(QtWidgets.QDialog):
         '''
         self.formWidget.saveAllWidgetStates()
 
-    def getWidgetStates(self):
+    def getSavedWidgetStates(self):
         '''Returns the saved widget states.'''
-        return self.formWidget.getWidgetStates()
+        return self.formWidget.getSavedWidgetStates()
 
     def getDefaultWidgetStates(self):
         '''Returns the saved default widget states.'''
@@ -375,7 +375,7 @@ class AdvancedFormDialog(FormDialog):
         self.close()
 
         if self.display_on_parent_dict:
-            if self.getWidgetStates() == self.getDefaultWidgetStates():
+            if self.getSavedWidgetStates() == self.getDefaultWidgetStates():
                 self._removeWidgetsFromParent()
             else:
                 self._addOrUpdateWidgetsInParent()
@@ -390,9 +390,9 @@ class AdvancedFormDialog(FormDialog):
         """
         for index, name in enumerate(self.display_on_parent_dict, start=1):
             widget_row = self.parent_button_row + index if self.parent_button_row != -1 else -1
-            value = str(self.getWidgetStates()[f'{name}_field']['value'])
+            value = str(self.getSavedWidgetStates()[f'{name}_field']['value'])
             if f'{name}_field' not in self.dialog_parent.getWidgets():
-                label = str(self.getWidgetStates()[f'{name}_label']['value'])
+                label = str(self.getSavedWidgetStates()[f'{name}_label']['value'])
                 self.dialog_parent.insertWidget(widget_row, name, QtWidgets.QLabel(value), label)
             else:
                 self.dialog_parent.getWidget(name, 'field').setText(value)

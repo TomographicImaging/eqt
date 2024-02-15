@@ -458,7 +458,7 @@ class UIFormWidget:
         '''
         self.widget_states = self.getAllWidgetStates()
 
-    def getWidgetStates(self):
+    def getSavedWidgetStates(self):
         '''Returns the saved widget states.'''
         return self.widget_states
 
@@ -616,9 +616,9 @@ class FormDockWidget(QtWidgets.QDockWidget):
         '''
         self.widget().saveAllWidgetStates()
 
-    def getWidgetStates(self):
+    def getSavedWidgetStates(self):
         '''Returns the saved widget states.'''
-        return self.widget().getWidgetStates()
+        return self.widget().getSavedWidgetStates()
 
     def getDefaultWidgetStates(self):
         '''Returns the saved default widget states.'''

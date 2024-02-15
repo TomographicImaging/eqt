@@ -794,7 +794,6 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.simple_form = AdvancedFormDialog()
         self.add_two_widgets()
 
-
     def click_default_button(self):
         """
         Clicks the default button on the form.
@@ -815,20 +814,20 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
 
     def test_dialog_ok_button_behaviour(self):
         """
-        Test the behavior of the Ok button on the advanced dialog.
+        Tests the behavior of the Ok button on the advanced dialog.
 
         This test case verifies the button's behavior in different scenarios:
-        1. Click the Ok button without changing any states and verify that the parent widget states remain unchanged.
-        2. Change the states and click the OK button, then verify that the parent widget states are updated correctly.
-        3. Click the default button and then the OK button, and verify that the parent widget states are restored to their initial values.
+        1. Clicks the Ok button without changing any states and verifies that the parent widget states remain unchanged.
+        2. Changes the states and click the OK button, then verifies that the parent widget states are updated correctly.
+        3. Clicks the default button and then the OK button, and verifies that the parent widget states are restored to their initial values.
         """
-        # click ok first
+        # 1.
         parent_initial_states = self.form_parent.getAllWidgetStates()
         self.form.open()
         self.click_Ok()
         parent_states = self.form_parent.getAllWidgetStates()
         self.assertEqual(parent_states, parent_initial_states)
-        # change states and click ok
+        # 2.
         for i in [0, 1]:
             self.set_state(i)
             self.form.open()
@@ -838,7 +837,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
                 self.assertEqual(parent_states[f'{name}_field']['value'],
                                  str(self.exampleState[i][f'{name}_value']))
                 self.assertEqual(parent_states[f'{name}_label']['value'], name)
-        # click default and then ok
+        # 3.
         self.form.open()
         self.click_default_button()
         self.click_Ok()
@@ -847,30 +846,30 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
 
     def test_dialog_cancel_button_behaviour(self):
         """
-        Test the behavior of the Cancel button on the advanced dialog.
+        Tests the behavior of the Cancel button on the advanced dialog.
 
         This test case verifies the button's behavior in different scenarios:
-        1. Open the dialog, click the Cancel button without changing any states and verify that the
+        1. Opens the dialog, clicks the Cancel button without changing any states and verifies that the
             parent-widget states remain unchanged.
-        2. Open the dialog, update the widgets and click the Cancel button. Verify that the parent-widget states remain unchanged.
-        3. Open the dialog, update the widgets and click the Ok button. Then reopen the dialog, change the states and click the Cancel button.
-            Verify that the parent widget states are those set before reopening the dialog.
-        4. Open the dialog, click the default button and then the Cancel button. Verify that the parent widget 
+        2. Opens the dialog, update the widgets and clicks the Cancel button. Verifies that the parent-widget states remain unchanged.
+        3. Opens the dialog, updates the widgets and clicks the Ok button. Then reopens the dialog, changes the states and clicks the Cancel button.
+            Verifies that the parent widget states are those set before reopening the dialog.
+        4. Opens the dialog, clicks the default button and then the Cancel button. Verifies that the parent widget 
             states remain unchanged.
         """
-        # click cancel first
+        # 1.
         parent_initial_states = self.form_parent.getAllWidgetStates()
         self.form.open()
         self.click_Cancel()
         parent_states = self.form_parent.getAllWidgetStates()
         self.assertEqual(parent_states, parent_initial_states)
-        # change states and click Cancel
+        # 2.
         self.form.open()
         self.set_state(0)
         self.click_Cancel()
         parent_states = self.form_parent.getAllWidgetStates()
         self.assertEqual(parent_states, parent_initial_states)
-        # change states and click Ok then chance states and click cancel
+        # 3.
         self.form.open()
         self.set_state(0)
         self.click_Ok()
@@ -882,7 +881,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
             self.assertEqual(parent_states[f'{name}_field']['value'],
                              str(self.exampleState[0][f'{name}_value']))
             self.assertEqual(parent_states[f'{name}_label']['value'], name)
-        # click default and then Cancel
+        # 4.
         self.form.open()
         self.click_default_button()
         self.click_Cancel()
@@ -891,3 +890,17 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
             self.assertEqual(parent_states[f'{key}_field']['value'],
                              str(self.exampleState[0][f'{key}_value']))
             self.assertEqual(parent_states[f'{key}_label']['value'], key)
+
+    def test_dialog_default_button_behaviour(self):
+        """
+        Tests the behavior of the default button on the advanced dialog.
+
+        This test case opens the dialog, updates the widgets, clicks the default
+        button and then the Ok button. Verifies that the widgets in the dialog
+        are set to their default states.
+        """
+        self.form.open()
+        self.set_state(0)
+        self.click_default_button()
+        self.click_Ok()
+        self.assertEqual(self.form.getSavedWidgetStates(), self.form.getDefaultWidgetStates())
