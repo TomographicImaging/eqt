@@ -102,10 +102,10 @@ Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html)
 ## Developers Guide
 
 ### Changelog style
-The [changelog](https://github.com/TomographicImaging/eqt/blob/558ccabf7800bfec3272f165cf1b661021ed668f/CHANGELOG.md) needs to be updated manually every time a pull request (PR) is submitted. 
+The [changelog](https://github.com/TomographicImaging/eqt/blob/558ccabf7800bfec3272f165cf1b661021ed668f/CHANGELOG.md) needs to be updated manually every time a pull request (PR) is submitted.
 - Itemise the message with "-".
 - Be concise by explaining the overall changes in only a few words.
 - Mention the relevant PR in brackets.
 
-For example:
+#### Example:
 - Adds `title` to `FormDockWidget` & update tests/examples (#102)
