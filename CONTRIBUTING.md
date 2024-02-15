@@ -60,5 +60,3 @@ The changelog file needs to be updated manually every time a pull request (PR) i
 
 ###### Example:
 - Adds `title` to `FormDockWidget` & update tests/examples (#102)
-
-

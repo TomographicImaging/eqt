@@ -101,5 +101,3 @@ Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html)
 
 ## Developer Contribution Guide
 See [CONTRIBUTING.md](./CONTRIBUTING.md).
-
-
