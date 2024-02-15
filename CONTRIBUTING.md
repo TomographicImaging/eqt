@@ -50,5 +50,15 @@ Version 1.33.7
 The `<body>` should be taken from the changelog (below).
 
 #### Changelog
+Located in [CHANGELOG.md](./CHANGELOG.md).
 
-See [CHANGELOG.md](./CHANGELOG.md).
+##### Changelog style
+The changelog file needs to be updated manually every time a pull request (PR) is submitted.
+- Itemise the message with "-".
+- Be concise by explaining the overall changes in only a few words.
+- Mention the relevant PR in brackets.
+
+###### Example:
+- Adds `title` to `FormDockWidget` & update tests/examples (#102)
+
+
