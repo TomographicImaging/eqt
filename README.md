@@ -98,3 +98,14 @@ status = QtCore.Signal(tuple)
 ```
 
 Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html) and on how to use them in [PySide2](https://wiki.qt.io/Qt_for_Python_Signals_and_Slots).
+
+## Developers Guide
+
+### Changelog style
+The [changelog](https://github.com/TomographicImaging/eqt/blob/558ccabf7800bfec3272f165cf1b661021ed668f/CHANGELOG.md) needs to be updated manually every time a pull request (PR) is submitted. 
+- Itemise the message with "-".
+- Be concise by explaining the overall changes in only a few words.
+- Mention the relevant PR in brackets.
+
+For example:
+- Adds `title` to `FormDockWidget` & update tests/examples (#102)
