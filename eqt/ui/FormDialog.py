@@ -385,9 +385,9 @@ class AdvancedFormDialog(FormDialog):
         """
         Adds or updates widgets in the parent form.
 
-        This method iterates over the display_on_parent_dict and adds the widgets to the parent form.
-        If a widget already exists in the parent form, it is updated with the most current value
-        set in the advanced dialog.
+        This method iterates over the display_on_parent_dict and adds the widgets to the parent
+        form. If a widget already exists in the parent form, it is updated with the most current
+        value set in the advanced dialog.
         """
         for index, name in enumerate(self.display_on_parent_dict, start=1):
             widget_row = self.parent_button_row + index if self.parent_button_row != -1 else -1

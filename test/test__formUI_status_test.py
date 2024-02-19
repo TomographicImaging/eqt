@@ -816,9 +816,12 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         Tests the behavior of the Ok button on the advanced dialog.
 
         This test case verifies the button's behavior in different scenarios:
-        1. Clicks the Ok button without changing any states and verifies that the parent widget states remain unchanged.
-        2. Changes the states and click the OK button, then verifies that the parent widget states are updated correctly.
-        3. Clicks the default button and then the OK button, and verifies that the parent widget states are restored to their initial values.
+        1. Clicks the Ok button without changing any states and verifies that the parent
+        widget states remain unchanged.
+        2. Changes the states and click the OK button, then verifies that the parent widget
+        states are updated correctly.
+        3. Clicks the default button and then the OK button, and verifies that the parent widget
+        states are restored to their initial values.
         """
         # 1.
         parent_initial_states = self.form_parent.getAllWidgetStates()
@@ -848,13 +851,15 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         Tests the behavior of the Cancel button on the advanced dialog.
 
         This test case verifies the button's behavior in different scenarios:
-        1. Opens the dialog, clicks the Cancel button without changing any states and verifies that the
-            parent-widget states remain unchanged.
-        2. Opens the dialog, update the widgets and clicks the Cancel button. Verifies that the parent-widget states remain unchanged.
-        3. Opens the dialog, updates the widgets and clicks the Ok button. Then reopens the dialog, changes the states and clicks the Cancel button.
-            Verifies that the parent widget states are those set before reopening the dialog.
-        4. Opens the dialog, clicks the default button and then the Cancel button. Verifies that the parent widget
-            states remain unchanged.
+        1. Opens the dialog, clicks the Cancel button without changing any states and verifies that
+        the parent-widget states remain unchanged.
+        2. Opens the dialog, update the widgets and clicks the Cancel button. Verifies that the
+        parent-widget states remain unchanged.
+        3. Opens the dialog, updates the widgets and clicks the Ok button. Then reopens the dialog,
+        changes the states and clicks the Cancel button. Verifies that the parent widget states are
+        those set before reopening the dialog.
+        4. Opens the dialog, clicks the default button and then the Cancel button. Verifies that
+        the parent widget states remain unchanged.
         """
         # 1.
         parent_initial_states = self.form_parent.getAllWidgetStates()
