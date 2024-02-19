@@ -19,7 +19,6 @@ class FormExample(FormWidget):
         self.addSpanningWidget(pb2, 'buttadv2')
         dialog = AdvancedFormDialog(parent=self, title='Example', parent_button_name='buttadv')
 
-
         dialog.Ok.clicked.connect(lambda: self.accepted())
         # Example on how to add elements to the FormDialog
         # add input 1 as QLineEdit

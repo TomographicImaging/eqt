@@ -782,7 +782,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
                                            'butt_adv')
         self.form = AdvancedFormDialog(parent=self.form_parent, title='Advanced form dialog',
                                        parent_button_name='butt_adv')
-                    
+
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
         self.add_every_widget()
@@ -790,7 +790,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
             self.form.addToDictionaryDisplayOnParent(key)
 
         self.form_without_parent = AdvancedFormDialog()
-            
+
         self.simple_form = AdvancedFormDialog()
         self.add_two_widgets()
 
@@ -854,7 +854,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         2. Opens the dialog, update the widgets and clicks the Cancel button. Verifies that the parent-widget states remain unchanged.
         3. Opens the dialog, updates the widgets and clicks the Ok button. Then reopens the dialog, changes the states and clicks the Cancel button.
             Verifies that the parent widget states are those set before reopening the dialog.
-        4. Opens the dialog, clicks the default button and then the Cancel button. Verifies that the parent widget 
+        4. Opens the dialog, clicks the default button and then the Cancel button. Verifies that the parent widget
             states remain unchanged.
         """
         # 1.

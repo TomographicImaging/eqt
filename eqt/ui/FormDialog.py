@@ -328,7 +328,7 @@ class AdvancedFormDialog(FormDialog):
     def __init__(self, parent=None, title=None, parent_button_name=None):
         """
         Constructs an advanced form dialog that adds widgets in its parent.
-        
+
         Creates a form dialog and adds a default button to the vertical layout.
         The default button is located between the form layout and the buttons 'ok' and 'cancel'.
         The default button is connected to the 'setDefaultValues' method.
@@ -342,7 +342,7 @@ class AdvancedFormDialog(FormDialog):
             The title of the advanced form dialog.
         parent_button_name : str or None, optional
             The name of the button opening the advanced form dialog in the parent.
-            If passed, the extra widgets will be added under this button in the parent, 
+            If passed, the extra widgets will be added under this button in the parent,
             otherwise they are added at the end.
         """
         self.dialog_parent = parent
@@ -350,10 +350,11 @@ class AdvancedFormDialog(FormDialog):
         if parent_button_name is None:
             self.parent_button_row = -1
         elif parent is None:
-            raise ValueError('The parent is None. Set the parent if you want to set the parent button name.')
+            raise ValueError(
+                'The parent is None. Set the parent if you want to set the parent button name.')
         else:
             self.parent_button_row = self.dialog_parent.getWidgetRow(parent_button_name)
-            
+
         FormDialog.__init__(self, parent, title)
 
         # add default button to vertical layout
@@ -364,7 +365,7 @@ class AdvancedFormDialog(FormDialog):
     def _onOk(self):
         """
         Called when the "Ok" button is clicked in the advanced dialog.
-        
+
         It saves the widget states, calls `onOk`, sets the default widgets
         to visible and closes the dialog. Adds or updates or removes widgets from the
         parent based on the values of the widgets in the advanced dialog.
