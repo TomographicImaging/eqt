@@ -10,7 +10,10 @@ from eqt.ui.FormDialog import AdvancedFormDialog, FormDialog
 from eqt.ui.UIFormWidget import FormDockWidget, FormWidget
 from eqt.ui.UISliderWidget import UISliderWidget
 
-from . import skip_ci
+from . import is_ci, skip
+
+if is_ci:
+    skip("Running in CI (no GUI)", allow_module_level=True)
 
 
 class FormsCommonTests(metaclass=abc.ABCMeta):
@@ -442,7 +445,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.assertEqual(self.simple_form.getAllWidgetStates(), self.state_simple_form)
 
 
-@skip_ci
 class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         """
@@ -606,7 +608,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
             state_to_restore['label_label']['visible'])
 
 
-@skip_ci
 class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         """
@@ -693,7 +694,6 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
             state_to_restore['label_label']['visible'])
 
 
-@skip_ci
 class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         """
@@ -770,7 +770,6 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
             state_to_restore['label_label']['visible'])
 
 
-@skip_ci
 class AdvancedFormDialogStatusTest(FormDialogStatusTest):
     def setUp(self):
         """
