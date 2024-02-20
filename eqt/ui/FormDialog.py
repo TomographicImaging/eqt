@@ -5,19 +5,13 @@ from . import UIFormFactory
 
 class FormDialog(QtWidgets.QDialog):
     def __init__(self, parent=None, title=None):
+        super().__init__(self, parent)
 
-        QtWidgets.QDialog.__init__(self, parent)
-
-        # button box
-        bb = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok
-                                        | QtWidgets.QDialogButtonBox.Cancel)
-        self.buttonBox = bb
-
-        formWidget = UIFormFactory.getQWidget(parent=self)
-        self.formWidget = formWidget
-
+        self.buttonBox = bb = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok
+                                                         | QtWidgets.QDialogButtonBox.Cancel)
+        self.formWidget = UIFormFactory.getQWidget(parent=self)
         # set the layout of the dialog
-        self.setLayout(formWidget.uiElements['verticalLayout'])
+        self.setLayout(self.formWidget.uiElements['verticalLayout'])
 
         if title is not None:
             self.setWindowTitle(title)
@@ -75,7 +69,7 @@ class FormDialog(QtWidgets.QDialog):
 
         Parameters
         ----------
-        qwidget : widget
+        qwidget : QWidget
         qlabel : qlabel widget or str
             only supported when layout is 'form'
         name : str
@@ -100,9 +94,15 @@ class FormDialog(QtWidgets.QDialog):
     def addSpanningWidget(self, qwidget, name=None, layout='form'):
         '''
         Adds a spanning widget occupying the full row in the layout.
-        layout = 'form' - adds the widget to the form layout
-        layout = 'vertical' - adds the widget to the vertical layout below the form.
-        To add to the form layout, name must be passed.
+
+        Parameters
+        ----------
+        qwidget : QWidget
+        name : str
+            only supported when layout is 'form'
+        layout : 'form' or 'vertical'
+                'form' - adds to the `groupBoxFormLayout`,
+                'vertical' - adds to the `verticalLayout` below the form.
         '''
         if layout == 'vertical':
             if name is not None:
@@ -131,7 +131,7 @@ class FormDialog(QtWidgets.QDialog):
             The position in the form where the widget is added.
         name : str
             The string associated to the qwidget and qlabel.
-        qwidget : widget
+        qwidget : QWidget
             The widget to be added on the right hand side of the form or as a spanning widget.
         qlabel : qlabel widget or str
             The qlabel widget, or a str from which a qlabel widget is created, to be added
@@ -141,17 +141,14 @@ class FormDialog(QtWidgets.QDialog):
         self.formWidget.insertWidget(row, name, qwidget, qlabel)
 
     def insertWidgetToVerticalLayout(self, row, qwidget):
-        '''
-        Inserts a widget to the vertical layout at position specified by row.
-        '''
+        '''Inserts a widget to the vertical layout at position specified by row.'''
         self.formWidget.uiElements['verticalLayout'].insertWidget(row, qwidget)
 
     def getWidgetFromVerticalLayout(self, index):
-        '''
-        Returns the widget in the vertical layout located at position index.'''
+        '''Returns the widget in the vertical layout located at position index.'''
         return self.formWidget.uiElements['verticalLayout'].itemAt(index).widget()
 
-    def removeWidget(self, widget):
+    def removeWidget(self, name):
         '''
         Removes the widget with the specified name from the form layout.
         This method delete the qwidget, and qlabel if present, from the widgets dictionary
@@ -168,20 +165,22 @@ class FormDialog(QtWidgets.QDialog):
             If the widget has a corresponding label, a tuple containing the widget
             and label is returned. Otherwise, only the widget is returned.
         '''
-        return self.formWidget.removeWidget(widget)
+        return self.formWidget.removeWidget(name)
 
     def removeWidgetFromVerticalLayout(self, widget):
-        '''
-        Removes a widget from the vertical layout.
+        '''Removes a widget from the vertical layout.
+
+        Parameters
+        ----------
+        widget : QWidget
+            The widget to be removed.
         '''
         self.formWidget.uiElements['verticalLayout'].removeWidget(widget)
         widget.setParent(None)
         return widget
 
     def getNumWidgets(self):
-        '''
-        Returns the number of widgets in the form.
-        '''
+        '''Returns the number of widgets in the form.'''
         return self.formWidget.getNumWidgets()
 
     def getWidget(self, name, role='field'):
