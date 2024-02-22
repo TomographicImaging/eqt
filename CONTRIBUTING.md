@@ -35,7 +35,7 @@ The [.pre-commit-config.yaml](./.pre-commit-config.yaml) config file indicates t
 
 ## Continuous integration
 
-GitHub Actions runs automatically on every commit via [test.yml](.github/workflows/test.yml).
+GitHub Actions runs automatically a subset of the unit tests on every commit via [test.yml](.github/workflows/test.yml).
 
 ### Testing
 
