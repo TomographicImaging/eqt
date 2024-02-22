@@ -151,6 +151,22 @@ class FormDialog(QtWidgets.QDialog):
         Returns the widget in the vertical layout located at position index.'''
         return self.formWidget.uiElements['verticalLayout'].itemAt(index).widget()
 
+    def getIndexFromVerticalLayout(self, widget):
+        '''
+        Returns the index of the widget in the vertical layout.
+
+        Parameters
+        -------------
+        widget : QWidget
+            The widget in the layout.
+
+        Return
+        ------------
+        int
+            The index of the widget in the layout.
+        '''
+        return self.formWidget.uiElements['verticalLayout'].indexOf(widget)
+
     def removeWidget(self, widget):
         '''
         Removes the widget with the specified name from the form layout.
