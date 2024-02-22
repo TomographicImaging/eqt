@@ -1,4 +1,5 @@
-# Version x.x.x
+# Version 1.0.0
+- Edit 'contributing.md' and 'README.md (#131).
 - Adds unit test for `addWidget` and `addSpanningWidget`; - Adds `getIndexFromVerticalLayout`
 to `FormDialog` (#123).
 - Initialises `widget_states` in init (#132).
