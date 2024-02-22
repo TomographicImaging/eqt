@@ -98,3 +98,6 @@ status = QtCore.Signal(tuple)
 ```
 
 Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html) and on how to use them in [PySide2](https://wiki.qt.io/Qt_for_Python_Signals_and_Slots).
+
+## Developer Contribution Guide
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
