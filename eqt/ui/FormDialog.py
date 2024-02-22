@@ -154,10 +154,12 @@ class FormDialog(QtWidgets.QDialog):
     def getIndexFromVerticalLayout(self, widget):
         '''
         Returns the index of the widget in the vertical layout.
+
         Parameters
         -------------
-        widget : qwidget
+        widget : QWidget
             The widget in the layout.
+
         Return
         ------------
         int

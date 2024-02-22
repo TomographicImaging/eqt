@@ -46,6 +46,7 @@ class UIFormWidget:
             'verticalLayout': verticalLayout, 'groupBox': groupBox,
             'groupBoxFormLayout': groupBoxFormLayout}
         self.widgets = {}
+        self.widget_states = {}
         self.default_widget_states = {}
 
     @property
@@ -80,14 +81,19 @@ class UIFormWidget:
         '''
         if f'{name}_field' in self.widgets:
             raise KeyError(f"Widget name ({name}) already defined. Choose another name.")
-
         formLayout = self.uiElements['groupBoxFormLayout']
+        if formLayout.indexOf(qwidget) != -1:
+            raise KeyError(f"The widget {qwidget} is already in use. Create another QWidget.")
 
         if qlabel is not None:
             if isinstance(qlabel, str):
                 txt = qlabel
                 qlabel = QtWidgets.QLabel(self)
                 qlabel.setText(txt)
+            else:
+                if formLayout.indexOf(qlabel) != -1:
+                    raise KeyError(
+                        f"The widget {qlabel} is already in use. Create another QLabel.")
             formLayout.insertRow(row, qlabel, qwidget)
             self.widgets[f'{name}_label'] = qlabel
             self.default_widget_states[f'{name}_label'] = self.getWidgetState(name, 'label')
@@ -472,7 +478,7 @@ class UIFormWidget:
         `saveAllWidgetStates` was previously invoked. If there are no previously saved states,
         `default_widget_states` are used instead, after being made visible.
         '''
-        if not hasattr(self, 'widget_states'):
+        if not self.widget_states:
             self.setDefaultWidgetStatesVisibleTrue()
             self.applyWidgetStates(self.default_widget_states)
         else:
