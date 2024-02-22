@@ -1,5 +1,5 @@
 # Version x.x.x
-- Adds unit test for `addWidget` and `addSpanningWidget`. Add `getIndexFromVerticalLayout`
+- Adds unit test for `addWidget` and `addSpanningWidget`. Adds `getIndexFromVerticalLayout`
 to `FormDialog`. (#123)
 - Adds methods to insert widgets in the forms & tests/example
   Removes `_addWidget`
