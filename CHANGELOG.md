@@ -1,5 +1,6 @@
 # Version 1.0.0
-- Adds the class `AdvancedDialogForm` & tests/example (#124)
+- Adds the class `AdvancedDialogForm` & tests/example; 
+deprecates `getWidgetStates` to be `getSavedWidgetStates` (#124)
 - Edits 'contributing.md' and 'README.md (#131, #133)
 - Adds unit test for `addWidget` and `addSpanningWidget`; adds `getIndexFromVerticalLayout`
 to `FormDialog` (#123)

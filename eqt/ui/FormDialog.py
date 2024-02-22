@@ -240,6 +240,10 @@ class FormDialog(QtWidgets.QDialog):
         '''
         self.formWidget.saveAllWidgetStates()
 
+    def getWidgetStates(self):
+        '''Deprecated. Use `getSavedWidgetStates`.'''
+        return self.formWidget.getWidgetStates()
+
     def getSavedWidgetStates(self):
         '''Returns the saved widget states.'''
         return self.formWidget.getSavedWidgetStates()
@@ -333,11 +337,11 @@ class AdvancedFormDialog(FormDialog):
 
         Creates a form dialog and adds a default button to the vertical layout.
         The default button is located between the form layout and the buttons 'ok' and 'cancel'.
-        The default button is connected to the 'setDefaultValues' method.
+        The default button is connected to the '_setDefaultValues' method.
 
         Parameters
         ----------
-        parent : QWidget or None, optional
+        parent : UIFormWidget or None, optional
             The parent widget of the advanced form dialog.
             If None, the dialog is created without a parent.
         title : str or None, optional
@@ -362,7 +366,7 @@ class AdvancedFormDialog(FormDialog):
         # add default button to vertical layout
         self.default_button = QtWidgets.QPushButton("Set default values")
         self.insertWidgetToVerticalLayout(1, self.default_button)
-        self.default_button.clicked.connect(lambda: self.setDefaultValues())
+        self.default_button.clicked.connect(lambda: self._setDefaultValues())
 
     def _onOk(self):
         """
@@ -372,11 +376,8 @@ class AdvancedFormDialog(FormDialog):
         to visible and closes the dialog. Adds or updates or removes widgets from the
         parent based on the values of the widgets in the advanced dialog.
         """
-        self.saveAllWidgetStates()
-        self.onOk()
+        super()._onOk()
         self.formWidget.setDefaultWidgetStatesVisibleTrue()
-        self.close()
-
         if self.display_on_parent_dict:
             if self.getSavedWidgetStates() == self.getDefaultWidgetStates():
                 self._removeWidgetsFromParent()
@@ -411,17 +412,17 @@ class AdvancedFormDialog(FormDialog):
             if f'{name}_field' in self.dialog_parent.getWidgets():
                 self.dialog_parent.removeWidget(name)
 
-    def setDefaultValues(self):
+    def _setDefaultValues(self):
         """
         Sets the widgets in the advanced dialog to their default states.
 
-        Makes the default widget states visible and applies the widget states
-        to the widgets in the form.
+        Makes the default widget states visible, as often the default states are saved while the widgets are not visible.
+        Applies the widget states to the widgets in the form.
         """
         self.formWidget.setDefaultWidgetStatesVisibleTrue()
         self.applyWidgetStates(self.formWidget.default_widget_states)
 
-    def addToDictionaryDisplayOnParent(self, name):
+    def displayWidgetValueOnParent(self, name):
         """
         Adds `name` in a dictionary. The order in which names are added to this
         dictionary reflects the order in which the widgets are added to the parent.

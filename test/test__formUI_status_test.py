@@ -853,7 +853,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
         self.add_every_widget()
         for key in self.list_all_widgets:
-            self.form.addToDictionaryDisplayOnParent(key)
+            self.form.displayWidgetValueOnParent(key)
 
         self.form_without_parent = AdvancedFormDialog()
 

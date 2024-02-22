@@ -29,7 +29,7 @@ class FormExample(FormWidget):
         # finally add to the form widget
         dialog.insertWidget(0, 'input_title', QtWidgets.QLabel("Input Values: "))
         dialog.insertWidget(1, 'input1', qwidget, qlabel)
-        dialog.addToDictionaryDisplayOnParent('input1')
+        dialog.displayWidgetValueOnParent('input1')
 
         # add input 2 as QComboBox
         qlabel = QtWidgets.QLabel(dialog.groupBox)
@@ -41,7 +41,7 @@ class FormExample(FormWidget):
         qwidget.setEnabled(True)
         # finally add to the form widget
         dialog.addWidget(qwidget, qlabel, 'input2')
-        dialog.addToDictionaryDisplayOnParent('input2')
+        dialog.displayWidgetValueOnParent('input2')
         dialog.addWidget(QtWidgets.QLabel("Example Vertical Layout Text"), layout="vertical")
 
         # store a reference
