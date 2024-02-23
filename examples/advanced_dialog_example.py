@@ -1,69 +1,47 @@
 import sys
-
 from PySide2 import QtWidgets
-
 from eqt.ui.FormDialog import AdvancedFormDialog
 from eqt.ui.UIFormWidget import FormWidget
 
-
-class FormExample(FormWidget):
-    def __init__(self, parent=None):
-        FormWidget.__init__(self, parent)
-
-        pb = QtWidgets.QPushButton(self)
-        pb.setText("Open Advanced Dialog")
-        pb.clicked.connect(lambda: self.openFormDialog())
-        self.addSpanningWidget(pb, 'buttadv')
-        pb2 = QtWidgets.QPushButton(self)
-        pb2.setText("b2")
-        self.addSpanningWidget(pb2, 'buttadv2')
-        dialog = AdvancedFormDialog(parent=self, title='Example', parent_button_name='buttadv')
-
-        dialog.Ok.clicked.connect(lambda: self.accepted())
-        # Example on how to add elements to the FormDialog
-        # add input 1 as QLineEdit
-        qlabel = QtWidgets.QLabel(dialog.groupBox)
-        qlabel.setText("Input 1: ")
-        qwidget = QtWidgets.QLineEdit(dialog.groupBox)
-        qwidget.setClearButtonEnabled(True)
-        # finally add to the form widget
-        dialog.insertWidget(0, 'input_title', QtWidgets.QLabel("Input Values: "))
-        dialog.insertWidget(1, 'input1', qwidget, qlabel)
-        dialog.displayWidgetValueOnParent('input1')
-
-        # add input 2 as QComboBox
-        qlabel = QtWidgets.QLabel(dialog.groupBox)
-        qlabel.setText("Input 2: ")
-        qwidget = QtWidgets.QComboBox(dialog.groupBox)
-        qwidget.addItem("option 1")
-        qwidget.addItem("option 2")
-        qwidget.setCurrentIndex(0)
-        qwidget.setEnabled(True)
-        # finally add to the form widget
-        dialog.addWidget(qwidget, qlabel, 'input2')
-        dialog.displayWidgetValueOnParent('input2')
-        dialog.addWidget(QtWidgets.QLabel("Example Vertical Layout Text"), layout="vertical")
-
-        # store a reference
-        self.dialog = dialog
-        self.dialog.onCancel = self.rejected
-        self.show()
-
-    def openFormDialog(self):
-        self.dialog.exec()
-
-    def accepted(self):
-        print(self.dialog.widgets['input1_field'].text())
-        print(self.dialog.widgets['input2_field'].currentText())
-        self.dialog.close()
-
-    def rejected(self):
-        print("rejected")
-
+def run_example():
+    parent = FormWidget(parent=None)
+    # open advanced dialog button
+    pb = QtWidgets.QPushButton(parent)
+    pb.setText("Open Advanced Dialog")
+    pb.clicked.connect(lambda: advanced_dialog.exec())
+    parent.addSpanningWidget(pb, 'button_advanced')
+    # extra button
+    extra_button = QtWidgets.QPushButton(parent)
+    extra_button.setText("Extra button")
+    parent.addSpanningWidget(extra_button, 'extra_button')
+    # create dialog
+    advanced_dialog = AdvancedFormDialog(parent=parent, title='Example', parent_button_name='button_advanced')
+    # widget 0
+    advanced_dialog.insertWidget(0, 'input_title', QtWidgets.QLabel("Input Values: "))
+    # widget 1
+    qlabel = QtWidgets.QLabel(advanced_dialog.groupBox)
+    qlabel.setText("Widget 1: ")
+    qwidget = QtWidgets.QLineEdit(advanced_dialog.groupBox)
+    advanced_dialog.insertWidget(1, 'widget1', qwidget, qlabel)
+    # widget 2
+    qlabel = QtWidgets.QLabel(advanced_dialog.groupBox)
+    qlabel.setText("Widget 2: ")
+    qwidget = QtWidgets.QComboBox(advanced_dialog.groupBox)
+    qwidget.addItem("option A")
+    qwidget.addItem("option B")
+    qwidget.setCurrentIndex(0)
+    qwidget.setEnabled(True)
+    advanced_dialog.addWidget(qwidget, qlabel, 'widget2')
+    # add to parent list
+    advanced_dialog.displayWidgetValueOnParent('widget1')
+    advanced_dialog.displayWidgetValueOnParent('widget2')
+    # show
+    parent.show()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-
-    window = FormExample()
-
+    run_example()
     sys.exit(app.exec_())
+
+
+
