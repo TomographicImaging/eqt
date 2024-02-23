@@ -395,12 +395,16 @@ class AdvancedFormDialog(FormDialog):
         """
         for index, name in enumerate(self.display_on_parent, start=1):
             widget_row = self.parent_button_row + index if self.parent_button_row != -1 else -1
-            value = str(self.getSavedWidgetStates()[f'{name}_field']['value'])
+            value = self.getSavedWidgetStates()[f'{name}_field']['value']
+            qwidget = self.getWidget(name, 'field')
+            if isinstance(qwidget, QtWidgets.QComboBox):
+                value = qwidget.itemText(value)
             if f'{name}_field' not in self.dialog_parent.getWidgets():
                 label = str(self.getSavedWidgetStates()[f'{name}_label']['value'])
-                self.dialog_parent.insertWidget(widget_row, name, QtWidgets.QLabel(value), label)
+                self.dialog_parent.insertWidget(widget_row, name, QtWidgets.QLabel(str(value)),
+                                                label)
             else:
-                self.dialog_parent.getWidget(name, 'field').setText(value)
+                self.dialog_parent.getWidget(name, 'field').setText(str(value))
 
     def _removeWidgetsFromParent(self):
         """

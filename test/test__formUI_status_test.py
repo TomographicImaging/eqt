@@ -45,9 +45,12 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
     @property
     def list_all_widgets(self):
+        combobox_widget = QtWidgets.QComboBox()
+        combobox_list = ['choice 1', 'choice 2']
+        combobox_widget.addItems(combobox_list)
         list_all_widgets = {
             'label': QtWidgets.QLabel('test label'),
-            'checkBox': QtWidgets.QCheckBox('test checkbox'), 'comboBox': QtWidgets.QComboBox(),
+            'checkBox': QtWidgets.QCheckBox('test checkbox'), 'comboBox': combobox_widget,
             'doubleSpinBox': QtWidgets.QDoubleSpinBox(), 'spinBox': QtWidgets.QSpinBox(),
             'slider': QtWidgets.QSlider(), 'uiSliderWidget': UISliderWidget(QtWidgets.QLabel()),
             'radioButton': QtWidgets.QRadioButton('test radio button'),
@@ -901,17 +904,29 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
             self.set_state(i)
             self.form.open()
             self.click_Ok()
-            parent_states = self.form_parent.getAllWidgetStates()
-            for name in self.list_all_widgets:
-                self.assertEqual(parent_states[f'{name}_field']['value'],
-                                 str(self.exampleState[i][f'{name}_value']))
-                self.assertEqual(parent_states[f'{name}_label']['value'], name)
+            self._test_parent_state(i)
         # 3.
         self.form.open()
         self.click_default_button()
         self.click_Ok()
         parent_states = self.form_parent.getAllWidgetStates()
         self.assertEqual(parent_states, parent_initial_states)
+
+    def _test_parent_state(self, i):
+        """
+        Gets the parent widget states and compares them with the expected states.
+        If the value in the parent originated from the ComboBox in the advanced dialog,
+        it is converted to its corresponding index in the comboBox before comparison.
+        """
+        parent_states = self.form_parent.getAllWidgetStates()
+        for name in self.list_all_widgets:
+            if isinstance(self.list_all_widgets[name], QtWidgets.QComboBox):
+                value = parent_states[f'{name}_field']['value']
+                parent_states[f'{name}_field']['value'] = str(
+                    self.form.getWidget(name, 'field').findText(value))
+            self.assertEqual(parent_states[f'{name}_field']['value'],
+                             str(self.exampleState[i][f'{name}_value']))
+            self.assertEqual(parent_states[f'{name}_label']['value'], name)
 
     def test_dialog_cancel_button_behaviour(self):
         """
@@ -947,20 +962,12 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.form.open()
         self.set_state(1)
         self.click_Cancel()
-        parent_states = self.form_parent.getAllWidgetStates()
-        for name in self.list_all_widgets:
-            self.assertEqual(parent_states[f'{name}_field']['value'],
-                             str(self.exampleState[0][f'{name}_value']))
-            self.assertEqual(parent_states[f'{name}_label']['value'], name)
+        self._test_parent_state(0)
         # 4.
         self.form.open()
         self.click_default_button()
         self.click_Cancel()
-        parent_states = self.form_parent.getAllWidgetStates()
-        for key in self.list_all_widgets.keys():
-            self.assertEqual(parent_states[f'{key}_field']['value'],
-                             str(self.exampleState[0][f'{key}_value']))
-            self.assertEqual(parent_states[f'{key}_label']['value'], key)
+        self._test_parent_state(0)
 
     def test_dialog_default_button_behaviour(self):
         """
