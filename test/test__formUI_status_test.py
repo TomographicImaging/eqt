@@ -78,12 +78,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         for key in self.list_all_widgets:
             form.addWidget(self.list_all_widgets[key], key, key)
 
-    def add_every_spanning_widget(self):
-        """Generate every spanning widget and add it to the form."""
-        form = self.form
-        for key in self.list_all_widgets:
-            form.addSpanningWidget(self.list_all_widgets[key], f'{key}_spanning')
-
     def add_two_widgets(self):
         """Generate two widgets and add them to `self.simple_form`"""
         form = self.simple_form
@@ -478,6 +472,163 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         """Check that the state of all widgets is returned"""
         self.assertEqual(self.simple_form.getAllWidgetStates(), self.state_simple_form)
 
+class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
+    def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+        """
+        self.form = FormWidget()
+        self.add_every_widget()
+        self.simple_form = FormWidget()
+        self.add_two_widgets()
+        self.layout = self.form.uiElements['groupBoxFormLayout']
+
+    def test_get_name_and_role_from_key_or_widget(self):
+        """
+        Checks that the method `_getNameAndRoleFromKey` returns the correct name and role in
+        all widgets.
+        """
+        for name in self.list_all_widgets:
+            for role in {'field', 'label'}:
+                name_role = name + '_' + role
+                name_c, role_c = self.form._getNameAndRoleFromKey(name_role)
+                self.assertEqual(name_c, name)
+                self.assertEqual(role_c, role)
+                name_c, role_c = self.form._getNameAndRoleFromWidget(
+                    self.form.getWidget(name, role))
+                self.assertEqual(name_c, name)
+                self.assertEqual(role_c, role)
+
+    def test_getWidgetState_returns_QLabel_value(self):
+        """Check that the value of the QLabel is saved to the state"""
+        initial_label_value = 'test label'
+        self.assertEqual(self.form.getWidgetState('label_field')['value'], initial_label_value)
+
+        final_label_value = 'final test label'
+        self.form.getWidget('label').setText(final_label_value)
+        self.assertEqual(self.form.getWidgetState('label_field')['value'], final_label_value)
+
+    def test_saveAllWidgetStates(self):
+        """Check that the state of all widgets is saved to the state variable"""
+        self.simple_form.saveAllWidgetStates()
+        self.assertEqual(self.simple_form.widget_states, self.state_simple_form)
+
+    def test_restoreAllSavedWidgetStates(self):
+        """Check that the state of all widgets is restored from the state variable"""
+        state_to_restore = self.state_simple_form
+        self.simple_form.widget_states = self.state_simple_form
+        self.simple_form.restoreAllSavedWidgetStates()
+
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox').isChecked(),
+            state_to_restore['checkBox_field']['value'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox').isEnabled(),
+            state_to_restore['checkBox_field']['enabled'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox').isVisible(),
+            state_to_restore['checkBox_field']['visible'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox', 'label').text(),
+            state_to_restore['checkBox_label']['value'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox', 'label').isEnabled(),
+            state_to_restore['checkBox_label']['enabled'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox', 'label').isVisible(),
+            state_to_restore['checkBox_label']['visible'])
+        self.assertEqual(
+            self.simple_form.getWidget('label').text(), state_to_restore['label_field']['value'])
+        self.assertEqual(
+            self.simple_form.getWidget('label').isEnabled(),
+            state_to_restore['label_field']['enabled'])
+        self.assertEqual(
+            self.simple_form.getWidget('label').isVisible(),
+            state_to_restore['label_field']['visible'])
+        self.assertEqual(
+            self.simple_form.getWidget('label', 'label').text(),
+            state_to_restore['label_label']['value'])
+        self.assertEqual(
+            self.simple_form.getWidget('label', 'label').isEnabled(),
+            state_to_restore['label_label']['enabled'])
+        self.assertEqual(
+            self.simple_form.getWidget('label', 'label').isVisible(),
+            state_to_restore['label_label']['visible'])
+
+class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
+    def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+        """
+        self.form = FormDockWidget()
+        self.add_every_widget()
+        self.simple_form = FormDockWidget()
+        self.add_two_widgets()
+        self.layout = self.form.widget().uiElements['groupBoxFormLayout']
+
+    def test_form_init_title(self):
+        """Tests if the FormDockWidget is created correctly with or without the title argument."""
+        FormDockWidget()
+        FormDockWidget(title=None)
+        FormDockWidget(title='title')
+
+    def test_getWidgetState_returns_QLabel_value(self):
+        """Check that the value of the QLabel is saved to the state"""
+        initial_label_value = 'test label'
+        self.assertEqual(self.form.getWidgetState('label_field')['value'], initial_label_value)
+
+        final_label_value = 'final test label'
+        self.form.getWidget('label').setText(final_label_value)
+        self.assertEqual(self.form.getWidgetState('label_field')['value'], final_label_value)
+
+    def test_saveAllWidgetStates(self):
+        """Check that the state of all widgets is saved to the state variable"""
+        self.simple_form.saveAllWidgetStates()
+        self.assertEqual(self.simple_form.widget().widget_states, self.state_simple_form)
+
+    def test_restoreAllSavedWidgetStates(self):
+        """Check that the state of all widgets is restored from the state variable"""
+        state_to_restore = self.state_simple_form
+        self.simple_form.widget().widget_states = self.state_simple_form
+        self.simple_form.restoreAllSavedWidgetStates()
+
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox').isChecked(),
+            state_to_restore['checkBox_field']['value'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox').isEnabled(),
+            state_to_restore['checkBox_field']['enabled'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox').isVisible(),
+            state_to_restore['checkBox_field']['visible'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox', 'label').text(),
+            state_to_restore['checkBox_label']['value'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox', 'label').isEnabled(),
+            state_to_restore['checkBox_label']['enabled'])
+        self.assertEqual(
+            self.simple_form.getWidget('checkBox', 'label').isVisible(),
+            state_to_restore['checkBox_label']['visible'])
+        self.assertEqual(
+            self.simple_form.getWidget('label').text(), state_to_restore['label_field']['value'])
+        self.assertEqual(
+            self.simple_form.getWidget('label').isEnabled(),
+            state_to_restore['label_field']['enabled'])
+        self.assertEqual(
+            self.simple_form.getWidget('label').isVisible(),
+            state_to_restore['label_field']['visible'])
+        self.assertEqual(
+            self.simple_form.getWidget('label', 'label').text(),
+            state_to_restore['label_label']['value'])
+        self.assertEqual(
+            self.simple_form.getWidget('label', 'label').isEnabled(),
+            state_to_restore['label_label']['enabled'])
+        self.assertEqual(
+            self.simple_form.getWidget('label', 'label').isVisible(),
+            state_to_restore['label_label']['visible'])
 
 class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
@@ -487,7 +638,6 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         """
         self.form = FormDialog()
         self.add_every_widget()
-        self.add_every_spanning_widget()
         self.simple_form = FormDialog()
         self.add_two_widgets()
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
@@ -515,7 +665,7 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
             self.form.addWidget(self.list_all_widgets[key], qlabel=None, name=None,
                                 layout='vertical')
 
-    def test_dialog_buttons_default_behaviour(self):
+    def test_Ok_and_Cancel_button_behaviour(self):
         # create the states dictionary
         self.set_state(1)
         states1 = self.form.getAllWidgetStates()
@@ -676,190 +826,19 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
-
-
-class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
-    def setUp(self):
-        """
-        Set up the test environment by initialising the necessary objects and widgets.
-        This method is executed before each test case.
-        """
-        self.form = FormWidget()
-        self.add_every_widget()
-        self.add_every_spanning_widget()
-        self.simple_form = FormWidget()
-        self.add_two_widgets()
-        self.layout = self.form.uiElements['groupBoxFormLayout']
-
-    def test_get_name_and_role_from_key_or_widget(self):
-        """
-        Checks that the method `_getNameAndRoleFromKey` returns the correct name and role in
-        all widgets.
-        """
-        for name in self.list_all_widgets:
-            for role in {'field', 'label'}:
-                name_role = name + '_' + role
-                name_c, role_c = self.form._getNameAndRoleFromKey(name_role)
-                self.assertEqual(name_c, name)
-                self.assertEqual(role_c, role)
-                name_c, role_c = self.form._getNameAndRoleFromWidget(
-                    self.form.getWidget(name, role))
-                self.assertEqual(name_c, name)
-                self.assertEqual(role_c, role)
-
-    def test_getWidgetState_returns_QLabel_value(self):
-        """Check that the value of the QLabel is saved to the state"""
-        initial_label_value = 'test label'
-        self.assertEqual(self.form.getWidgetState('label_field')['value'], initial_label_value)
-
-        final_label_value = 'final test label'
-        self.form.getWidget('label').setText(final_label_value)
-        self.assertEqual(self.form.getWidgetState('label_field')['value'], final_label_value)
-
-    def test_saveAllWidgetStates(self):
-        """Check that the state of all widgets is saved to the state variable"""
-        self.simple_form.saveAllWidgetStates()
-        self.assertEqual(self.simple_form.widget_states, self.state_simple_form)
-
-    def test_restoreAllSavedWidgetStates(self):
-        """Check that the state of all widgets is restored from the state variable"""
-        state_to_restore = self.state_simple_form
-        self.simple_form.widget_states = self.state_simple_form
-        self.simple_form.restoreAllSavedWidgetStates()
-
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox').isChecked(),
-            state_to_restore['checkBox_field']['value'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox').isEnabled(),
-            state_to_restore['checkBox_field']['enabled'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox').isVisible(),
-            state_to_restore['checkBox_field']['visible'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox', 'label').text(),
-            state_to_restore['checkBox_label']['value'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox', 'label').isEnabled(),
-            state_to_restore['checkBox_label']['enabled'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox', 'label').isVisible(),
-            state_to_restore['checkBox_label']['visible'])
-        self.assertEqual(
-            self.simple_form.getWidget('label').text(), state_to_restore['label_field']['value'])
-        self.assertEqual(
-            self.simple_form.getWidget('label').isEnabled(),
-            state_to_restore['label_field']['enabled'])
-        self.assertEqual(
-            self.simple_form.getWidget('label').isVisible(),
-            state_to_restore['label_field']['visible'])
-        self.assertEqual(
-            self.simple_form.getWidget('label', 'label').text(),
-            state_to_restore['label_label']['value'])
-        self.assertEqual(
-            self.simple_form.getWidget('label', 'label').isEnabled(),
-            state_to_restore['label_label']['enabled'])
-        self.assertEqual(
-            self.simple_form.getWidget('label', 'label').isVisible(),
-            state_to_restore['label_label']['visible'])
-
-
-class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
-    def setUp(self):
-        """
-        Set up the test environment by initialising the necessary objects and widgets.
-        This method is executed before each test case.
-        """
-        self.form = FormDockWidget()
-        self.add_every_widget()
-        self.add_every_spanning_widget()
-        self.simple_form = FormDockWidget()
-        self.add_two_widgets()
-        self.layout = self.form.widget().uiElements['groupBoxFormLayout']
-
-    def test_form_init_title(self):
-        """Tests if the FormDockWidget is created correctly with or without the title argument."""
-        FormDockWidget()
-        FormDockWidget(title=None)
-        FormDockWidget(title='title')
-
-    def test_getWidgetState_returns_QLabel_value(self):
-        """Check that the value of the QLabel is saved to the state"""
-        initial_label_value = 'test label'
-        self.assertEqual(self.form.getWidgetState('label_field')['value'], initial_label_value)
-
-        final_label_value = 'final test label'
-        self.form.getWidget('label').setText(final_label_value)
-        self.assertEqual(self.form.getWidgetState('label_field')['value'], final_label_value)
-
-    def test_saveAllWidgetStates(self):
-        """Check that the state of all widgets is saved to the state variable"""
-        self.simple_form.saveAllWidgetStates()
-        self.assertEqual(self.simple_form.widget().widget_states, self.state_simple_form)
-
-    def test_restoreAllSavedWidgetStates(self):
-        """Check that the state of all widgets is restored from the state variable"""
-        state_to_restore = self.state_simple_form
-        self.simple_form.widget().widget_states = self.state_simple_form
-        self.simple_form.restoreAllSavedWidgetStates()
-
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox').isChecked(),
-            state_to_restore['checkBox_field']['value'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox').isEnabled(),
-            state_to_restore['checkBox_field']['enabled'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox').isVisible(),
-            state_to_restore['checkBox_field']['visible'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox', 'label').text(),
-            state_to_restore['checkBox_label']['value'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox', 'label').isEnabled(),
-            state_to_restore['checkBox_label']['enabled'])
-        self.assertEqual(
-            self.simple_form.getWidget('checkBox', 'label').isVisible(),
-            state_to_restore['checkBox_label']['visible'])
-        self.assertEqual(
-            self.simple_form.getWidget('label').text(), state_to_restore['label_field']['value'])
-        self.assertEqual(
-            self.simple_form.getWidget('label').isEnabled(),
-            state_to_restore['label_field']['enabled'])
-        self.assertEqual(
-            self.simple_form.getWidget('label').isVisible(),
-            state_to_restore['label_field']['visible'])
-        self.assertEqual(
-            self.simple_form.getWidget('label', 'label').text(),
-            state_to_restore['label_label']['value'])
-        self.assertEqual(
-            self.simple_form.getWidget('label', 'label').isEnabled(),
-            state_to_restore['label_label']['enabled'])
-        self.assertEqual(
-            self.simple_form.getWidget('label', 'label').isVisible(),
-            state_to_restore['label_label']['visible'])
-
-
+        
 class AdvancedFormDialogStatusTest(FormDialogStatusTest):
     def setUp(self):
         """
         Set up the test environment by initialising the necessary objects and widgets.
         This method is executed before each test case.
-        """
-        self.form_parent = FormWidget()
-        self.form_parent.addSpanningWidget(QtWidgets.QPushButton("Open Advanced Dialog"),
-                                           'butt_adv')
-        self.form = AdvancedFormDialog(parent=self.form_parent, title='Advanced form dialog',
-                                       parent_button_name='butt_adv')
 
+        An advanced form dialog with no parent is created.
+        """
+        self.form = AdvancedFormDialog(title='Advanced form dialog without parent')
         self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
         self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
         self.add_every_widget()
-        for key in self.list_all_widgets:
-            self.form.displayWidgetValueOnParent(key)
-
-        self.form_without_parent = AdvancedFormDialog()
-
         self.simple_form = AdvancedFormDialog()
         self.add_two_widgets()
 
@@ -877,11 +856,61 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         the ok and cancel buttons."""
         index = self.form.getIndexFromVerticalLayout(self.form.default_button)
         self.assertEqual(index, 1)
-        index = self.form_without_parent.getIndexFromVerticalLayout(
-            self.form_without_parent.default_button)
-        self.assertEqual(index, 1)
 
-    def test_dialog_ok_button_behaviour(self):
+    def test_default_button_behaviour(self):
+        """
+        Tests the behavior of the default button on the advanced dialog.
+
+        This test case opens the dialog, updates the widgets, clicks the default
+        button and then the Ok button. Verifies that the widgets in the dialog
+        are set to their default states.
+        """
+        self.form.open()
+        self.set_state(0)
+        self.click_default_button()
+        self.click_Ok()
+        self.assertEqual(self.form.getSavedWidgetStates(), self.form.getDefaultWidgetStates())
+
+class AdvancedFormDialogWithParentStatusTest(AdvancedFormDialogStatusTest):
+    def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+
+        An advanced form dialog with parent is created.
+        """
+        self.form_parent = FormWidget()
+        self.form_parent.addSpanningWidget(QtWidgets.QPushButton("Open Advanced Dialog"),
+                                           'button_advanced')
+        self.form = AdvancedFormDialog(parent=self.form_parent, title='Advanced form dialog',
+                                       parent_button_name='button_advanced')
+
+        self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
+        self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
+        self.add_every_widget()
+        for key in self.list_all_widgets:
+            self.form.displayWidgetValueOnParent(key)
+
+        self.simple_form = AdvancedFormDialog()
+        self.add_two_widgets()
+
+    def _test_parent_state(self, i):
+        """
+        Gets the parent widget states and compares them with the expected states.
+        If the value in the parent originated from the ComboBox in the advanced dialog,
+        it is converted to its corresponding index in the comboBox before comparison.
+        """
+        parent_states = self.form_parent.getAllWidgetStates()
+        for name in self.list_all_widgets:
+            if isinstance(self.list_all_widgets[name], QtWidgets.QComboBox):
+                value = parent_states[f'{name}_field']['value']
+                parent_states[f'{name}_field']['value'] = str(
+                    self.form.getWidget(name, 'field').findText(value))
+            self.assertEqual(parent_states[f'{name}_field']['value'],
+                             str(self.exampleState[i][f'{name}_value']))
+            self.assertEqual(parent_states[f'{name}_label']['value'], name)
+
+    def test_ok_button_behaviour(self):
         """
         Tests the behavior of the Ok button on the advanced dialog.
 
@@ -912,23 +941,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         parent_states = self.form_parent.getAllWidgetStates()
         self.assertEqual(parent_states, parent_initial_states)
 
-    def _test_parent_state(self, i):
-        """
-        Gets the parent widget states and compares them with the expected states.
-        If the value in the parent originated from the ComboBox in the advanced dialog,
-        it is converted to its corresponding index in the comboBox before comparison.
-        """
-        parent_states = self.form_parent.getAllWidgetStates()
-        for name in self.list_all_widgets:
-            if isinstance(self.list_all_widgets[name], QtWidgets.QComboBox):
-                value = parent_states[f'{name}_field']['value']
-                parent_states[f'{name}_field']['value'] = str(
-                    self.form.getWidget(name, 'field').findText(value))
-            self.assertEqual(parent_states[f'{name}_field']['value'],
-                             str(self.exampleState[i][f'{name}_value']))
-            self.assertEqual(parent_states[f'{name}_label']['value'], name)
-
-    def test_dialog_cancel_button_behaviour(self):
+    def test_cancel_button_behaviour(self):
         """
         Tests the behavior of the Cancel button on the advanced dialog.
 
@@ -969,7 +982,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.click_Cancel()
         self._test_parent_state(0)
 
-    def test_dialog_default_button_behaviour(self):
+
         """
         Tests the behavior of the default button on the advanced dialog.
 
@@ -982,3 +995,42 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.click_default_button()
         self.click_Ok()
         self.assertEqual(self.form.getSavedWidgetStates(), self.form.getDefaultWidgetStates())
+
+    def test_button_argument(self):
+        "Checks that the widgets are placed in the expected rows under the parent button."
+        self.set_state(0)
+        self.click_Ok()
+        for index, name in enumerate(self.list_all_widgets, start=1):
+            row = self.form_parent.getWidgetRow(name)
+            self.assertEqual(row, self.form.parent_button_row + index)
+
+class AdvancedFormDialogNoButtonArgumentStatusTest(AdvancedFormDialogWithParentStatusTest):
+    def setUp(self):
+        """
+        Set up the test environment by initialising the necessary objects and widgets.
+        This method is executed before each test case.
+
+        An advanced form dialog with parent and no argument `parent_button_name` is created.
+        """
+        self.form_parent = FormWidget()
+        self.form_parent.addSpanningWidget(QtWidgets.QPushButton("Open Advanced Dialog"),
+                                           'button_advanced')
+        self.form = AdvancedFormDialog(parent=self.form_parent, title='Advanced form dialog')
+
+        self.layout = self.form.formWidget.uiElements['groupBoxFormLayout']
+        self.vertical_layout = self.form.formWidget.uiElements['verticalLayout']
+        self.add_every_widget()
+        for name in self.list_all_widgets:
+            self.form.displayWidgetValueOnParent(name)
+
+        self.simple_form = AdvancedFormDialog()
+        self.add_two_widgets()
+
+    def test_button_argument(self):
+        "Checks that the widgets are placed in the expected row in the parent layout."
+        num_initial = self.form_parent.getNumWidgets()
+        self.set_state(0)
+        self.click_Ok()
+        for index, name in enumerate(self.list_all_widgets):
+            row = self.form_parent.getWidgetRow(name)
+            self.assertEqual(row, num_initial +  index)
