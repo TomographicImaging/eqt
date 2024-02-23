@@ -472,6 +472,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         """Check that the state of all widgets is returned"""
         self.assertEqual(self.simple_form.getAllWidgetStates(), self.state_simple_form)
 
+
 class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         """
@@ -556,6 +557,7 @@ class FormWidgetStateTest(FormsCommonTests, unittest.TestCase):
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
 
+
 class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
         """
@@ -629,6 +631,7 @@ class FormDockWidgetStateTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
+
 
 class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
     def setUp(self):
@@ -826,7 +829,8 @@ class FormDialogStatusTest(FormsCommonTests, unittest.TestCase):
         self.assertEqual(
             self.simple_form.getWidget('label', 'label').isVisible(),
             state_to_restore['label_label']['visible'])
-        
+
+
 class AdvancedFormDialogStatusTest(FormDialogStatusTest):
     def setUp(self):
         """
@@ -870,6 +874,7 @@ class AdvancedFormDialogStatusTest(FormDialogStatusTest):
         self.click_default_button()
         self.click_Ok()
         self.assertEqual(self.form.getSavedWidgetStates(), self.form.getDefaultWidgetStates())
+
 
 class AdvancedFormDialogWithParentStatusTest(AdvancedFormDialogStatusTest):
     def setUp(self):
@@ -981,8 +986,6 @@ class AdvancedFormDialogWithParentStatusTest(AdvancedFormDialogStatusTest):
         self.click_default_button()
         self.click_Cancel()
         self._test_parent_state(0)
-
-
         """
         Tests the behavior of the default button on the advanced dialog.
 
@@ -1003,6 +1006,7 @@ class AdvancedFormDialogWithParentStatusTest(AdvancedFormDialogStatusTest):
         for index, name in enumerate(self.list_all_widgets, start=1):
             row = self.form_parent.getWidgetRow(name)
             self.assertEqual(row, self.form.parent_button_row + index)
+
 
 class AdvancedFormDialogNoButtonArgumentStatusTest(AdvancedFormDialogWithParentStatusTest):
     def setUp(self):
@@ -1033,4 +1037,4 @@ class AdvancedFormDialogNoButtonArgumentStatusTest(AdvancedFormDialogWithParentS
         self.click_Ok()
         for index, name in enumerate(self.list_all_widgets):
             row = self.form_parent.getWidgetRow(name)
-            self.assertEqual(row, num_initial +  index)
+            self.assertEqual(row, num_initial + index)
