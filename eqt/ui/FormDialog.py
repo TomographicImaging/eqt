@@ -333,11 +333,12 @@ class FormDialog(QtWidgets.QDialog):
 class AdvancedFormDialog(FormDialog):
     def __init__(self, parent=None, title=None, parent_button_name=None):
         """
-        Constructs an advanced form dialog that adds widgets in its parent.
+        Constructs an advanced form dialog that adds widgets on its parent.
 
-        Creates a form dialog and adds a default button to the vertical layout.
-        The default button is located between the form layout and the buttons 'ok' and 'cancel'.
-        The default button is connected to the '_setDefaultValues' method.
+        To add widgets to the parent, call `displayWidgetValueOnParent` after creating an instance
+        of the class. The advanced form dialog has a default button in its vertical layout, which
+        is located between the form layout and the buttons 'ok' and 'cancel'. This button sets the
+        widgets to their default values.
 
         Parameters
         ----------
@@ -352,7 +353,7 @@ class AdvancedFormDialog(FormDialog):
             otherwise they are added at the end.
         """
         self.dialog_parent = parent
-        self.display_on_parent_dict = {}
+        self.display_on_parent = []
         if parent_button_name is None:
             self.parent_button_row = -1
         elif parent is None:
@@ -372,13 +373,13 @@ class AdvancedFormDialog(FormDialog):
         """
         Called when the "Ok" button is clicked in the advanced dialog.
 
-        It saves the widget states, calls `onOk`, sets the default widgets
-        to visible and closes the dialog. Adds or updates or removes widgets from the
-        parent based on the values of the widgets in the advanced dialog.
+        Calls the super-class method `_onOk`, sets the default widgets
+        to visible, and adds/updates/removes widgets from the
+        parent depending on the the widgets in the advanced dialog.
         """
         super()._onOk()
         self.formWidget.setDefaultWidgetStatesVisibleTrue()
-        if self.display_on_parent_dict:
+        if self.display_on_parent:
             if self.getSavedWidgetStates() == self.getDefaultWidgetStates():
                 self._removeWidgetsFromParent()
             else:
@@ -388,11 +389,11 @@ class AdvancedFormDialog(FormDialog):
         """
         Adds or updates widgets in the parent form.
 
-        This method iterates over the display_on_parent_dict and adds the widgets to the parent
+        This method iterates over the display_on_parent and adds the widgets to the parent
         form. If a widget already exists in the parent form, it is updated with the most current
         value set in the advanced dialog.
         """
-        for index, name in enumerate(self.display_on_parent_dict, start=1):
+        for index, name in enumerate(self.display_on_parent, start=1):
             widget_row = self.parent_button_row + index if self.parent_button_row != -1 else -1
             value = str(self.getSavedWidgetStates()[f'{name}_field']['value'])
             if f'{name}_field' not in self.dialog_parent.getWidgets():
@@ -405,10 +406,10 @@ class AdvancedFormDialog(FormDialog):
         """
         Removes widgets from the parent form.
 
-        This method iterates over the display_on_parent_dict and removes
+        This method iterates over the display_on_parent and removes
         the widgets from the parent.
         """
-        for name in self.display_on_parent_dict:
+        for name in self.display_on_parent:
             if f'{name}_field' in self.dialog_parent.getWidgets():
                 self.dialog_parent.removeWidget(name)
 
@@ -416,17 +417,17 @@ class AdvancedFormDialog(FormDialog):
         """
         Sets the widgets in the advanced dialog to their default states.
 
-        Makes the default widget states visible, as often the default states are saved while the widgets are not visible.
-        Applies the widget states to the widgets in the form.
+        Makes the default widget states visible, as often the default states are saved while the
+        widgets are not visible. Applies the widget states to the widgets in the form.
         """
         self.formWidget.setDefaultWidgetStatesVisibleTrue()
         self.applyWidgetStates(self.formWidget.default_widget_states)
 
     def displayWidgetValueOnParent(self, name):
         """
-        Adds `name` in a dictionary. The order in which names are added to this
-        dictionary reflects the order in which the widgets are added to the parent.
-        Raises an error if the parent of the advanced dialog is None.
+        Adds `name` in a list. The order in which names are added to this
+        list reflects the order in which the widgets are added to the parent.
+        Raises an error if the parent of the advanced dialog is `None`.
 
         Parameters
         ----------
@@ -436,4 +437,4 @@ class AdvancedFormDialog(FormDialog):
         if self.dialog_parent is None:
             raise KeyError('''The advanced-dialog parent is None.
                            Set the parent if you want to add widgets to it.''')
-        self.display_on_parent_dict[name] = None
+        self.display_on_parent.append(name)

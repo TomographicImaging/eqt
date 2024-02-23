@@ -1,8 +1,8 @@
+from warnings import warn
+
 from PySide2 import QtWidgets
 
 from .UISliderWidget import UISliderWidget
-
-from warnings import warn
 
 
 class UIFormWidget:
@@ -465,10 +465,11 @@ class UIFormWidget:
         To later restore the states, use `restoreAllSavedWidgetStates()`.
         '''
         self.widget_states = self.getAllWidgetStates()
-    
+
     def getWidgetStates(self):
         '''Deprecated. Use `getSavedWidgetStates`.'''
-        warn('The method `getWidgetStates` is deprecated, use `getSavedWidgetStates`.', DeprecationWarning, stacklevel=2)
+        warn('The method `getWidgetStates` is deprecated, use `getSavedWidgetStates`.',
+             DeprecationWarning, stacklevel=2)
         return self.getSavedWidgetStates()
 
     def getSavedWidgetStates(self):
