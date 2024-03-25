@@ -203,7 +203,6 @@ class FormDialog(QtWidgets.QDialog):
     def getWidget(self, name, role='field'):
         '''
         Returns the widget by the name with which it has been added.
-
         By default it returns the widget that is the field in the form.
         The user can get the label by specifying the role to be label.
         Raises ValueError if the role is not field or label.
@@ -242,8 +241,12 @@ class FormDialog(QtWidgets.QDialog):
         self.formWidget.saveAllWidgetStates()
 
     def getWidgetStates(self):
-        '''Returns the saved widget states.'''
+        '''Deprecated. Use `getSavedWidgetStates`.'''
         return self.formWidget.getWidgetStates()
+
+    def getSavedWidgetStates(self):
+        '''Returns the saved widget states.'''
+        return self.formWidget.getSavedWidgetStates()
 
     def getDefaultWidgetStates(self):
         '''Returns the saved default widget states.'''
@@ -325,3 +328,117 @@ class FormDialog(QtWidgets.QDialog):
                   'widget2': {'value': 2, 'enabled': False, 'visible': False, 'widget_row': 1}}.
         '''
         return self.formWidget.applyWidgetStates(states)
+
+
+class AdvancedFormDialog(FormDialog):
+    def __init__(self, parent=None, title=None, parent_button_name=None):
+        """
+        Constructs an advanced form dialog that adds widgets on its parent.
+
+        To add widgets to the parent, call `displayWidgetValueOnParent` after creating an instance
+        of the class. The advanced form dialog has a default button in its vertical layout, which
+        is located between the form layout and the buttons 'ok' and 'cancel'. This button sets the
+        widgets to their default values.
+
+        Parameters
+        ----------
+        parent : UIFormWidget or None, optional
+            The parent widget of the advanced form dialog.
+            If None, the dialog is created without a parent.
+        title : str or None, optional
+            The title of the advanced form dialog.
+        parent_button_name : str or None, optional
+            The name of the button opening the advanced form dialog in the parent.
+            If passed, the extra widgets will be added under this button in the parent,
+            otherwise they are added at the end.
+        """
+        self.dialog_parent = parent
+        self.display_on_parent = []
+        if parent_button_name is None:
+            self.parent_button_row = -1
+        elif parent is None:
+            raise ValueError(
+                'The parent is None. Set the parent if you want to set the parent button name.')
+        else:
+            self.parent_button_row = self.dialog_parent.getWidgetRow(parent_button_name)
+
+        FormDialog.__init__(self, parent, title)
+
+        # add default button to vertical layout
+        self.default_button = QtWidgets.QPushButton("Set default values")
+        self.insertWidgetToVerticalLayout(1, self.default_button)
+        self.default_button.clicked.connect(lambda: self._setDefaultValues())
+
+    def _onOk(self):
+        """
+        Called when the "Ok" button is clicked in the advanced dialog.
+
+        Calls the super-class method `_onOk`, sets the default widgets
+        to visible, and adds/updates/removes widgets from the
+        parent depending on the the widgets in the advanced dialog.
+        """
+        super()._onOk()
+        self.formWidget.setDefaultWidgetStatesVisibleTrue()
+        if self.display_on_parent:
+            if self.getSavedWidgetStates() == self.getDefaultWidgetStates():
+                self._removeWidgetsFromParent()
+            else:
+                self._addOrUpdateWidgetsInParent()
+
+    def _addOrUpdateWidgetsInParent(self):
+        """
+        Adds or updates widgets in the parent form.
+
+        This method iterates over the display_on_parent and adds the widgets to the parent
+        form. If a widget already exists in the parent form, it is updated with the most current
+        value set in the advanced dialog.
+        """
+        for index, name in enumerate(self.display_on_parent, start=1):
+            widget_row = self.parent_button_row + index if self.parent_button_row != -1 else -1
+            value = self.getSavedWidgetStates()[f'{name}_field']['value']
+            qwidget = self.getWidget(name, 'field')
+            if isinstance(qwidget, QtWidgets.QComboBox):
+                value = qwidget.itemText(value)
+            if f'{name}_field' not in self.dialog_parent.getWidgets():
+                label = str(self.getSavedWidgetStates()[f'{name}_label']['value'])
+                self.dialog_parent.insertWidget(widget_row, name, QtWidgets.QLabel(str(value)),
+                                                label)
+            else:
+                self.dialog_parent.getWidget(name, 'field').setText(str(value))
+
+    def _removeWidgetsFromParent(self):
+        """
+        Removes widgets from the parent form.
+
+        This method iterates over the display_on_parent and removes
+        the widgets from the parent.
+        """
+        for name in self.display_on_parent:
+            if f'{name}_field' in self.dialog_parent.getWidgets():
+                self.dialog_parent.removeWidget(name)
+
+    def _setDefaultValues(self):
+        """
+        Sets the widgets in the advanced dialog to their default states.
+
+        Makes the default widget states visible, as often the default states are saved while the
+        widgets are not visible. Applies the widget states to the widgets in the form.
+        """
+        self.formWidget.setDefaultWidgetStatesVisibleTrue()
+        self.applyWidgetStates(self.formWidget.default_widget_states)
+
+    def displayWidgetValueOnParent(self, name):
+        """
+        Adds `name` in a list. The order in which names are added to this
+        list reflects the order in which the widgets are added to the parent.
+        Raises an error if the parent of the advanced dialog is `None`.
+
+        Parameters
+        ----------
+        name : str
+            The name of the widget in the advanced dialog to be displayed in the parent.
+        """
+        if self.dialog_parent is None:
+            raise KeyError('''The advanced-dialog parent is None.
+                           Set the parent if you want to add widgets to it.''')
+        self.display_on_parent.append(name)
