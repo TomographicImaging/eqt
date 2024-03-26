@@ -5,7 +5,9 @@ from pytest import skip
 
 from eqt.ui import FormDialog
 
-if any(os.getenv(var, '0').lower() in ('1', 'true') for var in ('CONDA_BUILD', 'CI')):
+is_ci = any(os.getenv(var, '0').lower() in ('1', 'true') for var in ('CONDA_BUILD', 'CI'))
+
+if is_ci:
 
     def skip_ci(_):
         def inner(*_, **__):

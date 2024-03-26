@@ -1,3 +1,5 @@
+from warnings import warn
+
 from PySide2 import QtWidgets
 
 from .UISliderWidget import UISliderWidget
@@ -465,6 +467,12 @@ class UIFormWidget:
         self.widget_states = self.getAllWidgetStates()
 
     def getWidgetStates(self):
+        '''Deprecated. Use `getSavedWidgetStates`.'''
+        warn('The method `getWidgetStates` is deprecated, use `getSavedWidgetStates`.',
+             DeprecationWarning, stacklevel=2)
+        return self.getSavedWidgetStates()
+
+    def getSavedWidgetStates(self):
         '''Returns the saved widget states.'''
         return self.widget_states
 
@@ -623,8 +631,12 @@ class FormDockWidget(QtWidgets.QDockWidget):
         self.widget().saveAllWidgetStates()
 
     def getWidgetStates(self):
-        '''Returns the saved widget states.'''
+        '''Deprecated. Use `getSavedWidgetStates`.'''
         return self.widget().getWidgetStates()
+
+    def getSavedWidgetStates(self):
+        '''Returns the saved widget states.'''
+        return self.widget().getSavedWidgetStates()
 
     def getDefaultWidgetStates(self):
         '''Returns the saved default widget states.'''
