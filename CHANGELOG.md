@@ -1,4 +1,5 @@
 # Version 1.0.0
+- Update "pre-commit-config.yaml" (#136)
 - Change order of widget states (#129)
 - Adds the class `AdvancedDialogForm` & tests/example;
 deprecates `getWidgetStates` to be `getSavedWidgetStates` (#124)
