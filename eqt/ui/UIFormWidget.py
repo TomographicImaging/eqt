@@ -318,10 +318,7 @@ class UIFormWidget:
                 raise KeyError(f'No widget associated with the dictionary key `{name_role}`.')
         else:
             name, role = self._getNameAndRoleFromWidget(widget)
-        widget_state = {
-            'enabled': widget.isEnabled(), 'visible': widget.isVisible(),
-            'widget_row': self.getWidgetRow(name, role)}
-
+        widget_state = {}
         if isinstance(widget, QtWidgets.QLabel):
             widget_state['value'] = widget.text()
         elif isinstance(widget, (QtWidgets.QCheckBox, QtWidgets.QPushButton)):
@@ -338,6 +335,9 @@ class UIFormWidget:
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
+        widget_state['enabled'] = widget.isEnabled()
+        widget_state['visible'] = widget.isVisible()
+        widget_state['widget_row'] = self.getWidgetRow(name, role)
         return widget_state
 
     def _getNameAndRoleFromKey(self, key):
@@ -488,7 +488,7 @@ class FormDockWidget(QtWidgets.QDockWidget):
     def __init__(self, parent=None, title=''):
         if title is None:
             title = ''
-        super().__init__(self, title, parent)
+        super().__init__(title, parent)
         widget = FormWidget(parent)
         self.setWidget(widget)
         if title is not None:

@@ -5,9 +5,9 @@ from . import UIFormFactory
 
 class FormDialog(QtWidgets.QDialog):
     def __init__(self, parent=None, title=None):
-        super().__init__(self, parent)
+        super().__init__(parent)
 
-        self.buttonBox = bb = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok
+        self.buttonBox = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok
                                                          | QtWidgets.QDialogButtonBox.Cancel)
         self.formWidget = UIFormFactory.getQWidget(parent=self)
         # set the layout of the dialog
@@ -16,9 +16,9 @@ class FormDialog(QtWidgets.QDialog):
         if title is not None:
             self.setWindowTitle(title)
         # add button box to the UI
-        self.formWidget.uiElements['verticalLayout'].addWidget(bb)
-        bb.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self._onOk)
-        bb.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self._onCancel)
+        self.formWidget.uiElements['verticalLayout'].addWidget(self.buttonBox)
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self._onOk)
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self._onCancel)
 
     @property
     def Ok(self):
@@ -164,10 +164,10 @@ class FormDialog(QtWidgets.QDialog):
         '''
         return self.formWidget.uiElements['verticalLayout'].indexOf(widget)
 
-    def removeWidget(self, widget):
+    def removeWidget(self, name):
         '''
         Removes the widget with the specified name from the form layout.
-        This method delete the qwidget, and qlabel if present, from the widgets dictionary
+        This method deletes the qwidget, and qlabel if present, from the widgets dictionary
         and sets their parent to `None`.
 
         Parameters
