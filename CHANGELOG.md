@@ -1,4 +1,5 @@
 # Version 1.0.0
+- Change order of widget states (#129)
 - Adds the class `AdvancedDialogForm` & tests/example;
 deprecates `getWidgetStates` to be `getSavedWidgetStates` (#124)
 - Edits 'contributing.md' and 'README.md (#131, #133)
