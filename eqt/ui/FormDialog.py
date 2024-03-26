@@ -8,7 +8,7 @@ class FormDialog(QtWidgets.QDialog):
         super().__init__(parent)
 
         self.buttonBox = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok
-                                                         | QtWidgets.QDialogButtonBox.Cancel)
+                                                    | QtWidgets.QDialogButtonBox.Cancel)
         self.formWidget = UIFormFactory.getQWidget(parent=self)
         # set the layout of the dialog
         self.setLayout(self.formWidget.uiElements['verticalLayout'])
