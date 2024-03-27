@@ -31,7 +31,7 @@ or run pre-commit on a single file by specifying its file path
 ```sh
 pre-commit run --files [path]
 ```
-The [.pre-commit-config.yaml](./.pre-commit-config.yaml) config file indicates the repositories and the hooks which will automatically applied.
+The [.pre-commit-config.yaml](./.pre-commit-config.yaml) config file indicates the repositories and the hooks which will be applied automatically.
 
 ## Continuous integration
 
