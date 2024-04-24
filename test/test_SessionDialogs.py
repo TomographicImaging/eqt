@@ -83,19 +83,17 @@ class TestSessionDirectorySelectionDialog(unittest.TestCase):
             sdsd.getWidget("select_session_directory").text(),
             "Select a session directory to save and retrieve all Test App Sessions:")
 
-    @patch("PySide2.QtWidgets.QFileDialog.getExistingDirectory")
+    @patch("qtpy.QtWidgets.QFileDialog.getExistingDirectory")
     def test_browse_for_dir_button_makes_file_dialog_for_getting_dir(self, mock_dialog_call):
         sdsd = SessionDirectorySelectionDialog()
         sdsd.browse_for_dir()
         mock_dialog_call.assert_called_once()
 
-    @patch("PySide2.QtWidgets.QFileDialog.getExistingDirectory")
-    def test_browse_button_calls_browse_for_dir(self, mock_dialog_call):
+    @patch.object(SessionDirectorySelectionDialog, "browse_for_dir")
+    def test_browse_button_calls_browse_for_dir(self, mock_browse):
         sdsd = SessionDirectorySelectionDialog()
-        sdsd.browse_for_dir = unittest.mock.Mock()
-        QFileDialog.getExistingDirectory = unittest.mock.Mock()
         sdsd.getWidget("selected_dir").click()
-        sdsd.browse_for_dir.assert_called_once()
+        mock_browse.assert_called_once()
 
     def test_browse_dialog_updates_session_directory_label(self):
         example_dir = "C:\\Users\\test_user\\Documents\\test_dir"
