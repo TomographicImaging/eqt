@@ -1,8 +1,8 @@
 import sys
 
 import qdarkstyle
-from PySide2 import QtWidgets
 from qdarkstyle.dark.palette import DarkPalette
+from qtpy import QtWidgets
 
 from eqt.ui.ReOrderableListWidget import ReOrderableListWidget
 

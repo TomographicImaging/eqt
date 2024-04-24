@@ -1,7 +1,7 @@
 import os
 
-from PySide2 import QtWidgets
-from PySide2.QtWidgets import (
+from qtpy import QtWidgets
+from qtpy.QtWidgets import (
     QCheckBox,
     QComboBox,
     QFileDialog,

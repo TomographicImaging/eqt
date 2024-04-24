@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from PySide2.QtWidgets import QFileDialog
+from qtpy.QtWidgets import QFileDialog
 
 from eqt.ui.SessionDialogs import (
     AppSettingsDialog,

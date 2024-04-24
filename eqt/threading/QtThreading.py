@@ -7,8 +7,8 @@ import sys
 # https://www.geeksforgeeks.org/migrate-pyqt5-app-to-pyside2
 import traceback
 
-from PySide2 import QtCore
-from PySide2.QtCore import Slot
+from qtpy import QtCore
+from qtpy.QtCore import Slot
 
 
 class Worker(QtCore.QRunnable):
