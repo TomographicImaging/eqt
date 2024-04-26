@@ -1,4 +1,4 @@
-# Version 1.0.1
+# Version 2.0.0
 
 - Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
 
