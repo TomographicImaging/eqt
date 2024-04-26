@@ -1,3 +1,7 @@
+# Version 1.0.1
+
+- Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
+
 # Version 1.0.0
 - Update "pre-commit-config.yaml" (#136)
 - Change order of widget states (#129)
