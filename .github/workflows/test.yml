@@ -18,6 +18,7 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
     - run: pip install -U .[dev]
+    - run: pip install pyside2
     - run: pytest
   deploy:
     needs: [test]
