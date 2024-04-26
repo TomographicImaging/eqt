@@ -1,7 +1,7 @@
 import os
 
-from PySide2 import QtWidgets
 from pytest import skip
+from qtpy import QtWidgets
 
 from eqt.ui import FormDialog
 

@@ -18,6 +18,8 @@ Via `pip`/`conda`/`mamba`, i.e. any of the following:
 - `conda install -c conda-forge eqt`
 - `mamba install -c conda-forge eqt`
 
+Note that `eqt` use the [`qtpy`](https://github.com/spyder-ide/qtpy) abstraction layer for Qt bindings, so can work with either PySide or PyQt bindings. Therefore the package does not depend on either. If the environment does not already have a Qt binding then the user must install either `pyside2` or `pyqt5`.
+
 ## Examples
 
 See the [`examples`](examples) directory, e.g. how to launch a `QDialog` with a form inside using `eqt`'s [`QWidget`](examples/dialog_example.py) or [`FormDialog`](examples/dialog_example_2.py).

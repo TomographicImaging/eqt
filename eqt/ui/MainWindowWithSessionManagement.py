@@ -4,8 +4,8 @@ import shutil
 from datetime import datetime
 from functools import partial
 
-from PySide2.QtGui import QCloseEvent, QKeySequence
-from PySide2.QtWidgets import QAction
+from qtpy.QtGui import QCloseEvent, QKeySequence
+from qtpy.QtWidgets import QAction
 
 from ..io import zip_directory
 from ..threading import Worker

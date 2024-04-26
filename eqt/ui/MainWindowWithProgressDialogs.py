@@ -1,9 +1,9 @@
 import qdarkstyle
-from PySide2.QtCore import QSettings, QThreadPool
-from PySide2.QtGui import QKeySequence
-from PySide2.QtWidgets import QAction, QMainWindow
 from qdarkstyle.dark.palette import DarkPalette
 from qdarkstyle.light.palette import LightPalette
+from qtpy.QtCore import QSettings, QThreadPool
+from qtpy.QtGui import QKeySequence
+from qtpy.QtWidgets import QAction, QMainWindow
 
 from .ProgressTimerDialog import ProgressTimerDialog
 from .SessionDialogs import AppSettingsDialog
