@@ -10,6 +10,7 @@ jobs:
     strategy:
       matrix:
         python: [3.7, 3.11]
+        qtbindings: ['PySide2', 'PyQt5']
     steps:
     - uses: actions/checkout@v4
       with:
@@ -17,8 +18,9 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python }}
+        qt-bindings: ${{ matrix.qtbindings }}
     - run: pip install -U .[dev]
-    - run: pip install pyside2
+    - run: pip install ${{ matrix.qtbindings }}
     - run: pytest
   deploy:
     needs: [test]
