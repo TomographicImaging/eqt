@@ -1,3 +1,6 @@
+# Version x.x.x
+- Remove question mark from form dialog (#150)
+
 # Version 1.0.0
 - Update "pre-commit-config.yaml" (#136)
 - Change order of widget states (#129)
