@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtCore
 
 from . import UIFormFactory
 
@@ -6,6 +6,7 @@ from . import UIFormFactory
 class FormDialog(QtWidgets.QDialog):
     def __init__(self, parent=None, title=None):
         super().__init__(parent)
+        self.setWindowFlag(QtCore.Qt.WindowContextHelpButtonHint, False)
 
         self.buttonBox = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok
                                                     | QtWidgets.QDialogButtonBox.Cancel)
