@@ -6,8 +6,8 @@ from datetime import datetime
 from unittest import mock
 from unittest.mock import patch
 
-from PySide2.QtCore import QSettings, QThreadPool
-from PySide2.QtWidgets import QMenu, QMenuBar
+from qtpy.QtCore import QSettings, QThreadPool
+from qtpy.QtWidgets import QMenu, QMenuBar
 
 import eqt
 from eqt.io import zip_directory

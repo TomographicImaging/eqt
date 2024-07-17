@@ -1,4 +1,4 @@
-from PySide2 import QtCore, QtWidgets
+from qtpy import QtCore, QtWidgets
 
 
 class ReOrderableListWidget(QtWidgets.QTableWidget):

@@ -1,7 +1,7 @@
 import sys
 
-from PySide2 import QtWidgets
-from PySide2.QtWidgets import QApplication
+from qtpy import QtWidgets
+from qtpy.QtWidgets import QApplication
 
 from eqt import __version__
 from eqt.ui.MainWindowWithSessionManagement import MainWindowWithSessionManagement
