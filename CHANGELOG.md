@@ -1,4 +1,5 @@
 # Version x.x.x
+- Edit next and prev in UIMultiStepWidget #151
 - Remove question mark from form dialog (#150)
 
 # Version 1.0.0
