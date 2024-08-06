@@ -4,9 +4,13 @@ from PySide2.QtWidgets import QHBoxLayout, QPushButton, QWidget
 
 from eqt.ui.NoBorderScrollArea import NoBorderScrollArea
 
+from . import is_ci, skip
+
+if is_ci:
+    skip("Running in CI (no GUI)", allow_module_level=True)
+
 
 class TestNoBorderScrollArea(unittest.TestCase):
-
     def setUp(self):
         '''Initialises a NoBorderScrollArea widget and adds it to a layout.'''
         self.main_widget = QWidget()
