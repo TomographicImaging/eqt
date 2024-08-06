@@ -1,6 +1,9 @@
 import unittest
+
+from PySide2.QtWidgets import QHBoxLayout, QPushButton, QWidget
+
 from eqt.ui.NoBorderScrollArea import NoBorderScrollArea
-from PySide2.QtWidgets import QApplication, QHBoxLayout, QPushButton, QWidget
+
 
 class TestNoBorderScrollArea(unittest.TestCase):
 
@@ -23,4 +26,5 @@ class TestNoBorderScrollArea(unittest.TestCase):
         '''
         Tests the init method of the NoBorderScrollArea class.
         '''
-        self.assertIsNotNone(self.scroll_area_widget, "NoBorderScrollArea widget should be created")
+        self.assertIsNotNone(self.scroll_area_widget,
+                             "NoBorderScrollArea widget should be created")
