@@ -7,14 +7,6 @@ from eqt.ui.NoBorderScrollArea import NoBorderScrollArea
 
 class TestNoBorderScrollArea(unittest.TestCase):
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     '''If not present already, creates a QApplication.'''
-    #     if not QApplication.instance():
-    #         app = QApplication([])
-    #     else:
-    #         app = QApplication.instance()
-
     def setUp(self):
         '''Initialises a NoBorderScrollArea widget and adds it to a layout.'''
         self.main_widget = QWidget()
