@@ -5,7 +5,6 @@ from PySide2.QtWidgets import QPushButton, QScrollArea, QWidget
 
 
 class NoBorderScrollArea(QScrollArea):
-    """Note: move this class to eqt."""
     def __init__(self, widget, parent=None):
         """Creates an instance of a QScrollArea and sets its border to none.
         Sets its widget to resizable."""
