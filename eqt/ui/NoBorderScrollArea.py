@@ -10,8 +10,8 @@ class NoBorderScrollArea(QScrollArea):
         Sets its widget to resizable. Due to a bug in `qdarkstyle`, the PushButtons in the
         widget do not inherit the right style. The init applies `qdarkstyle` to all the buttons
         present in the widget when the object is created. Any button added to the widget after the
-        init is invoked will not be styled as expected. The method `apply_qdarkstyle_to_buttons`
-        needs to be invoked after the object is instanced."""
+        init is invoked will not be styled as expected. In this case, the method `apply_qdarkstyle_to_buttons`
+        would need to be invoked by the user after the object is instanced."""
         super().__init__(parent)
         self.setStyleSheet("QScrollArea { border: none; }")
         self.setWidgetResizable(True)
