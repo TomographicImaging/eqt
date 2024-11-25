@@ -1,9 +1,0 @@
-# This creates an environment with all of the prerequisites for eqt
-name: eqt_env
-channels:
-  - conda-forge
-dependencies:
-  - python
-  - pip
-  - pyside2
-  - qdarkstyle

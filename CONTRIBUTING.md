@@ -2,12 +2,34 @@
 Contribute to the repository by opening a pull request.
 
 ## Local
-Develop code locally by cloning the source code and installing it.
+Develop code locally by cloning the source code, creating a development environment and installing it.
+
+1. Install [mamba](https://mamba.readthedocs.io/en/latest/installation.html), then launch the `Miniforge Prompt`.
+
+2. Clone the `main` branch of `eqt` locally, and navigate into where it has been cloned:
 
 ```sh
 # Clone (download) source code
-git clone git@github.com:TomographicImaging/eqt
+git clone git@github.com:TomographicImaging/eqt.git
 cd eqt
+```
+
+3. Create the mamba environment using the following command:
+
+```sh
+# Create environment
+mamba env create -f recipe/eqt_env.yml
+```
+
+4. Activate the environment:
+
+```sh
+mamba activate eqt_env
+```
+
+5. Install the dependencies:
+
+```sh
 # Install test dependencies
 pip install .[dev]
 ```
