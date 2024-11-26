@@ -4,7 +4,7 @@ Contribute to the repository by opening a pull request.
 ## Local
 Develop code locally by cloning the source code, creating a development environment and installing it.
 
-1. Install [mamba](https://mamba.readthedocs.io/en/latest/installation.html), then launch the `Miniforge Prompt`.
+1. Install [mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html), then launch the `Miniforge Prompt`.
 
 2. Clone the `main` branch of `eqt` locally, and navigate into where it has been cloned:
 
