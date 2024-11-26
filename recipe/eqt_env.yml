@@ -1,0 +1,9 @@
+name: eqt_env
+channels:
+  - conda-forge
+  - https://software.repos.intel.com/python/conda
+dependencies:
+  - python
+  - pip
+  - pyside2
+  - qdarkstyle
