@@ -1,3 +1,6 @@
+# Version x.x.x
+- Change SessionDirectorySelectionDialog `.open()` call to `.exec()` (#163)
+
 # Version 1.0.1
 - Add NoBorderScrollArea, example and tests (#155)
 - Edit next and prev in UIMultiStepWidget (#151)
