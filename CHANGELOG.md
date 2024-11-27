@@ -1,7 +1,6 @@
-# Version 1.0.2
-- Rename /scripts directory to /recipe
-- Add additional channel to list of channels in eqt_env.yml
-- Update CONTRIBUTING.md with detailed installation instructions
+# Version x.x.x
+- Rename /scripts directory to /recipe (#161)
+- Update CONTRIBUTING.md with detailed installation instructions (#161)
 
 # Version 1.0.1
 - Add NoBorderScrollArea, example and tests (#155)
