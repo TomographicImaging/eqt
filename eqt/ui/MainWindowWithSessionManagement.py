@@ -252,7 +252,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
             session_folder_selection_dialog.selected_dir = os.path.split(
                 self.sessions_directory)[0]
 
-        session_folder_selection_dialog.open()
+        session_folder_selection_dialog.exec()
 
         return session_folder_selection_dialog
 
