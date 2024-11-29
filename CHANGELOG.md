@@ -1,6 +1,7 @@
 # Version x.x.x
 - Rename /scripts directory to /recipe (#161)
 - Update CONTRIBUTING.md with detailed installation instructions (#161)
+- Limit Python version to <3.12 in conda recipe (#161)
 
 # Version 1.0.1
 - Add NoBorderScrollArea, example and tests (#155)
