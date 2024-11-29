@@ -2,7 +2,7 @@ name: eqt_env
 channels:
   - conda-forge
 dependencies:
-  - python=<3.12
+  - python <3.12
   - pip
   - pyside2
   - qdarkstyle
