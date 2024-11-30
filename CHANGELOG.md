@@ -1,4 +1,7 @@
 # Version x.x.x
+- Rename `/scripts` directory to `/recipe` (#161)
+- Update `CONTRIBUTING.md` with detailed installation and contribution instructions (#161)
+- Limit Python version to <3.12 in conda recipe (#161)
 - Change SessionDirectorySelectionDialog `.open()` call to `.exec()` (#163)
 
 # Version 1.0.1
