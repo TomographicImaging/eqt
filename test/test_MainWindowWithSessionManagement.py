@@ -25,6 +25,7 @@ class TestMainWindowWithSessionManagementInit(unittest.TestCase):
         # Testing the init method, so don't call init in the setUp
         self.title = "title"
         self.app_name = "App Name"
+        MainWindowWithSessionManagement.createSessionsDirectorySelectionDialog = mock.MagicMock()
 
     def test_init_sets_title_and_app_name(self):
         smw = MainWindowWithSessionManagement(self.title, self.app_name)
@@ -191,7 +192,8 @@ class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase
         self.title = "title"
         self.app_name = "app_name"
         self.smw = MainWindowWithSessionManagement(self.title, self.app_name)
-        os.mkdir("Test Folder")
+        if not os.path.isdir("Test Folder"):
+            os.mkdir("Test Folder")
         os.chdir("Test Folder")
         os.mkdir("Session Folder")
         self.smw.sessions_directory = "."
