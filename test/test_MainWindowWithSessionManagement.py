@@ -25,6 +25,7 @@ class TestMainWindowWithSessionManagementInit(unittest.TestCase):
         # Testing the init method, so don't call init in the setUp
         self.title = "title"
         self.app_name = "App Name"
+        MainWindowWithSessionManagement.createSessionsDirectorySelectionDialog = mock.MagicMock()
 
     def test_init_sets_title_and_app_name(self):
         smw = MainWindowWithSessionManagement(self.title, self.app_name)
@@ -191,8 +192,9 @@ class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase
         self.title = "title"
         self.app_name = "app_name"
         self.smw = MainWindowWithSessionManagement(self.title, self.app_name)
-        os.mkdir("Test Folder")
-        os.chdir("Test Folder")
+        if not os.path.isdir("Test_Folder"):
+            os.mkdir("Test_Folder")
+        os.chdir("Test_Folder")
         os.mkdir("Session Folder")
         self.smw.sessions_directory = "."
 
@@ -225,7 +227,7 @@ class TestMainWindowWithSessionManagementCreateSessionSelector(unittest.TestCase
 
     def tearDown(self):
         os.chdir("..")
-        shutil.rmtree("Test Folder")
+        shutil.rmtree("Test_Folder")
 
 
 @skip_ci
@@ -264,8 +266,8 @@ class TestCreateSessionFolder(unittest.TestCase):
 
         self.smw = MainWindowWithSessionManagement(self.title, self.app_name)
 
-        os.mkdir("Test Folder")
-        os.chdir("Test Folder")
+        os.mkdir("Test_Folder")
+        os.chdir("Test_Folder")
         self.date_time = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
 
     def test_createSessionFolder(self):
@@ -278,7 +280,7 @@ class TestCreateSessionFolder(unittest.TestCase):
 
     def tearDown(self):
         os.chdir("..")
-        shutil.rmtree("Test Folder")
+        shutil.rmtree("Test_Folder")
 
 
 @skip_ci
@@ -292,8 +294,8 @@ class TestLoadSessionConfig(unittest.TestCase):
     def setUp(self):
         '''
         Create a session zip file, which contains a session.json file'''
-        os.mkdir("Test Folder")
-        os.chdir("Test Folder")
+        os.mkdir("Test_Folder")
+        os.chdir("Test_Folder")
 
         self.title = "title"
         self.app_name = "app_name"
@@ -322,10 +324,10 @@ class TestLoadSessionConfig(unittest.TestCase):
     def tearDown(self):
         os.chdir("..")
         try:
-            shutil.rmtree("Test Folder")
+            shutil.rmtree("Test_Folder")
         except Exception:
             os.chdir("..")
-            shutil.rmtree("Test Folder")
+            shutil.rmtree("Test_Folder")
 
 
 @skip_ci
@@ -354,13 +356,13 @@ class TestSaveSession(unittest.TestCase):
         mock_zip_directory.assert_called_once_with(self.smw.current_session_folder, False)
 
     def test_moveSessionFolder(self):
-        os.mkdir("Test Folder")
+        os.mkdir("Test_Folder")
         new_folder_to_save_to = os.path.join(
-            "Test Folder", self.session_name + "_" + datetime.now().strftime("%d-%m-%Y-%H-%M"))
+            "Test_Folder", self.session_name + "_" + datetime.now().strftime("%d-%m-%Y-%H-%M"))
 
         # Make the current session folder, with a test file inside it:
 
-        self.smw.sessions_directory = os.path.abspath("Test Folder")
+        self.smw.sessions_directory = os.path.abspath("Test_Folder")
         current_session_folder = os.path.join(self.smw.sessions_directory,
                                               "Current Session Folder")
         os.mkdir(current_session_folder)
@@ -384,7 +386,7 @@ class TestSaveSession(unittest.TestCase):
             raise e
 
         finally:
-            shutil.rmtree("Test Folder")
+            shutil.rmtree("Test_Folder")
 
     def test_saveSessionConfigToJson(self):
 
@@ -401,8 +403,8 @@ class TestSaveSession(unittest.TestCase):
 
         self.smw.getSessionConfig = mock.MagicMock(return_value=config)
 
-        os.mkdir("Test Folder")
-        os.chdir("Test Folder")
+        os.mkdir("Test_Folder")
+        os.chdir("Test_Folder")
         self.smw.current_session_folder = "."
         try:
             self.smw.saveSessionConfigToJson()
@@ -414,7 +416,7 @@ class TestSaveSession(unittest.TestCase):
             raise e
         finally:
             os.chdir("..")
-            shutil.rmtree("Test Folder")
+            shutil.rmtree("Test_Folder")
 
 
 @skip_ci
