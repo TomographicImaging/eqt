@@ -1,7 +1,7 @@
 import re
 
 import qdarkstyle
-from PySide2.QtWidgets import QPushButton, QScrollArea, QWidget
+from qtpy.QtWidgets import QPushButton, QScrollArea, QWidget
 
 
 class NoBorderScrollArea(QScrollArea):
