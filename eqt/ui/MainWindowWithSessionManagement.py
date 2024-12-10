@@ -337,7 +337,8 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
         date_time = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
         session_folder_name = f'{self.app_name}-{date_time}'
         session_folder_path = os.path.join(self.sessions_directory, session_folder_name)
-        os.mkdir(session_folder_path)
+        if not os.path.isdir(session_folder_path):
+            os.mkdir(session_folder_path)
         self.current_session_folder = os.path.abspath(session_folder_path)
 
     def loadSessionConfig(self, folder, **kwargs):

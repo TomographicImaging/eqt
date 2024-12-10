@@ -3,7 +3,7 @@
 - Rename `/scripts` directory to `/recipe` (#161)
 - Update `CONTRIBUTING.md` with detailed installation and contribution instructions (#161)
 - Limit Python version to <3.12 in conda recipe (#161)
-- Change SessionDirectorySelectionDialog `.open()` call to `.exec()` (#163)
+- Change SessionDirectorySelectionDialog `.open()` call to `.exec()` (#163, #165)
 
 # Version 1.0.1
 - Add NoBorderScrollArea, example and tests (#155)
