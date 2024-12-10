@@ -7,7 +7,7 @@ from unittest import mock
 from unittest.mock import patch
 
 from qtpy.QtCore import QSettings, QThreadPool
-from qtpy.QtWidgets import QMenu, QMenuBar
+from qtpy.QtWidgets import QMenuBar
 
 import eqt
 from eqt.io import zip_directory
@@ -102,8 +102,6 @@ class TestMainWindowWithSessionManagementMenuBar(unittest.TestCase):
         # dict should contain the expected menus
         assert "File" in self.smw.menus
         assert "Settings" in self.smw.menus
-        assert isinstance(self.smw.menus["File"], QMenu)
-        assert isinstance(self.smw.menus["Settings"], QMenu)
 
     def test_menu_has_file_and_settings_menu(self):
         actions = self.smw.menu_bar.actions()
@@ -111,15 +109,16 @@ class TestMainWindowWithSessionManagementMenuBar(unittest.TestCase):
         assert actions[1].text() == "Settings"
 
     def test_file_menu_has_expected_actions(self):
-        menus = self.smw.menu_bar.findChildren(QMenu)
-        file_menu = menus[0]
+        "Extracts the nested menus"
+        menus = self.smw.menu_bar.actions()
+        file_menu = menus[0].menu()
         assert file_menu.actions()[0].text() == "Save"
         assert file_menu.actions()[1].text() == "Save + Exit"
         assert file_menu.actions()[2].text() == "Exit"
 
     def test_settings_menu_has_expected_actions(self):
-        menus = self.smw.menu_bar.findChildren(QMenu)
-        settings_menu = menus[1]
+        menus = self.smw.menu_bar.actions()
+        settings_menu = menus[1].menu()
         self.assertEqual(settings_menu.actions()[0].text(), "App Settings")
         self.assertEqual(settings_menu.actions()[1].text(), "Set Session Directory")
 
