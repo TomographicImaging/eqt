@@ -1,3 +1,6 @@
+# Version 2.0.0
+- Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
+
 # Version 1.0.1
 - Add NoBorderScrollArea, example and tests (#155)
 - Edit next and prev in UIMultiStepWidget (#151)
