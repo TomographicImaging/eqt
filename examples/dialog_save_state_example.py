@@ -35,7 +35,7 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
         dialog.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
         dialog.addWidget(QtWidgets.QRadioButton('test 1'), 'RadioButton 1: ', 'radioButton')
-        dialog.addWidget(QtWidgets.QRadioButton('test 2'), 'RadioButton 2: ', 'radioButton')
+        dialog.addWidget(QtWidgets.QRadioButton('test 2'), 'RadioButton 2: ', 'radioButton_2')
         dialog.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
         dialog.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')
         dialog.addWidget(QtWidgets.QLineEdit('test'), 'LineEdit: ', 'lineEdit')
