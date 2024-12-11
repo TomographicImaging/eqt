@@ -1,6 +1,6 @@
 from warnings import warn
 
-from PySide2 import QtWidgets
+from qtpy import QtWidgets
 
 from .UISliderWidget import UISliderWidget
 

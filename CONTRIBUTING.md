@@ -32,6 +32,15 @@ cd eqt
 mamba env create -f recipe/eqt_env.yml
 ```
 
+`eqt` uses the [`qtpy`](https://github.com/spyder-ide/qtpy) abstraction layer for Qt bindings, meaning that it works with either PySide or PyQt bindings. Thus, `eqt_env` does not depend on either. The environment can be updated with either `pyside2` or `pyqt5`, as follows.
+```sh
+mamba env update --name eqt_env --file pyside_env.yml
+```
+or
+```sh
+mamba env update --name eqt_env --file pyqt_env.yml
+```
+
 4. Activate the environment:
 ```sh
 mamba activate eqt_env

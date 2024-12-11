@@ -1,8 +1,8 @@
 import sys
 from time import sleep
 
-from PySide2 import QtCore, QtWidgets
-from PySide2.QtCore import QThreadPool
+from qtpy import QtCore, QtWidgets
+from qtpy.QtCore import QThreadPool
 
 from eqt.threading import Worker
 from eqt.ui import ProgressTimerDialog

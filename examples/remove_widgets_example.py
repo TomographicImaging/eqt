@@ -1,6 +1,6 @@
 import sys
 
-from PySide2 import QtWidgets
+from qtpy import QtWidgets
 
 from eqt.ui import FormDialog, UIFormWidget
 

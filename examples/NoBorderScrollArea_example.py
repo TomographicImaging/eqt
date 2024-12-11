@@ -1,7 +1,7 @@
 import sys
 
-from PySide2 import QtWidgets
-from PySide2.QtWidgets import QPushButton
+from qtpy import QtWidgets
+from qtpy.QtWidgets import QPushButton
 
 from eqt.ui.NoBorderScrollArea import NoBorderScrollArea
 
