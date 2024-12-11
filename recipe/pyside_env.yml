@@ -1,0 +1,5 @@
+name: eqt_env
+channels:
+  - conda-forge
+dependencies:
+  - pyside2
