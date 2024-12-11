@@ -1,9 +1,20 @@
 # Version 2.0.0
-- Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
-- Rename `/scripts` directory to `/recipe` (#161)
-- Update `CONTRIBUTING.md` with detailed installation and contribution instructions (#161)
-- Limit Python version to <3.12 in conda recipe (#161)
+
+Bugfix:
 - Change SessionDirectorySelectionDialog `.open()` call to `.exec()` (#163, #165)
+
+Backend:
+- Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
+- Add environment yml files (#146)
+- Rename `/scripts` directory to `/recipe` (#161)
+
+Documentation:
+- Update `CONTRIBUTING.md` with detailed installation and contribution instructions (#161, #146)
+- Update README.md and add documentation file (#146)
+
+Dependencies:
+- Limit Python version to <3.12 in conda recipe (#161)
+
 
 # Version 1.0.1
 - Add NoBorderScrollArea, example and tests (#155)
