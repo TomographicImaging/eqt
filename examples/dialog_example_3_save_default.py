@@ -3,7 +3,7 @@ import sys
 import utilitiesForExamples as utex
 from PySide2 import QtWidgets
 
-from eqt.ui import UISliderWidget
+from eqt.ui import FormDialog
 
 
 class MainUI(QtWidgets.QMainWindow):
@@ -20,7 +20,7 @@ class MainUI(QtWidgets.QMainWindow):
         widg.setLayout(layout)
 
         self.setCentralWidget(widg)
-        self.uislider = UISliderWidget()
+        self.dialog = FormDialog(parent=self, title='Example')
         self.openFormDialog()
 
         self.show()
