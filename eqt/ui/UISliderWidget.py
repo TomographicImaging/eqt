@@ -6,7 +6,7 @@ class UISliderWidget(QSlider):
     '''Creates a Slider widget which updates
     a QLabel with its value (which may be scaled
     to a non-integer value by setting the scale_factor)'''
-    def __init__(self, dspinbox, scale_factor=1, parent=None):
+    def __init__(self, dspinbox, min=0.00, max=1.00, scale_factor=1, parent=None):
         QSlider.__init__(self)
         self.parent = parent
         self.scale_factor = scale_factor
@@ -20,9 +20,6 @@ class UISliderWidget(QSlider):
         self.sliderReleased.connect(self.update_dspinbox)
 
         self.dspinbox = dspinbox
-        self.dspinbox.setMinimum(0.00)
-        self.dspinbox.setMaximum(100.00)
-        self.dspinbox.setValue(0.00)
         self.dspinbox.editingFinished.connect(self.update_slider)
 
     def get_slider_value(self):
