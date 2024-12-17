@@ -1,4 +1,4 @@
-# Version x.x.x
+# Version 1.0.2
 - Rename `/scripts` directory to `/recipe` (#161)
 - Update `CONTRIBUTING.md` with detailed installation and contribution instructions (#161)
 - Limit Python version to <3.12 in conda recipe (#161)
