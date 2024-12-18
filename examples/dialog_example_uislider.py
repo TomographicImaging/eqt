@@ -29,7 +29,8 @@ class MainUI(QtWidgets.QMainWindow):
         # Example on how to add elements to the FormDialog
         # add input 1 as UISliderWidget and DoubleSpinBox
         dspinbox = QtWidgets.QDoubleSpinBox()
-        uislider = UISliderWidget.UISliderWidget(dspinbox)
+        uislider = UISliderWidget.UISliderWidget(dspinbox, minimum=0.00, maximum=10.00,
+                                                 step_size=1.00)
 
         # finally add to the form widget
         dialog.addWidget(uislider, 'Slider 1', 'input_slider')
@@ -42,8 +43,8 @@ class MainUI(QtWidgets.QMainWindow):
 
     def accepted(self):
         print("accepted")
-        print(self.dialog.widgets['input_slider_field'].value())
-        print(self.dialog.widgets['input_dspinbox_field'].value())
+        print(f"Slider Value: {self.dialog.widgets['input_slider_field'].value()}")
+        print(f"SpinBox Value: {self.dialog.widgets['input_dspinbox_field'].value()}")
         self.dialog.close()
 
     def rejected(self):
