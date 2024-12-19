@@ -12,13 +12,15 @@ class UISliderWidget(QSlider):
     line_edit : QLineEdit
     min_label : QLabel
     max_label : QLabel
-    min : float
-    max : float
+    minimum : float
+    maximum : float
     step_size : float
+    scale_factor : float
     '''
     def __init__(self, line_edit, min_label, max_label, minimum=0.0, maximum=1.0, scale_factor=1.0,
                  step_size=1.0):
         QSlider.__init__(self)
+
         self.line_edit = line_edit
         self.min_label = min_label
         self.max_label = max_label
@@ -40,7 +42,7 @@ class UISliderWidget(QSlider):
         self.sliderMoved.connect(self.update_line_edit)
         self.sliderReleased.connect(self.update_line_edit)
 
-        # Configure the Validator and QLineEdit
+        # Configure the QDoubleValidator and QLineEdit
         self.validator = QtGui.QDoubleValidator()
         self.validator.setBottom(self.minimum)
         self.validator.setTop(self.maximum)

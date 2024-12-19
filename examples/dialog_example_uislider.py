@@ -2,7 +2,7 @@ import sys
 
 from PySide2 import QtWidgets
 
-from eqt.ui import FormDialog, UISliderLineEditWidget, UISliderWidget
+from eqt.ui import FormDialog, UISliderLEditWidget, UISliderWidget
 
 
 class MainUI(QtWidgets.QMainWindow):
@@ -39,8 +39,8 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.addWidget(line_edit, '', 'input_line_edit1')
 
         # add input 2 as UISliderLineEditWidget
-        uislider = UISliderLineEditWidget.UISliderLineEditWidget(minimum=0.0, maximum=10.0,
-                                                                 step_size=2.0)
+        uislider = UISliderLEditWidget.UISliderLEditWidget(minimum=0.0, maximum=10.0,
+                                                           step_size=1.0)
 
         # add to the form widget
         dialog.addWidget(uislider, 'QSlider 2:', 'input_slider2')
