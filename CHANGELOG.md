@@ -1,3 +1,7 @@
+# Version x.x.x
+- Add `QDoubleSpinBox` support to `UISliderWidget` (#168)
+  + Breaks backwards compatability as `UISliderWidget` no longer accepts a `QLabel`
+
 # Version 1.0.2
 - Upgrade python to 3.8 in `test.yml` (#171)
 - Rename `/scripts` directory to `/recipe` (#161)
