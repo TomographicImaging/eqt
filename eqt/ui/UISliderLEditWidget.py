@@ -49,6 +49,7 @@ class UISliderLEditWidget(QWidget):
 
         # Connect the QLineEdit to the QSlider
         self.line_edit.textEdited.connect(self.update_slider)
+        self.line_edit.returnPressed.connect(self.update_slider)
 
         # Configure the min/max QLabels
         self.min_label = QLabel()

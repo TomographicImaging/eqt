@@ -6,23 +6,23 @@ class UISliderWidget(QSlider):
     '''Creates a Slider widget which updates
     a QLineEdit with its value (which may be scaled
     to a non-integer value by setting the scale_factor)
+    Also accepts a QLabel that is configured to
+    display the maximum value of the QSlider
 
     Parameters
     ----------
     line_edit : QLineEdit
-    min_label : QLabel
     max_label : QLabel
     minimum : float
     maximum : float
     step_size : float
     scale_factor : float
     '''
-    def __init__(self, line_edit, min_label, max_label, minimum=0.0, maximum=1.0, scale_factor=1.0,
+    def __init__(self, line_edit, max_label, minimum=0.0, maximum=1.0, scale_factor=1.0,
                  step_size=1.0):
         QSlider.__init__(self)
 
         self.line_edit = line_edit
-        self.min_label = min_label
         self.max_label = max_label
         self.minimum = minimum
         self.maximum = maximum
@@ -50,15 +50,17 @@ class UISliderWidget(QSlider):
         self.validator.setLocale(QtCore.QLocale("en_US"))
 
         self.line_edit.setValidator(self.validator)
-        self.line_edit.setText(str(minimum))
-        self.line_edit.setPlaceholderText(str(minimum))
+        self.line_edit.setText(str(self.minimum))
+        self.line_edit.setPlaceholderText(str(self.minimum))
 
         # Connect the QLineEdit to the QSlider
         self.line_edit.textEdited.connect(self.update_slider)
+        self.line_edit.returnPressed.connect(self.update_slider)
 
-        # Configure QLabels for minimum and maximum QSlider values
-        # self.min_label = min_label
-        # self.max_label = max_label
+        # Configure QLabel to show maximum QSlider value
+        self.max_label = max_label
+        self.max_label.setAlignment(QtCore.Qt.AlignRight)
+        self.max_label.setText(str(self.maximum))
 
     def get_slider_value(self):
         return self.value()
