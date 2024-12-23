@@ -31,7 +31,7 @@ class MainUI(QtWidgets.QMainWindow):
         line_edit = QtWidgets.QLineEdit()
         max_label = QtWidgets.QLabel()
         uislider = UISliderWidget.UISliderWidget(line_edit, max_label, minimum=0.0, maximum=100.0,
-                                                 step_size=1.0)
+                                                 scale_factor=10.0)
 
         # add to the form widget
         dialog.addWidget(uislider, 'QSlider 1:', 'input_slider1')

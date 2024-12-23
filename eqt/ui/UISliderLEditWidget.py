@@ -20,6 +20,7 @@ class UISliderLEditWidget(QWidget):
         self.maximum = maximum
         self.scale_factor = scale_factor
         self.step_size = step_size
+        self.tick_interval = self.step_size * self.scale_factor
 
         # Configure the QSlider
         self.slider = QSlider()
@@ -72,16 +73,16 @@ class UISliderLEditWidget(QWidget):
         return self.slider.value()
 
     def get_line_edit_value(self):
-        return float(self.line_edit.text())
+        return self.line_edit.text()
 
     def update_slider(self):
         state = self.validator.validate(self.line_edit.text(), 0)
         if state[0] == QtGui.QDoubleValidator.Acceptable:
-            line_edit_value = self.get_line_edit_value()
+            line_edit_value = float(self.get_line_edit_value())
             self.slider.setValue(line_edit_value)
         else:
             self.line_edit.setText(str(self.minimum))
-            line_edit_value = self.get_line_edit_value()
+            line_edit_value = float(self.get_line_edit_value())
             self.slider.setValue(line_edit_value)
 
     def update_line_edit(self):
