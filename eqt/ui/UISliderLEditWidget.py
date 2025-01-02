@@ -19,8 +19,7 @@ class UISliderLEditWidget(QWidget):
         self.minimum = minimum
         self.maximum = maximum
         self.scale_factor = scale_factor
-        self.step_size = step_size
-        self.tick_interval = self.step_size * self.scale_factor
+        self.step_size = step_size * self.scale_factor
 
         # Configure the QSlider
         self.slider = QSlider()
@@ -29,12 +28,12 @@ class UISliderLEditWidget(QWidget):
         self.slider.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider.setTickPosition(QSlider.TicksBelow)
         self.slider.setSingleStep(self.step_size)
-        self.slider.setTickInterval(self.step_size)
+        self.slider.setTickInterval(self.maximum * 0.25)
 
         # Connect the QSlider to the QLineEdit
-        self.slider.sliderPressed.connect(self.update_line_edit)
-        self.slider.sliderMoved.connect(self.update_line_edit)
-        self.slider.sliderReleased.connect(self.update_line_edit)
+        self.slider.sliderPressed.connect(self.updateLineEdit)
+        self.slider.sliderMoved.connect(self.updateLineEdit)
+        self.slider.sliderReleased.connect(self.updateLineEdit)
 
         # Configure the QDoubleValidator and QLineEdit
         self.validator = QtGui.QDoubleValidator()
@@ -49,42 +48,61 @@ class UISliderLEditWidget(QWidget):
         self.line_edit.setPlaceholderText(str(minimum))
 
         # Connect the QLineEdit to the QSlider
-        self.line_edit.textEdited.connect(self.update_slider)
-        self.line_edit.returnPressed.connect(self.update_slider)
+        self.line_edit.textEdited.connect(self.updateSlider)
+        self.line_edit.returnPressed.connect(self.updateSlider)
 
-        # Configure the min/max QLabels
+        # Configure QLabels
         self.min_label = QLabel()
         self.min_label.setText(str(self.minimum))
+        self.median_label = QLabel()
+        self.median_label.setText(str(self.maximum * 0.5))
         self.max_label = QLabel()
         self.max_label.setText(str(self.maximum))
+
+        # Configure quartile QLabels
+        # self.lowerq_label = QLabel()
+        # self.lowerq_label.setText(str(self.maximum * 0.25))
+        # self.upperq_label = QLabel()
+        # self.upperq_label.setText(str(self.maximum * 0.75))
 
         # Configure the QGridLayout
         widget_layout = QGridLayout()
         widget_layout.addWidget(self.slider, 0, 0, 1, -1)
         widget_layout.addWidget(self.min_label, 1, 0, QtCore.Qt.AlignLeft)
-        widget_layout.addWidget(self.max_label, 1, 1, QtCore.Qt.AlignRight)
+        # widget_layout.addWidget(self.lowerq_label, 1, 1, QtCore.Qt.AlignLeft)
+        widget_layout.addWidget(self.median_label, 1, 1, QtCore.Qt.AlignCenter)
+        # widget_layout.addWidget(self.upperq_label, 1, 3, QtCore.Qt.AlignRight)
+        widget_layout.addWidget(self.max_label, 1, 2, QtCore.Qt.AlignRight)
         widget_layout.addWidget(self.line_edit, 2, 0, 1, -1)
 
         # Set the layout
         self.setLayout(widget_layout)
         self.show()
 
-    def get_slider_value(self):
+    def getValue(self):
+        return float(self.line_edit.text())
+
+    def setValue(self, value):
+        self.line_edit.setText(str(value))
+
+    def getSliderValue(self):
         return self.slider.value()
 
-    def get_line_edit_value(self):
+    def getLineEditValue(self):
         return self.line_edit.text()
 
-    def update_slider(self):
+    def updateSlider(self):
         state = self.validator.validate(self.line_edit.text(), 0)
         if state[0] == QtGui.QDoubleValidator.Acceptable:
-            line_edit_value = float(self.get_line_edit_value())
+            line_edit_value = float(self.getLineEditValue())
             self.slider.setValue(line_edit_value)
+            self.setValue(line_edit_value)
         else:
             self.line_edit.setText(str(self.minimum))
-            line_edit_value = float(self.get_line_edit_value())
+            line_edit_value = float(self.getLineEditValue())
             self.slider.setValue(line_edit_value)
+            self.setValue(line_edit_value)
 
-    def update_line_edit(self):
-        slider_value = str(float(self.get_slider_value()))
+    def updateLineEdit(self):
+        slider_value = str(float(self.getSliderValue()))
         self.line_edit.setText(slider_value)
