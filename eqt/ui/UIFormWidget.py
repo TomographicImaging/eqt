@@ -2,6 +2,7 @@ from warnings import warn
 
 from PySide2 import QtWidgets
 
+from .UISliderLEditWidget import UISliderLEditWidget
 from .UISliderWidget import UISliderWidget
 
 
@@ -335,6 +336,8 @@ class UIFormWidget:
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
+        elif isinstance(widget, UISliderLEditWidget) or isinstance(widget, QtWidgets.QWidget):
+            widget_state['value'] = widget.getValue()
         widget_state['enabled'] = widget.isEnabled()
         widget_state['visible'] = widget.isVisible()
         widget_state['widget_row'] = self.getWidgetRow(name, role)
@@ -420,6 +423,9 @@ class UIFormWidget:
                     widget.setChecked(value)
                 elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
+                elif isinstance(widget, UISliderLEditWidget) or isinstance(
+                        widget, QtWidgets.QWidget):
+                    widget.setValue(value)
 
     def applyWidgetStates(self, states):
         '''

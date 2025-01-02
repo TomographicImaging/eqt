@@ -13,13 +13,15 @@ class UISliderLEditWidget(QWidget):
     step_size : float
     scale_factor : float
     '''
-    def __init__(self, minimum=0.0, maximum=1.0, step_size=1.0, scale_factor=1.0):
+    def __init__(self, minimum=0.0, maximum=1.0, step_size=1.0, scale_factor=1.0,
+                 tick_interval=1.0):
         QWidget.__init__(self)
 
         self.minimum = minimum
         self.maximum = maximum
         self.scale_factor = scale_factor
         self.step_size = step_size * self.scale_factor
+        self.tick_interval = tick_interval * self.scale_factor
 
         # Configure the QSlider
         self.slider = QSlider()
@@ -28,7 +30,7 @@ class UISliderLEditWidget(QWidget):
         self.slider.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.slider.setTickPosition(QSlider.TicksBelow)
         self.slider.setSingleStep(self.step_size)
-        self.slider.setTickInterval(self.maximum * 0.25)
+        self.slider.setTickInterval(self.tick_interval)
 
         # Connect the QSlider to the QLineEdit
         self.slider.sliderPressed.connect(self.updateLineEdit)
