@@ -2,7 +2,7 @@ from warnings import warn
 
 from PySide2 import QtWidgets
 
-from .UISliderLEditWidget import UISliderLEditWidget
+from .UISliderEditWidget import UISliderEditWidget
 from .UISliderWidget import UISliderWidget
 
 
@@ -336,7 +336,7 @@ class UIFormWidget:
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
-        elif isinstance(widget, UISliderLEditWidget) or isinstance(widget, QtWidgets.QWidget):
+        elif isinstance(widget, UISliderEditWidget) or isinstance(widget, QtWidgets.QWidget):
             widget_state['value'] = widget.getValue()
             # isinstance(QWidget) must be last due to other QtWidgets inheriting from it
         widget_state['enabled'] = widget.isEnabled()
@@ -424,7 +424,7 @@ class UIFormWidget:
                     widget.setChecked(value)
                 elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
-                elif isinstance(widget, (UISliderLEditWidget, QtWidgets.QWidget)):
+                elif isinstance(widget, (UISliderEditWidget, QtWidgets.QWidget)):
                     widget.setValue(value)
                     # isinstance(QWidget) must be last due to other QtWidgets inheriting from it
 

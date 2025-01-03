@@ -1,6 +1,6 @@
 from PySide2 import QtWidgets
 
-from eqt.ui.UISliderLEditWidget import UISliderLEditWidget
+from eqt.ui.UISliderEditWidget import UISliderEditWidget
 from eqt.ui.UISliderWidget import UISliderWidget
 
 
@@ -10,7 +10,7 @@ def list_all_widgets():
         'comboBox': QtWidgets.QComboBox(), 'doubleSpinBox': QtWidgets.QDoubleSpinBox(),
         'spinBox': QtWidgets.QSpinBox(), 'slider': QtWidgets.QSlider(),
         'uiSliderWidget': UISliderWidget(QtWidgets.QLineEdit(), QtWidgets.QLabel()),
-        'uiSliderLEditWidget': UISliderLEditWidget(),
+        'uiSliderEditWidget': UISliderEditWidget(),
         'radioButton': QtWidgets.QRadioButton('test radio button'),
         'textEdit': QtWidgets.QTextEdit('test text edit'),
         'plainTextEdit': QtWidgets.QPlainTextEdit('test plain text edit'),
@@ -44,8 +44,8 @@ def addWidgetsToExample(form):
     form.addWidget(max_label, '', 'uiSliderMaxLabel')
     form.addWidget(line_edit, '', 'uiSliderLineEdit')
 
-    form.addWidget(UISliderLEditWidget(minimum=0.0, maximum=100.0, scale_factor=10.0),
-                   'UISliderLEditWidget:', 'uiSliderLEditWidget')
+    form.addWidget(UISliderEditWidget(minimum=0.0, maximum=100.0, scale_factor=10.0),
+                   'UISliderEditWidget:', 'uiSliderEditWidget')
 
     form.addWidget(QtWidgets.QRadioButton('select me'), 'RadioButton: ', 'radioButton')
     form.addWidget(QtWidgets.QTextEdit('write text here'), 'TextEdit: ', 'textEdit')

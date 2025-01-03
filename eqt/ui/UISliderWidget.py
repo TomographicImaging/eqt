@@ -17,6 +17,7 @@ class UISliderWidget(QSlider):
     maximum : float
     step_size : float
     scale_factor : float
+    tick_interval : float
     '''
     def __init__(self, line_edit, max_label, minimum=0.0, maximum=10.0, scale_factor=1.0,
                  step_size=1.0, tick_interval=1.0):

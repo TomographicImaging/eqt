@@ -3,7 +3,7 @@ import sys
 from PySide2 import QtWidgets
 
 from eqt.ui import FormDialog
-from eqt.ui.UISliderLEditWidget import UISliderLEditWidget
+from eqt.ui.UISliderEditWidget import UISliderEditWidget
 from eqt.ui.UISliderWidget import UISliderWidget
 
 
@@ -45,8 +45,8 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.addWidget(max_label, '', 'input_max_label1')
         dialog.addWidget(line_edit, '', 'input_line_edit1')
 
-        dialog.addWidget(UISliderLEditWidget(minimum=0.0, maximum=100.0, scale_factor=10.0),
-                         'UISliderLEditWidget:', 'uiSliderLEditWidget')
+        dialog.addWidget(UISliderEditWidget(minimum=0.0, maximum=100.0, scale_factor=10.0),
+                         'UISliderEditWidget:', 'uiSliderEditWidget')
 
         dialog.addWidget(QtWidgets.QRadioButton('test 1'), 'RadioButton 1: ', 'radioButton1')
         dialog.addWidget(QtWidgets.QRadioButton('test 2'), 'RadioButton 2: ', 'radioButton2')

@@ -2,8 +2,8 @@ from PySide2 import QtCore, QtGui
 from PySide2.QtWidgets import QGridLayout, QLabel, QLineEdit, QSlider, QWidget
 
 
-class UISliderLEditWidget(QWidget):
-    '''Creates a QGridLayout that includes a QSlider, min/max QLabels and a QLineEdit.
+class UISliderEditWidget(QWidget):
+    '''Creates a QGridLayout that includes a QSlider, min/median/max QLabels and a QLineEdit.
     The QLineEdit is updated with the value of the slider and vice versa.
 
     Parameters
@@ -12,6 +12,7 @@ class UISliderLEditWidget(QWidget):
     max : float
     step_size : float
     scale_factor : float
+    tick_interval : float
     '''
     def __init__(self, minimum=0.0, maximum=10.0, step_size=1.0, scale_factor=1.0,
                  tick_interval=1.0):
