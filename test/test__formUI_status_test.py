@@ -34,13 +34,13 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         state = [{
             'label_value': 'Test label state 0', 'checkBox_value': False, 'comboBox_value': 0,
             'doubleSpinBox_value': 10.0, 'spinBox_value': 10, 'slider_value': 10,
-            'uiSliderWidget_value': 10, 'uiSliderEditWidget_value': 10.0,
+            'uiSliderWidget_value': 10.0, 'uiSliderEditWidget_value': 10.0,
             'radioButton_value': False, 'textEdit_value': 'test edit 0',
             'plainTextEdit_value': 'test plain 0', 'lineEdit_value': 'test line 0',
             'button_value': False}, {
                 'label_value': 'Test label state 1', 'checkBox_value': True, 'comboBox_value': 1,
                 'doubleSpinBox_value': 1.0, 'spinBox_value': 1, 'slider_value': 1,
-                'uiSliderWidget_value': 1, 'uiSliderEditWidget_value': 1.0,
+                'uiSliderWidget_value': 1.0, 'uiSliderEditWidget_value': 1.0,
                 'radioButton_value': True, 'textEdit_value': 'test edit 1',
                 'plainTextEdit_value': 'test plain 1', 'lineEdit_value': 'test line 1',
                 'button_value': True}]
