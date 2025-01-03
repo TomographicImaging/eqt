@@ -13,7 +13,7 @@ class UISliderLEditWidget(QWidget):
     step_size : float
     scale_factor : float
     '''
-    def __init__(self, minimum=0.0, maximum=1.0, step_size=1.0, scale_factor=1.0,
+    def __init__(self, minimum=0.0, maximum=10.0, step_size=1.0, scale_factor=1.0,
                  tick_interval=1.0):
         QWidget.__init__(self)
 

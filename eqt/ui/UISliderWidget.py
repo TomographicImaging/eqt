@@ -18,7 +18,7 @@ class UISliderWidget(QSlider):
     step_size : float
     scale_factor : float
     '''
-    def __init__(self, line_edit, max_label, minimum=0.0, maximum=1.0, scale_factor=1.0,
+    def __init__(self, line_edit, max_label, minimum=0.0, maximum=10.0, scale_factor=1.0,
                  step_size=1.0, tick_interval=1.0):
         QSlider.__init__(self)
 
@@ -62,9 +62,6 @@ class UISliderWidget(QSlider):
         self.max_label = max_label
         self.max_label.setAlignment(QtCore.Qt.AlignRight)
         self.max_label.setText(str(self.maximum))
-
-    def getValue(self):
-        return self.getLineEditValue()
 
     def getSliderValue(self):
         return self.value()

@@ -392,7 +392,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             self.form.getWidgetState('uiSliderLEditWidget_field')['value'], initial_slider_value)
 
         final_slider_value = 1
-        self.form.getWidget('UISliderLEditWidget').setValue(final_slider_value)
+        self.form.getWidget('uiSliderLEditWidget').setValue(final_slider_value)
 
         self.assertEqual(
             self.form.getWidgetState('uiSliderLEditWidget_field')['value'], final_slider_value)
