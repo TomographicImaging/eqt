@@ -63,6 +63,9 @@ class UISliderWidget(QSlider):
         self.max_label.setAlignment(QtCore.Qt.AlignRight)
         self.max_label.setText(str(self.maximum))
 
+    def getValue(self):
+        return self.getLineEditValue()
+
     def getSliderValue(self):
         return self.value()
 

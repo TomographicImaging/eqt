@@ -82,7 +82,7 @@ class UISliderLEditWidget(QWidget):
         self.show()
 
     def getValue(self):
-        return float(self.line_edit.text())
+        return self.getLineEditValue()
 
     def setValue(self, value):
         self.line_edit.setText(str(value))
@@ -91,17 +91,17 @@ class UISliderLEditWidget(QWidget):
         return self.slider.value()
 
     def getLineEditValue(self):
-        return self.line_edit.text()
+        return float(self.line_edit.text())
 
     def updateSlider(self):
         state = self.validator.validate(self.line_edit.text(), 0)
         if state[0] == QtGui.QDoubleValidator.Acceptable:
-            line_edit_value = float(self.getLineEditValue())
+            line_edit_value = self.getLineEditValue()
             self.slider.setValue(line_edit_value)
             self.setValue(line_edit_value)
         else:
             self.line_edit.setText(str(self.minimum))
-            line_edit_value = float(self.getLineEditValue())
+            line_edit_value = self.getLineEditValue()
             self.slider.setValue(line_edit_value)
             self.setValue(line_edit_value)
 
