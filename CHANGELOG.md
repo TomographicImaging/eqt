@@ -1,6 +1,8 @@
 # Version x.x.x
-- Add `QDoubleSpinBox` support to `UISliderWidget` (#168)
+- Add `QLineEdit` support to `UISliderWidget` (#168)
   + Breaks backwards compatability as `UISliderWidget` no longer accepts a `QLabel`
+- Add `UISliderEditWidget` class, with layout and `QLineEdit` support (#168)
+- Add support for `UISliderEditWidget` and modified `UISliderWidget` to `UIFormWidget` and tests (#168)
 
 # Version 1.0.2
 - Upgrade python to 3.8 in `test.yml` (#171)
