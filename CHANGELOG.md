@@ -1,20 +1,15 @@
 # Version 2.0.0
 
-Bugfix:
-- Change SessionDirectorySelectionDialog `.open()` call to `.exec()` (#163, #165)
-
-Backend:
 - Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
-- Add environment yml files (#146)
+- Add `pyqt_env.yml`  and `pyside_env.yml` environment files (#146)
+- Update `CONTRIBUTING.md`, `README.md` and add documentation file (#146)
+
+# Version 1.0.2
+- Upgrade python to 3.8 in `test.yml` (#171)
 - Rename `/scripts` directory to `/recipe` (#161)
-
-Documentation:
-- Update `CONTRIBUTING.md` with detailed installation and contribution instructions (#161, #146)
-- Update README.md and add documentation file (#146)
-
-Dependencies:
+- Update `CONTRIBUTING.md` with detailed installation and contribution instructions (#161)
 - Limit Python version to <3.12 in conda recipe (#161)
-
+- Change SessionDirectorySelectionDialog `.open()` call to `.exec()` (#163, #165)
 
 # Version 1.0.1
 - Add NoBorderScrollArea, example and tests (#155)
