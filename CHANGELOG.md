@@ -1,5 +1,4 @@
 # Version 2.0.0
-
 - Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
 - Add `pyqt_env.yml`  and `pyside_env.yml` environment files (#146)
 - Update `CONTRIBUTING.md`, `README.md` and add documentation file (#146)
