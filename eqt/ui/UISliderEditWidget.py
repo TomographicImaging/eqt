@@ -1,5 +1,5 @@
 from PySide2 import QtCore, QtGui
-from PySide2.QtWidgets import QGridLayout, QLabel, QLineEdit, QSlider, QWidget
+from PySide2.QtWidgets import QApplication, QGridLayout, QLabel, QLineEdit, QSlider, QWidget
 
 
 class UISliderEditWidget(QWidget):
@@ -51,8 +51,13 @@ class UISliderEditWidget(QWidget):
         self.line_edit.setPlaceholderText(str(minimum))
 
         # Connect the QLineEdit to the QSlider
-        self.line_edit.textEdited.connect(self.updateSlider)
-        self.line_edit.returnPressed.connect(self.updateSlider)
+        self.line_edit.editingFinished.connect(self.updateSlider)
+
+        # Configure the QApplication
+        self.app = QApplication.instance()
+
+        # Connect the QApplication to the QLineEdit
+        self.app.focusChanged.connect(self.updateSlider)
 
         # Configure QLabels
         self.min_label = QLabel()

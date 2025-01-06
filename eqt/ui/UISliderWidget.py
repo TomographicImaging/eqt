@@ -1,5 +1,5 @@
 from PySide2 import QtCore, QtGui
-from PySide2.QtWidgets import QSlider
+from PySide2.QtWidgets import QApplication, QSlider
 
 
 class UISliderWidget(QSlider):
@@ -56,8 +56,13 @@ class UISliderWidget(QSlider):
         self.line_edit.setPlaceholderText(str(self.minimum))
 
         # Connect the QLineEdit to the QSlider
-        self.line_edit.textEdited.connect(self.updateSlider)
-        self.line_edit.returnPressed.connect(self.updateSlider)
+        self.line_edit.editingFinished.connect(self.updateSlider)
+
+        # Configure the QApplication
+        self.app = QApplication.instance()
+
+        # Connect the QApplication to the QLineEdit
+        self.app.focusChanged.connect(self.updateSlider)
 
         # Configure QLabel to show maximum QSlider value
         self.max_label = max_label
