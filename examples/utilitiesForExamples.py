@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets
+from qtpy import QtWidgets
 
 from eqt.ui.UISliderWidget import UISliderWidget
 
