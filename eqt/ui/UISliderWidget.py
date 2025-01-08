@@ -1,5 +1,5 @@
-from PySide2 import QtCore, QtGui
-from PySide2.QtWidgets import QApplication, QSlider
+from qtpy import QtCore, QtGui
+from qtpy.QtWidgets import QApplication, QSlider
 
 
 class UISliderWidget(QSlider):
