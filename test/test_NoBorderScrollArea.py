@@ -1,6 +1,6 @@
 import unittest
 
-from PySide2.QtWidgets import QHBoxLayout, QPushButton, QWidget
+from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
 
 from eqt.ui.NoBorderScrollArea import NoBorderScrollArea
 

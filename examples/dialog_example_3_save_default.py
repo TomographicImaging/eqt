@@ -1,7 +1,7 @@
 import sys
 
 import utilitiesForExamples as utex
-from PySide2 import QtWidgets
+from qtpy import QtWidgets
 
 from eqt.ui import FormDialog
 

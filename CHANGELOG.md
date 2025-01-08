@@ -4,6 +4,11 @@
 - Add `UISliderEditWidget` class, with layout and `QLineEdit` support (#168)
 - Add support for `UISliderEditWidget` and modified `UISliderWidget` to `UIFormWidget` and tests (#168)
 
+# Version 2.0.0
+- Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
+- Add `pyqt_env.yml`  and `pyside_env.yml` environment files (#146)
+- Update `CONTRIBUTING.md`, `README.md` and add documentation file (#146)
+
 # Version 1.0.2
 - Upgrade python to 3.8 in `test.yml` (#171)
 - Rename `/scripts` directory to `/recipe` (#161)

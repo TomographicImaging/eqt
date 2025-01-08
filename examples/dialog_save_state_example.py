@@ -1,6 +1,6 @@
 import sys
 
-from PySide2 import QtWidgets
+from qtpy import QtWidgets
 
 from eqt.ui import FormDialog
 from eqt.ui.UISliderEditWidget import UISliderEditWidget
@@ -36,7 +36,7 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
         dialog.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
         dialog.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-
+      
         line_edit = QtWidgets.QLineEdit()
         max_label = QtWidgets.QLabel()
         dialog.addWidget(

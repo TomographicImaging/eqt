@@ -1,9 +1,9 @@
 import time
 from time import sleep
 
-from PySide2 import QtCore
-from PySide2.QtCore import Qt, QThreadPool
-from PySide2.QtWidgets import QProgressDialog
+from qtpy import QtCore
+from qtpy.QtCore import Qt, QThreadPool
+from qtpy.QtWidgets import QProgressDialog
 
 from ..threading import Worker
 

@@ -2,9 +2,9 @@ import abc
 import unittest
 from unittest import mock
 
-from PySide2 import QtWidgets
-from PySide2.QtCore import Qt
-from PySide2.QtTest import QTest
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtTest import QTest
 
 from eqt.ui.FormDialog import AdvancedFormDialog, FormDialog
 from eqt.ui.UIFormWidget import FormDockWidget, FormWidget
