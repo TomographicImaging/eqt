@@ -23,6 +23,10 @@ class UISliderWidget(QWidget):
     def __init__(self, minimum, maximum, decimals=2, number_of_steps=2000, number_of_ticks=10):
         QWidget.__init__(self)
 
+        # Check that the minimum/maximum arguments are valid
+        if minimum >= maximum:
+            raise ValueError("'minimum' argument must be less than 'maximum'")
+
         self.decimals = decimals
         self.minimum = round(minimum, self.decimals)
         self.maximum = round(maximum, self.decimals)
