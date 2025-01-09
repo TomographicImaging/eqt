@@ -54,7 +54,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             'doubleSpinBox': QtWidgets.QDoubleSpinBox(), 'spinBox': QtWidgets.QSpinBox(),
             'slider': QtWidgets.QSlider(), 'uiSliderWidget': UISliderWidget(
                 minimum=0.0,
-                maximum=1.0), 'radioButton': QtWidgets.QRadioButton('test radio button'),
+                maximum=10.0), 'radioButton': QtWidgets.QRadioButton('test radio button'),
             'textEdit': QtWidgets.QTextEdit('test text edit'),
             'plainTextEdit': QtWidgets.QPlainTextEdit('test plain text edit'),
             'lineEdit': QtWidgets.QLineEdit('test line edit'),
@@ -105,7 +105,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.form.getWidget('spinBox').setValue(state[i]['spinBox_value'])
         # QSlider
         self.form.getWidget('slider').setValue(state[i]['slider_value'])
-        # UISlider
+        # UISliderWidget
         self.form.getWidget('uiSliderWidget').setValue(state[i]['uiSliderWidget_value'])
         # QRadioButton
         self.form.getWidget('radioButton').setChecked(state[i]['radioButton_value'])
@@ -140,7 +140,7 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.form.getWidget('spinBox_spanning').setValue(state[i]['spinBox_value'])
         # QSlider
         self.form.getWidget('slider_spanning').setValue(state[i]['slider_value'])
-        # UISlider
+        # UISliderWidget
         self.form.getWidget('uiSliderWidget_spanning').setValue(state[i]['uiSliderWidget_value'])
         # QRadioButton
         self.form.getWidget('radioButton_spanning').setChecked(state[i]['radioButton_value'])
