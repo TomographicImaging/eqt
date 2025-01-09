@@ -2,7 +2,6 @@ from warnings import warn
 
 from qtpy import QtWidgets
 
-from .UISliderEditWidget import UISliderEditWidget
 from .UISliderWidget import UISliderWidget
 
 
@@ -326,10 +325,6 @@ class UIFormWidget:
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, QtWidgets.QComboBox):
             widget_state['value'] = widget.currentIndex()
-        elif isinstance(widget, UISliderWidget):
-            widget_state['value'] = widget.getValue()
-        elif isinstance(widget, UISliderEditWidget):
-            widget_state['value'] = widget.getValue()
         elif isinstance(widget, QtWidgets.QSlider):
             widget_state['value'] = widget.value()
         elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
@@ -340,6 +335,8 @@ class UIFormWidget:
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
+        elif isinstance(widget, UISliderWidget):
+            widget_state['value'] = widget.getValue()
         widget_state['enabled'] = widget.isEnabled()
         widget_state['visible'] = widget.isVisible()
         widget_state['widget_row'] = self.getWidgetRow(name, role)
@@ -413,7 +410,7 @@ class UIFormWidget:
                     widget.setChecked(value)
                 elif isinstance(widget, QtWidgets.QComboBox):
                     widget.setCurrentIndex(value)
-                elif isinstance(widget, (UISliderWidget, UISliderEditWidget, QtWidgets.QSlider)):
+                elif isinstance(widget, (QtWidgets.QSlider)):
                     widget.setValue(value)
                 elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
                     widget.setValue(value)
@@ -425,6 +422,8 @@ class UIFormWidget:
                     widget.setChecked(value)
                 elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
+                elif isinstance(widget, (UISliderWidget)):
+                    widget.setValue(value)
 
     def applyWidgetStates(self, states):
         '''

@@ -8,7 +8,6 @@ from qtpy.QtTest import QTest
 
 from eqt.ui.FormDialog import AdvancedFormDialog, FormDialog
 from eqt.ui.UIFormWidget import FormDockWidget, FormWidget
-from eqt.ui.UISliderEditWidget import UISliderEditWidget
 from eqt.ui.UISliderWidget import UISliderWidget
 
 from . import is_ci, skip
@@ -34,16 +33,14 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         state = [{
             'label_value': 'Test label state 0', 'checkBox_value': False, 'comboBox_value': 0,
             'doubleSpinBox_value': 10.0, 'spinBox_value': 10, 'slider_value': 10,
-            'uiSliderWidget_value': 10.0, 'uiSliderEditWidget_value': 10.0,
-            'radioButton_value': False, 'textEdit_value': 'test edit 0',
-            'plainTextEdit_value': 'test plain 0', 'lineEdit_value': 'test line 0',
-            'button_value': False}, {
+            'uiSliderWidget_value': 10.0, 'radioButton_value': False,
+            'textEdit_value': 'test edit 0', 'plainTextEdit_value': 'test plain 0',
+            'lineEdit_value': 'test line 0', 'button_value': False}, {
                 'label_value': 'Test label state 1', 'checkBox_value': True, 'comboBox_value': 1,
                 'doubleSpinBox_value': 1.0, 'spinBox_value': 1, 'slider_value': 1,
-                'uiSliderWidget_value': 1.0, 'uiSliderEditWidget_value': 1.0,
-                'radioButton_value': True, 'textEdit_value': 'test edit 1',
-                'plainTextEdit_value': 'test plain 1', 'lineEdit_value': 'test line 1',
-                'button_value': True}]
+                'uiSliderWidget_value': 1.0, 'radioButton_value': True,
+                'textEdit_value': 'test edit 1', 'plainTextEdit_value': 'test plain 1',
+                'lineEdit_value': 'test line 1', 'button_value': True}]
         return state
 
     @property
@@ -56,9 +53,8 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
             'checkBox': QtWidgets.QCheckBox('test checkbox'), 'comboBox': combobox_widget,
             'doubleSpinBox': QtWidgets.QDoubleSpinBox(), 'spinBox': QtWidgets.QSpinBox(),
             'slider': QtWidgets.QSlider(), 'uiSliderWidget': UISliderWidget(
-                QtWidgets.QLineEdit(),
-                QtWidgets.QLabel()), 'uiSliderEditWidget': UISliderEditWidget(),
-            'radioButton': QtWidgets.QRadioButton('test radio button'),
+                minimum=0.0,
+                maximum=1.0), 'radioButton': QtWidgets.QRadioButton('test radio button'),
             'textEdit': QtWidgets.QTextEdit('test text edit'),
             'plainTextEdit': QtWidgets.QPlainTextEdit('test plain text edit'),
             'lineEdit': QtWidgets.QLineEdit('test line edit'),
@@ -111,8 +107,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.form.getWidget('slider').setValue(state[i]['slider_value'])
         # UISlider
         self.form.getWidget('uiSliderWidget').setValue(state[i]['uiSliderWidget_value'])
-        # UISliderEditWidget
-        self.form.getWidget('uiSliderEditWidget').setValue(state[i]['uiSliderEditWidget_value'])
         # QRadioButton
         self.form.getWidget('radioButton').setChecked(state[i]['radioButton_value'])
         # QTextEdit
@@ -148,9 +142,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
         self.form.getWidget('slider_spanning').setValue(state[i]['slider_value'])
         # UISlider
         self.form.getWidget('uiSliderWidget_spanning').setValue(state[i]['uiSliderWidget_value'])
-        # UISliderEditWidget
-        self.form.getWidget('uiSliderEditWidget_spanning').setValue(
-            state[i]['uiSliderEditWidget_value'])
         # QRadioButton
         self.form.getWidget('radioButton_spanning').setChecked(state[i]['radioButton_value'])
         # QTextEdit
@@ -383,19 +374,6 @@ class FormsCommonTests(metaclass=abc.ABCMeta):
 
         self.assertEqual(
             self.form.getWidgetState('uiSliderWidget_field')['value'], final_slider_value)
-
-    def test_getWidgetState_returns_UISliderEditWidget_value(self):
-        """Check that the value of the UISliderEditWidget is returned in the state"""
-        initial_slider_value = 0
-
-        self.assertEqual(
-            self.form.getWidgetState('uiSliderEditWidget_field')['value'], initial_slider_value)
-
-        final_slider_value = 1
-        self.form.getWidget('uiSliderEditWidget').setValue(final_slider_value)
-
-        self.assertEqual(
-            self.form.getWidgetState('uiSliderEditWidget_field')['value'], final_slider_value)
 
     def test_getWidgetState_returns_QLineEdit_value(self):
         """Check that the value of the QLineEdit is saved to the state"""

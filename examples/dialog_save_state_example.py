@@ -3,7 +3,6 @@ import sys
 from qtpy import QtWidgets
 
 from eqt.ui import FormDialog
-from eqt.ui.UISliderEditWidget import UISliderEditWidget
 from eqt.ui.UISliderWidget import UISliderWidget
 
 
@@ -36,17 +35,8 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
         dialog.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
         dialog.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-      
-        line_edit = QtWidgets.QLineEdit()
-        max_label = QtWidgets.QLabel()
-        dialog.addWidget(
-            UISliderWidget(line_edit, max_label, minimum=0.0, maximum=100.0, scale_factor=10.0),
-            'UISliderWidget: ', 'uiSliderWidget')
-        dialog.addWidget(max_label, '', 'input_max_label1')
-        dialog.addWidget(line_edit, '', 'input_line_edit1')
-
-        dialog.addWidget(UISliderEditWidget(minimum=0.0, maximum=100.0, scale_factor=10.0),
-                         'UISliderEditWidget:', 'uiSliderEditWidget')
+        dialog.addWidget(UISliderWidget(minimum=0.0, maximum=100.0), 'UISliderWidget: ',
+                         'uiSliderWidget')
 
         dialog.addWidget(QtWidgets.QRadioButton('test 1'), 'RadioButton 1: ', 'radioButton1')
         dialog.addWidget(QtWidgets.QRadioButton('test 2'), 'RadioButton 2: ', 'radioButton2')

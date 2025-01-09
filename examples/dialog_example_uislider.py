@@ -2,7 +2,7 @@ import sys
 
 from qtpy import QtWidgets
 
-from eqt.ui import FormDialog, UISliderEditWidget, UISliderWidget
+from eqt.ui import FormDialog, UISliderWidget
 
 
 class MainUI(QtWidgets.QMainWindow):
@@ -26,24 +26,11 @@ class MainUI(QtWidgets.QMainWindow):
         dialog = FormDialog(parent=self, title='Example')
         dialog.Ok.clicked.connect(lambda: self.accepted())
 
-        # Example on how to add elements to the FormDialog
-        # add input 1 as UISliderWidget and QLineEdit
-        line_edit = QtWidgets.QLineEdit()
-        max_label = QtWidgets.QLabel()
-        uislider = UISliderWidget.UISliderWidget(line_edit, max_label, minimum=0.0, maximum=100.0,
-                                                 scale_factor=10.0)
+        # Create UISliderWidget
+        uislider = UISliderWidget.UISliderWidget(minimum=-0.5, maximum=0.5, number_of_ticks=10)
 
         # add to the form widget
-        dialog.addWidget(uislider, 'UISlider 1:', 'input_slider1')
-        dialog.addWidget(max_label, '', 'input_max_label1')
-        dialog.addWidget(line_edit, '', 'input_line_edit1')
-
-        # add input 2 as UISliderLineEditWidget
-        uislider = UISliderEditWidget.UISliderEditWidget(minimum=0.0, maximum=100.0,
-                                                         scale_factor=10.0)
-
-        # add to the form widget
-        dialog.addWidget(uislider, 'UISlider 2:', 'input_slider2')
+        dialog.addWidget(uislider, 'UISlider:', 'input_slider')
 
         # store a reference
         self.dialog = dialog
@@ -52,12 +39,8 @@ class MainUI(QtWidgets.QMainWindow):
 
     def accepted(self):
         print("accepted")
-        print(f"UISlider 1 QSlider: {self.dialog.widgets['input_slider1_field'].value()}")
-        print(f"QSlider 1 QLabel: {self.dialog.widgets['input_max_label1_field'].text()}")
-        print(f"QSlider 1 QLineEdit: {self.dialog.widgets['input_line_edit1_field'].text()}")
-
-        print(f"UISlider 2 QSlider: {self.dialog.widgets['input_slider2_field'].getSliderValue()}")
-        print(f"UISlider 2 QLineEdit: {self.dialog.widgets['input_slider2_field'].getValue()}")
+        print(f"UISlider QSlider: {self.dialog.widgets['input_slider_field']._getSliderValue()}")
+        print(f"UISlider QLineEdit: {self.dialog.widgets['input_slider_field'].getValue()}")
 
         self.dialog.close()
 
