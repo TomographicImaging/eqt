@@ -95,16 +95,14 @@ class UISliderWidget(QWidget):
         self.show()
 
     def getValue(self):
-        '''
-        Gets the value of the UISliderWidget, which is the same as the QLineEdit value.
+        '''Gets the value of the UISliderWidget, which is the same as the QLineEdit value.
         This method is called by methods in the UIFormWidget class responsible for
         saving widget states, maintaining the naming convention used by other QWidgets.
         '''
         return self._getLineEditValue()
 
     def setValue(self, value):
-        '''
-        Sets the value of the UISliderWidget, which is the same as the QLineEdit value.
+        '''Sets the value of the UISliderWidget, which is the same as the QLineEdit value.
         This method is called by methods in the UIFormWidget class responsible for
         applying/loading widget states, maintaining the naming convention used by other QWidgets.
 
@@ -142,8 +140,7 @@ class UISliderWidget(QWidget):
         self.line_edit.setText(str(self._scaleDown(slider_value)))
 
     def _scaleUp(self, value):
-        '''
-        Scales a value up. The method calculates the appropriate scale factor for the conversion
+        '''Scales a value up. The method calculates the appropriate scale factor for the conversion
         using the minimum and maximum values of the QSlider and QLineEdit.
         Returns the upscaled value.
 
@@ -156,9 +153,8 @@ class UISliderWidget(QWidget):
         return int(value)
 
     def _scaleDown(self, value):
-        '''
-        Scales a value down. The method calculates the appropriate scale factor for the conversion
-        using the minimum and maximum values of the QSlider and QLineEdit.
+        '''Scales a value down. The method calculates the appropriate scale factor for the
+        conversion using the minimum and maximum values of the QSlider and QLineEdit.
         Returns the downscaled value, rounded as per the decimals attribute.
 
         Parameters
