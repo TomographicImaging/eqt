@@ -27,12 +27,13 @@ class UISliderWidget(QWidget):
         if minimum >= maximum:
             raise ValueError("'minimum' argument must be less than 'maximum'")
 
-        self.decimals = decimals
+        self._setDecimals(decimals)
+        self._setNumberOfSteps(number_of_steps)
+        self._setNumberOfTicks(number_of_ticks)
+
         self.minimum = round(minimum, self.decimals)
         self.maximum = round(maximum, self.decimals)
         self.median = round(((self.maximum - self.minimum) / 2), self.decimals) + self.minimum
-        self.number_of_steps = number_of_steps
-        self.number_of_ticks = number_of_ticks
 
         self.slider_minimum = 0
         self.slider_maximum = self.number_of_steps
@@ -83,15 +84,15 @@ class UISliderWidget(QWidget):
         self.max_label.setText(str(self.maximum))
 
         # Configure the QGridLayout
-        widget_layout = QGridLayout()
-        widget_layout.addWidget(self.slider, 0, 0, 1, -1)
-        widget_layout.addWidget(self.min_label, 1, 0, QtCore.Qt.AlignLeft)
-        widget_layout.addWidget(self.median_label, 1, 1, QtCore.Qt.AlignCenter)
-        widget_layout.addWidget(self.max_label, 1, 2, QtCore.Qt.AlignRight)
-        widget_layout.addWidget(self.line_edit, 2, 0, 1, -1)
+        self.widget_layout = QGridLayout()
+        self.widget_layout.addWidget(self.slider, 0, 0, 1, -1)
+        self.widget_layout.addWidget(self.min_label, 1, 0, QtCore.Qt.AlignLeft)
+        self.widget_layout.addWidget(self.median_label, 1, 1, QtCore.Qt.AlignCenter)
+        self.widget_layout.addWidget(self.max_label, 1, 2, QtCore.Qt.AlignRight)
+        self.widget_layout.addWidget(self.line_edit, 2, 0, 1, -1)
 
         # Set the layout
-        self.setLayout(widget_layout)
+        self.setLayout(self.widget_layout)
         self.show()
 
     def getValue(self):
@@ -111,6 +112,24 @@ class UISliderWidget(QWidget):
         value : float
         '''
         self.line_edit.setText(str(value))
+
+    def _setDecimals(self, decimals):
+        if decimals < 0:
+            raise ValueError("'decimals' value must be a positive integer")
+        else:
+            self.decimals = int(decimals)
+
+    def _setNumberOfSteps(self, number_of_steps):
+        if number_of_steps < 0:
+            raise ValueError("'number_of_steps' value must be a positive integer")
+        else:
+            self.number_of_steps = int(number_of_steps)
+
+    def _setNumberOfTicks(self, number_of_ticks):
+        if number_of_ticks < 0:
+            raise ValueError("'number_of_ticks' value must be a positive integer")
+        else:
+            self.number_of_ticks = int(number_of_ticks)
 
     def _getSliderValue(self):
         return self.slider.value()
