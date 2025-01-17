@@ -8,7 +8,7 @@ def list_all_widgets():
         'label': QtWidgets.QLabel('test label'), 'checkBox': QtWidgets.QCheckBox('test checkbox'),
         'comboBox': QtWidgets.QComboBox(), 'doubleSpinBox': QtWidgets.QDoubleSpinBox(),
         'spinBox': QtWidgets.QSpinBox(), 'slider': QtWidgets.QSlider(),
-        'uiSliderWidget': UISliderWidget(QtWidgets.QLabel()),
+        'uiSliderWidget': UISliderWidget(),
         'radioButton': QtWidgets.QRadioButton('test radio button'),
         'textEdit': QtWidgets.QTextEdit('test text edit'),
         'plainTextEdit': QtWidgets.QPlainTextEdit('test plain text edit'),
@@ -33,7 +33,8 @@ def addWidgetsToExample(form):
     form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
     form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
     form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-    form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISlider: ', 'uiSliderWidget')
+    form.addWidget(UISliderWidget(minimum=0.0, maximum=100.0), 'UISliderWidget: ',
+                   'uiSliderWidget')
     form.addWidget(QtWidgets.QRadioButton('select me'), 'RadioButton: ', 'radioButton')
     form.addWidget(QtWidgets.QTextEdit('write text here'), 'TextEdit: ', 'textEdit')
     form.addWidget(QtWidgets.QPlainTextEdit('write text here'), 'PlainTextEdit: ', 'plainTextEdit')
