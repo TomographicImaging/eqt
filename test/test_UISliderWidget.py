@@ -1,8 +1,8 @@
 import unittest
 
 from parameterized import parameterized
-from PySide2 import QtGui
-from PySide2.QtWidgets import QGridLayout, QLabel, QLineEdit, QSlider
+from qtpy import QtGui
+from qtpy.QtWidgets import QGridLayout, QLabel, QLineEdit, QSlider
 
 from eqt.ui import UISliderWidget
 
