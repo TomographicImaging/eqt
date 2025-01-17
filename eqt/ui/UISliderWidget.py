@@ -20,7 +20,7 @@ class UISliderWidget(QWidget):
     number_of_ticks : int
         - Number of ticks visualised under the QSlider, determines tick interval
     '''
-    def __init__(self, minimum, maximum, decimals=2, number_of_steps=2000, number_of_ticks=100):
+    def __init__(self, minimum, maximum, decimals=2, number_of_steps=2000, number_of_ticks=10):
         QWidget.__init__(self)
 
         # Check that the minimum/maximum arguments are valid
