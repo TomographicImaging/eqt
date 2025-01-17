@@ -113,7 +113,7 @@ class UISliderWidget(QWidget):
         value : float
         '''
         self.line_edit.setText(str(value))
-        self._updateSlider()
+        self.slider.setValue(self._scaleUp(self._getLineEditValue()))
 
     def _setDecimals(self, decimals):
         if decimals < 0:
