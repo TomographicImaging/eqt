@@ -136,7 +136,10 @@ class UISliderWidget(QWidget):
         return self.slider.value()
 
     def _getLineEditValue(self):
-        return float(self.line_edit.text())
+        if self.line_edit.text() == '':
+            return self.minimum
+        else:
+            return float(self.line_edit.text())
 
     def _updateSlider(self):
         line_edit_value = self._getLineEditValue()

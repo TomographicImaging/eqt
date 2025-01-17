@@ -124,17 +124,14 @@ class TestUISliderWidget(unittest.TestCase):
         self.assertEqual(self.widget._getSliderValue(), 2000)
         self.assertEqual(self.widget.getValue(), 10.0)
 
-    def test_gt_max_update_slider(self):
-        self.widget.line_edit.setText("11.0")
+    @parameterized.expand([("empty", "", 0, -10.0), ("lt_min", "-11.0", 0, -10.0),
+                           ("gt_max", "11.0", 2000, 10.0)])
+    def test_invalid_update_slider(self, _, value, expected_slider_value,
+                                   expected_line_edit_value):
+        self.widget.line_edit.setText(value)
         self.widget._updateSlider()
-        self.assertEqual(self.widget._getSliderValue(), self.widget.slider_maximum)
-        self.assertEqual(self.widget.getValue(), self.widget.maximum)
-
-    def test_invalid_update_slider(self):
-        self.widget.line_edit.setText("-11.0")
-        self.widget._updateSlider()
-        self.assertEqual(self.widget._getSliderValue(), self.widget.slider_minimum)
-        self.assertEqual(self.widget.getValue(), self.widget.minimum)
+        self.assertEqual(self.widget._getSliderValue(), expected_slider_value)
+        self.assertEqual(self.widget.getValue(), expected_line_edit_value)
 
     def test_update_lineedit(self):
         self.widget.slider.setValue(1500)
