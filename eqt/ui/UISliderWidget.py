@@ -68,6 +68,7 @@ class UISliderWidget(QWidget):
 
         # Connect the QLineEdit to the QSlider
         self.line_edit.editingFinished.connect(self._updateSlider)
+        self.line_edit.returnPressed.connect(self._updateSlider)
 
         # Configure the QApplication
         self.app = QApplication.instance()
