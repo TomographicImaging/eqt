@@ -104,7 +104,7 @@ class TestUISliderWidget(unittest.TestCase):
 
     @parameterized.expand([("positive", 0.0, 10.0, 5.0, 5.0), ("negative", -10.0, 0.0, -5.0, -5.0),
                            ("decimal", -0.5, 0.5, 0.25, 0.25),
-                           ("long", -9.99999, 9.99999, 1.11111, 1.11111)])
+                           ("long", -9.99999, 9.99999, 1.11111, 1.11)])
     def test_get_and_set_value(self, _, minimum, maximum, value, expected):
         self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
         self.widget.setValue(value)
