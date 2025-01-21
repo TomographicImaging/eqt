@@ -14,7 +14,7 @@ class UISliderWidget(QWidget):
     maximum : float
         - Maximum value of the QLineEdit
     decimals : int
-        - Number of decimal places that the QLabels and QSlider steps can display
+        - Number of decimal places that the QLabels, QLineEdit and QSlider steps can display
     number_of_steps : int
         - Number of steps in the QSlider
     number_of_ticks : int
@@ -41,7 +41,6 @@ class UISliderWidget(QWidget):
         self.step_size = float((self.maximum - self.minimum) / self.number_of_steps)
         self.tick_interval = round(
             (self.slider_maximum - self.slider_minimum) / self.number_of_ticks)
-        # self.number_of_steps = round((self.maximum - self.minimum) / self.step_size)
 
         # Configure the QSlider
         self.slider = QSlider()
@@ -113,60 +112,103 @@ class UISliderWidget(QWidget):
         value : float
         '''
         self.line_edit.setText(str(value))
-        self.slider.setValue(self._scaleUp(self._getLineEditValue()))
+        self.slider.setValue(self._scaleLineEditToSlider(self._getLineEditValue()))
 
     def _setDecimals(self, decimals):
+        '''Sets the number of decimal places that the QLabels, QLineEdit and
+        QSlider steps can display. Also checks that the argument provided is valid,
+        i.e. that it is a positive integer value - if the value is invalid, the method raises
+        a ValueError during object instantiation.
+
+        Parameters
+        ----------
+        decimals : int
+        '''
         if decimals < 0:
             raise ValueError("'decimals' value must be a positive integer")
         else:
             self.decimals = int(decimals)
 
     def _setNumberOfSteps(self, number_of_steps):
+        '''Sets the number of steps in the QSlider. Steps are each subdivision of the
+        QSlider's range. Also checks that the argument provided is valid, i.e. that
+        it is a positive integer value - if the value is invalid, the method raises
+        a ValueError during object instantiation.
+
+        Parameters
+        ----------
+        number_of_steps : int
+        '''
         if number_of_steps < 0:
             raise ValueError("'number_of_steps' value must be a positive integer")
         else:
             self.number_of_steps = int(number_of_steps)
 
     def _setNumberOfTicks(self, number_of_ticks):
+        '''Sets the number of ticks that the QSlider displays. Ticks are the notches
+        displayed underneath the QSlider. Also checks that the argument provided is
+        valid, i.e. that it is a positive integer value - if the value is invalid,
+        the method raises a ValueError during object instantiation.
+
+        Parameters
+        ----------
+        number_of_ticks : int
+        '''
         if number_of_ticks < 0:
             raise ValueError("'number_of_ticks' value must be a positive integer")
         else:
             self.number_of_ticks = int(number_of_ticks)
 
     def _getSliderValue(self):
+        '''Gets the current value of the QSlider, returning either 0 or a positive integer.
+        '''
         return self.slider.value()
 
     def _getLineEditValue(self):
+        '''Gets the current value of the QLineEdit. If the QLineEdit is empty,
+        this method returns the UISliderWidget's minimum value - otherwise, it
+        returns a float value between the UISliderWidget's minimum and maximum values.
+        '''
         if self.line_edit.text() == '':
             return self.minimum
         else:
             return float(self.line_edit.text())
 
     def _updateSlider(self):
+        '''Updates the QSlider to reflect the current value of the QLineEdit.
+        The method uses the state of the QValidator to check that the QLineEdit
+        value is valid - if it is valid, it sets the value of the QSlider to the
+        scaled value of the QLineEdit. Otherwise, it will update the QSlider with
+        either the scaled value of the QLineEdit's minimum or maximum.
+        '''
         line_edit_value = self._getLineEditValue()
         state = self.validator.validate(self.line_edit.text(), 0)
         if state[0] == QtGui.QDoubleValidator.Acceptable:
-            self.slider.setValue(self._scaleUp(line_edit_value))
+            self.slider.setValue(self._scaleLineEditToSlider(line_edit_value))
             self.setValue(line_edit_value)
         elif line_edit_value > self.maximum:
             self.line_edit.setText(str(self.maximum))
             line_edit_value = self._getLineEditValue()
-            self.slider.setValue(self._scaleUp(line_edit_value))
+            self.slider.setValue(self._scaleLineEditToSlider(line_edit_value))
             self.setValue(line_edit_value)
         else:
             self.line_edit.setText(str(self.minimum))
             line_edit_value = self._getLineEditValue()
-            self.slider.setValue(self._scaleUp(line_edit_value))
+            self.slider.setValue(self._scaleLineEditToSlider(line_edit_value))
             self.setValue(line_edit_value)
 
     def _updateLineEdit(self):
+        '''Updates the QLineEdit to reflect the current value of the QSlider.
+        The method sets the value of the QLineEdit to the scaled value of the QSlider.
+        '''
         slider_value = self._getSliderValue()
-        self.line_edit.setText(str(self._scaleDown(slider_value)))
+        self.line_edit.setText(str(self._scaleSliderToLineEdit(slider_value)))
 
-    def _scaleUp(self, value):
-        '''Scales a value up. The method calculates the appropriate scale factor for the conversion
-        using the minimum and maximum values of the QSlider and QLineEdit.
-        Returns the upscaled value.
+    def _scaleLineEditToSlider(self, value):
+        '''Converts a QLineEdit value to a scaled QSlider value. The method calculates
+        the appropriate scale factor for the conversion using the minimum and maximum
+        values of the QSlider and QLineEdit.
+        Returns the scaled value.
 
         Parameters
         ----------
@@ -176,10 +218,11 @@ class UISliderWidget(QWidget):
         value = self.slider_minimum + (scale_factor * (value - self.minimum))
         return int(value)
 
-    def _scaleDown(self, value):
-        '''Scales a value down. The method calculates the appropriate scale factor for the
-        conversion using the minimum and maximum values of the QSlider and QLineEdit.
-        Returns the downscaled value, rounded as per the decimals attribute.
+    def _scaleSliderToLineEdit(self, value):
+        '''Converts a QSlider value to a scaled QLineEdit value. The method calculates
+        the appropriate scale factor for the conversion using the minimum and maximum
+        values of the QSlider and QLineEdit.
+        Returns the scaled value, rounded as per the decimals property.
 
         Parameters
         ----------
