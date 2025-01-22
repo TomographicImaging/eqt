@@ -2,8 +2,7 @@ import sys
 
 from qtpy import QtWidgets
 
-from eqt.ui import FormDialog
-from eqt.ui.UISliderWidget import UISliderWidget
+from eqt.ui import FormDialog, UISliderWidget
 
 
 class MainUI(QtWidgets.QMainWindow):
@@ -35,8 +34,10 @@ class MainUI(QtWidgets.QMainWindow):
         dialog.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
         dialog.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
         dialog.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-        dialog.addWidget(UISliderWidget(minimum=0.0, maximum=100.0), 'UISliderWidget: ',
-                         'uiSliderWidget')
+        dialog.addWidget(
+            UISliderWidget.UISliderWidget(minimum=-0.5, maximum=0.5, decimals=10,
+                                          number_of_steps=10, number_of_ticks=10),
+            'UISliderWidget: ', 'uiSliderWidget')
 
         dialog.addWidget(QtWidgets.QRadioButton('test 1'), 'RadioButton 1: ', 'radioButton1')
         dialog.addWidget(QtWidgets.QRadioButton('test 2'), 'RadioButton 2: ', 'radioButton2')

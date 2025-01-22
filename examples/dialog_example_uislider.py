@@ -41,7 +41,7 @@ class MainUI(QtWidgets.QMainWindow):
     def accepted(self):
         print("accepted")
         print(f"UISlider QSlider: {self.dialog.widgets['input_slider_field']._getSliderValue()}")
-        print(f"UISlider QLineEdit: {self.dialog.widgets['input_slider_field'].getValue()}")
+        print(f"UISlider QLineEdit: {self.dialog.widgets['input_slider_field'].value()}")
 
         self.dialog.close()
 

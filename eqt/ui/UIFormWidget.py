@@ -327,6 +327,8 @@ class UIFormWidget:
             widget_state['value'] = widget.currentIndex()
         elif isinstance(widget, QtWidgets.QSlider):
             widget_state['value'] = widget.value()
+        elif isinstance(widget, UISliderWidget):
+            widget_state['value'] = widget.value()
         elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
             widget_state['value'] = widget.value()
         elif isinstance(widget, QtWidgets.QLineEdit):
@@ -335,8 +337,6 @@ class UIFormWidget:
             widget_state['value'] = widget.isChecked()
         elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
             widget_state['value'] = widget.toPlainText()
-        elif isinstance(widget, UISliderWidget):
-            widget_state['value'] = widget.getValue()
         widget_state['enabled'] = widget.isEnabled()
         widget_state['visible'] = widget.isVisible()
         widget_state['widget_row'] = self.getWidgetRow(name, role)
@@ -412,6 +412,8 @@ class UIFormWidget:
                     widget.setCurrentIndex(value)
                 elif isinstance(widget, (QtWidgets.QSlider)):
                     widget.setValue(value)
+                elif isinstance(widget, (UISliderWidget)):
+                    widget.setValue(value)
                 elif isinstance(widget, (QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox)):
                     widget.setValue(value)
                 elif isinstance(widget, QtWidgets.QPushButton):
@@ -422,8 +424,6 @@ class UIFormWidget:
                     widget.setChecked(value)
                 elif isinstance(widget, (QtWidgets.QTextEdit, QtWidgets.QPlainTextEdit)):
                     widget.setPlainText(value)
-                elif isinstance(widget, (UISliderWidget)):
-                    widget.setValue(value)
 
     def applyWidgetStates(self, states):
         '''

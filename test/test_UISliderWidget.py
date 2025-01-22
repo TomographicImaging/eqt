@@ -45,7 +45,7 @@ class TestUISliderWidget(unittest.TestCase):
             self.assertEqual(widget.number_of_ticks, 10)
 
     @parameterized.expand([("standard", 5.0), ("positive", 5.5), ("negative", -5.5),
-                           ("float", 0.0), ("long", 5.5600000000000005)])
+                           ("float", 0.0), ("long", 5.56)])
     def test_init_median(self, _, median):
         '''Tests the calculation of the 'median' property.
         '''
@@ -198,7 +198,7 @@ class TestUISliderWidget(unittest.TestCase):
         widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
         widget.setValue(widget_value)
-        self.assertEqual(widget.getValue(), expected)
+        self.assertEqual(widget.value(), expected)
 
     def test_get_slider_value(self):
         '''Tests getting the QSlider value.
@@ -237,7 +237,7 @@ class TestUISliderWidget(unittest.TestCase):
         widget.line_edit.setText(line_edit_value)
         widget._updateSlider()
         self.assertEqual(widget._getSliderValue(), expected_slider_value)
-        self.assertEqual(widget.getValue(), expected_line_edit_value)
+        self.assertEqual(widget.value(), expected_line_edit_value)
 
     @parameterized.expand([("empty", "", 0), ("lt_min", "-11.0", 0), ("gt_max", "11.0", 2000)])
     def test_invalid_update_slider(self, _, line_edit_value, expected_slider_value):
@@ -252,9 +252,9 @@ class TestUISliderWidget(unittest.TestCase):
             widget._updateSlider()
             self.assertEqual(widget._getSliderValue(), expected_slider_value)
             if _ == "gt_max":
-                self.assertEqual(widget.getValue(), widget.maximum)
+                self.assertEqual(widget.value(), widget.maximum)
             elif _ == "empty" or "lt_min":
-                self.assertEqual(widget.getValue(), widget.minimum)
+                self.assertEqual(widget.value(), widget.minimum)
 
     @parameterized.expand([("positive", 888, 5.0), ("negative", 1111, -5.0), ("float", 1500, 0.25),
                            ("long", 1000, 5.56)])
