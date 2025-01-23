@@ -66,6 +66,7 @@ class MainUI(QtWidgets.QMainWindow):
         qlabel.setText("Widget inserted in row 0: ")
         qwidget = QtWidgets.QLineEdit(form)
         form.insertWidget(0, 'inserted widget', qwidget, qlabel)
+        # Test whether UISliderWidget can be inserted
         buttonspanning = QtWidgets.QPushButton(self)
         buttonspanning.setText("Spanning widget inserted in row 2")
         form.insertWidget(2, 'inserted spanning widget', buttonspanning)

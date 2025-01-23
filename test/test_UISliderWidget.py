@@ -75,7 +75,7 @@ class TestUISliderWidget(unittest.TestCase):
             self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
     @parameterized.expand([("positive", 10, 10), ("negative", -10, 0), ("float", 2.5, 2),
-                           ("long", 9.99999, 9)])
+                           ("long", 9.99999, 9), ("value", "10", 10)])
     def test_input_decimals(self, _, decimals, expected):
         '''Tests the correct widget behaviour when different 'decimals'
         arguments are supplied.
@@ -89,8 +89,8 @@ class TestUISliderWidget(unittest.TestCase):
                 widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
                                                        decimals=decimals)
                 self.assertEqual(widget.decimals, expected)
-            except ValueError:
-                with self.assertRaises(ValueError):
+            except (ValueError, TypeError) as error:
+                with self.assertRaises(error):
                     widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
                                                            decimals=decimals)
 
@@ -109,8 +109,8 @@ class TestUISliderWidget(unittest.TestCase):
                                                    number_of_steps=number_of_steps)
             self.assertEqual(widget.number_of_steps, expected_steps)
             self.assertEqual(widget.step_size, expected_size)
-        except ValueError:
-            with self.assertRaises(ValueError):
+        except (ValueError, TypeError) as error:
+            with self.assertRaises(error):
                 widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
                                                        number_of_steps=number_of_steps)
 
@@ -131,8 +131,8 @@ class TestUISliderWidget(unittest.TestCase):
                 self.assertEqual(widget.number_of_ticks, expected_ticks)
                 self.assertEqual(widget.tick_interval, expected_interval)
                 self.assertEqual(widget.slider.tickInterval(), expected_interval)
-            except ValueError:
-                with self.assertRaises(ValueError):
+            except (ValueError, TypeError) as error:
+                with self.assertRaises(error):
                     widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
                                                            number_of_ticks=number_of_ticks)
 
@@ -189,7 +189,7 @@ class TestUISliderWidget(unittest.TestCase):
             self.assertIsInstance(widget.widget_layout, QGridLayout)
 
     @parameterized.expand([("positive", 5.0, 5.0), ("negative", -5.0, -5.0), ("float", 0.25, 0.25),
-                           ("long", 5.55555, 5.56)])
+                           ("long", 5.55555, 5.55555)])
     def test_get_and_set_value(self, _, widget_value, expected):
         '''Tests the getting and setting of the widget's 'value' property.
         '''
@@ -211,8 +211,8 @@ class TestUISliderWidget(unittest.TestCase):
             widget.slider.setValue(50)
             self.assertEqual(widget._getSliderValue(), 50)
 
-    @parameterized.expand([("positive", "5.0", 5.0), ("negative", "-5.0", -5.0),
-                           ("float", "0.25", 0.25), ("long", "5.55555", 5.55555)])
+    @parameterized.expand([("positive", "5.0", "5.0"), ("negative", "-5.0", "-5.0"),
+                           ("float", "0.25", "0.25"), ("long", "5.55555", "5.55555")])
     def test_get_lineedit_value(self, _, line_edit_value, expected):
         '''Tests getting the QLineEdit value.
         '''

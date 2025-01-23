@@ -123,6 +123,7 @@ class MainUI(QtWidgets.QMainWindow):
         print("\nDialog closed.")
 
     def remove(self, form, button, userselection=False):
+        # Test removing UISliderWidget
         if userselection is False:
             userselection = form.getWidget('userinput').currentText()
             form.getWidget('userinput').removeItem(form.getWidget('userinput').currentIndex())
