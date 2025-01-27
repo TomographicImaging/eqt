@@ -14,12 +14,12 @@ class MainUI(QtWidgets.QMainWindow):
         '''
         QtWidgets.QMainWindow.__init__(self, parent)
 
-        pb = QtWidgets.QPushButton(self)
-        pb.setText("Open Dialog with form layout")
-        pb.clicked.connect(lambda: self._openFormDialog())
+        form_dialog_button = QtWidgets.QPushButton(self)
+        form_dialog_button.setText("Open FormDialog")
+        form_dialog_button.clicked.connect(lambda: self._openFormDialog())
 
         layout = QtWidgets.QHBoxLayout()
-        layout.addWidget(pb)
+        layout.addWidget(form_dialog_button)
         widg = QtWidgets.QWidget()
         widg.setLayout(layout)
 

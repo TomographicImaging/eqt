@@ -2,38 +2,50 @@ import sys
 
 from qtpy import QtWidgets
 
-from eqt.ui import FormDialog, UIFormWidget
+from eqt.ui import FormDialog, UIFormWidget, UISliderWidget
 
 
 class MainUI(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
+        '''Creates a QMainWindow and adds a FormDockWidget, a FormDialog, and a QPushButton.
+        Opening the FormDockWidget will show the form in a separate window, and clicking
+        on the QPushButton will also display a form separately.
+        The form will initially show three widget labels and fields:
+        a QLineEdit, a spanning QLabel, a QComboBox, and a QPushButton.
+        Clicking the QPushButton will add additional widgets:
+        a QLineEdit, a spanning QPushButton, and a UISlider.
+
+        Opening the FormDialog adds an additional QPushButton, which will insert a
+        widget in the FormDialog's vertical layout.
+        '''
         QtWidgets.QMainWindow.__init__(self, parent)
 
-        # dialog form
-        self.dialog = FormDialog(parent=self, title='Form Dialog example insert widget')
-        self.addWidgetsToExampleForm(self.dialog)
-        buttoninsertvertical = QtWidgets.QPushButton()
-        buttoninsertvertical.setText("Insert widget in vertical layout")
-        self.dialog.addSpanningWidget(buttoninsertvertical, 'Button insert vertical')
-        buttoninsertvertical.clicked.connect(lambda: self.insert_vertical())
-
-        # create a FormDockWidget
         dock = UIFormWidget.FormDockWidget(parent=self)
-        dock.setWindowTitle('Dock Widget Example insert widget')
+        dock.setWindowTitle('Dock Widget Insert Widget Example')
         self.addWidgetsToExampleForm(dock)
 
-        # create button for Form Dialog
-        pb = QtWidgets.QPushButton(self)
-        pb.setText("Open Form Dialog")
-        pb.clicked.connect(self.openFormDialog)
+        form_dialog_button = QtWidgets.QPushButton(self)
+        form_dialog_button.setText("Open FormDialog")
+        form_dialog_button.clicked.connect(self.openFormDialog)
 
-        # create window layout
-        layout = QtWidgets.QHBoxLayout()
-        layout.addWidget(pb)
+        self.dialog = FormDialog(parent=self, title='Form Dialog Insert Widget Example')
+        self.addWidgetsToExampleForm(self.dialog)
+
+        insert_vertical_button = QtWidgets.QPushButton()
+        insert_vertical_button.setText("Insert widget in vertical layout")
+        self.dialog.addSpanningWidget(insert_vertical_button, 'qbutton insert vertical')
+        insert_vertical_button.clicked.connect(lambda: self.insert_vertical())
+
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(dock)
+        layout.addWidget(form_dialog_button)
         widg = QtWidgets.QWidget()
         widg.setLayout(layout)
         self.setCentralWidget(widg)
+
+        print('\nDictionary of widgets before insertion in the form layout:')
+        for widget in dock.getWidgets():
+            print(widget, dock.getWidgets()[widget])
 
         self.dialog.onCancel = self.onCancel
         self.show()
@@ -42,16 +54,19 @@ class MainUI(QtWidgets.QMainWindow):
         self.dialog.open()
 
     def addWidgetsToExampleForm(self, form):
-        form.addWidget(QtWidgets.QLineEdit(), "Initial widget row 0: ", 'Initial widget row 0')
-        form.addSpanningWidget(QtWidgets.QLabel("Initial widget row 1"), 'Initial widget row 1')
-        # add QComboBox
+        form.addWidget(QtWidgets.QLineEdit(), "Initial QLineEdit Row 0:",
+                       'initial qlineedit row 0')
+        form.addSpanningWidget(QtWidgets.QLabel("Initial Spanning QLabel Row 1"),
+                               'initial spanning qlabel row 1')
+
         qwidget = QtWidgets.QComboBox(form)
         qwidget.addItem("0")
         qwidget.addItem("1")
-        form.addWidget(qwidget, "Initial widget row 2", 'Initial widget row 2')
+        form.addWidget(qwidget, "Initial QComboBox Row 2:", 'initial qcombobox row 2')
+
         buttoninsert = QtWidgets.QPushButton()
         buttoninsert.setText("Insert widgets")
-        form.addSpanningWidget(buttoninsert, 'Button insert widgets')
+        form.addSpanningWidget(buttoninsert, 'qbutton insert widgets')
         buttoninsert.clicked.connect(lambda: self.insert_form(form, buttoninsert))
 
     def insert_vertical(self):
@@ -59,43 +74,57 @@ class MainUI(QtWidgets.QMainWindow):
             1, QtWidgets.QPushButton("Inserted widget in vertical layout"))
         print(
             "\nThe dictionary of widgets does not change after insertion in the vertical layout.")
-        self.dialog.getWidget('Button insert vertical').setEnabled(False)
+        self.dialog.getWidget('qbutton insert vertical').setEnabled(False)
 
     def insert_form(self, form, button):
         qlabel = QtWidgets.QLabel(form)
-        qlabel.setText("Widget inserted in row 0: ")
+        qlabel.setText("Inserted Widget Row 0:")
         qwidget = QtWidgets.QLineEdit(form)
-        form.insertWidget(0, 'inserted widget', qwidget, qlabel)
-        # Test whether UISliderWidget can be inserted
+        form.insertWidget(0, 'inserted qlineedit row 0', qwidget, qlabel)
+
         buttonspanning = QtWidgets.QPushButton(self)
-        buttonspanning.setText("Spanning widget inserted in row 2")
-        form.insertWidget(2, 'inserted spanning widget', buttonspanning)
-        print('\nDictionary of widgets after insertion in the form layout:\n' +
-              str(form.getWidgets()))
+        buttonspanning.setText("Inserted Spanning Widget Row 2")
+        form.insertWidget(2, 'inserted spanning qpushbutton row 2', buttonspanning)
+
+        qlabel = QtWidgets.QLabel(form)
+        qlabel.setText("Inserted Widget Row 4:")
+        uislider = UISliderWidget.UISliderWidget(minimum=-0.5, maximum=0.5, decimals=10,
+                                                 number_of_steps=10, number_of_ticks=10)
+        form.insertWidget(4, 'inserted uislider row 4', uislider, qlabel)
+
+        print('\nDictionary of widgets after insertion in the form layout:')
+        for widget in form.getWidgets():
+            print(widget, form.getWidgets()[widget])
+
         button.setEnabled(False)
 
     def onCancel(self):
-        if not hasattr(self.dialog.formWidget, 'widget_states'):
-            if self.dialog.getWidget('Button insert vertical').isEnabled() is False:
+        if bool(self.dialog.formWidget.widget_states) is False:
+            if self.dialog.getWidget('qbutton insert vertical').isEnabled() is False:
                 self.dialog.removeWidgetFromVerticalLayout(
                     self.dialog.getWidgetFromVerticalLayout(1))
-
-            if self.dialog.getWidget('Button insert widgets').isEnabled() is False:
+            if self.dialog.getWidget('qbutton insert widgets').isEnabled() is False:
                 self.dialog.formWidget._popWidget(self.dialog.formWidget.default_widget_states,
-                                                  'inserted widget')
+                                                  'inserted qlineedit row 0')
                 self.dialog.formWidget._popWidget(self.dialog.formWidget.default_widget_states,
-                                                  'inserted spanning widget')
-                self.dialog.formWidget.removeWidget('inserted widget')
-                self.dialog.formWidget.removeWidget('inserted spanning widget')
+                                                  'inserted spanning qpushbutton row 2')
+                self.dialog.formWidget._popWidget(self.dialog.formWidget.default_widget_states,
+                                                  'inserted uislider row 4')
+                self.dialog.formWidget.removeWidget('inserted qlineedit row 0')
+                self.dialog.formWidget.removeWidget('inserted spanning qpushbutton row 2')
+                self.dialog.formWidget.removeWidget('inserted uislider row 4')
         else:
-            if self.dialog.getWidget('Button insert vertical').isEnabled(
-            ) != self.dialog.getWidgetStates()['Button insert vertical_field']['enabled'] is True:
+            if self.dialog.getWidget(
+                    'qbutton insert vertical').isEnabled() != self.dialog.getSavedWidgetStates(
+                    )['qbutton insert vertical_field']['enabled'] is True:
                 self.dialog.removeWidgetFromVerticalLayout(
                     self.dialog.getWidgetFromVerticalLayout(1))
-            if self.dialog.getWidget('Button insert widgets').isEnabled(
-            ) != self.dialog.getWidgetStates()['Button insert widgets_field']['enabled'] is True:
-                self.dialog.formWidget.removeWidget('inserted widget')
-                self.dialog.formWidget.removeWidget('inserted spanning widget')
+            if self.dialog.getWidget(
+                    'qbutton insert widgets').isEnabled() != self.dialog.getSavedWidgetStates(
+                    )['qbutton insert widgets_field']['enabled'] is True:
+                self.dialog.formWidget.removeWidget('inserted qlineedit row 0')
+                self.dialog.formWidget.removeWidget('inserted spanning qpushbutton row 2')
+                self.dialog.formWidget.removeWidget('inserted uislider row 4')
 
 
 if __name__ == "__main__":
