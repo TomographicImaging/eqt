@@ -1,8 +1,6 @@
-import unittest
-
-from parameterized import parameterized
 from qtpy import QtGui
 from qtpy.QtWidgets import QGridLayout, QLabel, QLineEdit, QSlider
+from unittest_parametrize import ParametrizedTestCase, param, parametrize
 
 from eqt.ui import UISliderWidget
 
@@ -10,7 +8,7 @@ from . import skip_ci
 
 
 @skip_ci
-class TestUISliderWidget(unittest.TestCase):
+class TestUISliderWidget(ParametrizedTestCase):
     def setUp(self):
         self.test_widgets = {
             "standard": {"minimum": 0.0,
@@ -19,277 +17,460 @@ class TestUISliderWidget(unittest.TestCase):
                          "maximum": -1.0}, "float": {"minimum": -0.5, "maximum": 0.5},
             "long": {"minimum": 1.11111, "maximum": 9.99999}}
 
-    @parameterized.expand([("standard", 0.0, 10.0), ("positive", 1.0, 10.0),
-                           ("negative", -10.0, -1.0), ("float", -0.5, 0.5), ("long", 1.11, 10.0)])
-    def test_init_widget(self, _, expected_minimum, expected_maximum):
-        '''Tests widget instantiation using 'minimum'/'maximum' arguments.
+    @parametrize(
+        "expected_minimum,expected_maximum,test_widget",
+        [
+            param(0.0, 10.0, "standard", id="standard"),
+            param(1.0, 10.0, "positive", id="positive"),
+            param(-10.0, -1.0, "negative", id="negative"),
+            param(-0.5, 0.5, "float", id="float"),
+            param(1.11, 10.0, "long", id="long"),],
+    )
+    def test_init(self, expected_minimum, expected_maximum, test_widget):
+        '''Tests widget instantiation using required arguments.
         '''
-        minimum = self.test_widgets.get(_).get("minimum")
-        maximum = self.test_widgets.get(_).get("maximum")
-        widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        minimum = self.test_widgets.get(test_widget).get("minimum")
+        maximum = self.test_widgets.get(test_widget).get("maximum")
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-        self.assertIsInstance(widget, UISliderWidget.UISliderWidget)
-        self.assertEqual(widget.minimum, expected_minimum)
-        self.assertEqual(widget.maximum, expected_maximum)
+        self.assertIsInstance(self.widget, UISliderWidget.UISliderWidget)
+        self.assertEqual(self.widget.minimum, expected_minimum)
+        self.assertEqual(self.widget.maximum, expected_maximum)
 
-    def test_init_default_properties(self):
-        '''Tests the setting of the widget's default properties.
-        '''
-        for params in self.test_widgets.values():
-            minimum = params.get("minimum")
-            maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
-
-            self.assertEqual(widget.decimals, 2)
-            self.assertEqual(widget.number_of_steps, 2000)
-            self.assertEqual(widget.number_of_ticks, 10)
-
-    @parameterized.expand([("standard", 5.0), ("positive", 5.5), ("negative", -5.5),
-                           ("float", 0.0), ("long", 5.56)])
-    def test_init_median(self, _, median):
-        '''Tests the calculation of the 'median' property.
-        '''
-        minimum = self.test_widgets.get(_).get("minimum")
-        maximum = self.test_widgets.get(_).get("maximum")
-        widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
-
-        self.assertEqual(widget.median, median)
-
-    def test_widget_state(self):
-        '''Tests default widget states.
-        '''
-        for params in self.test_widgets.values():
-            minimum = params.get("minimum")
-            maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
-
-            self.assertTrue(widget.isVisible())
-            self.assertTrue(widget.isEnabled())
-
-    @parameterized.expand([("min_gt_max", 10.0, 0.0), ("min_eq_max", 0.0, 0.0)])
-    def test_input_invalid_min_max(self, _, minimum, maximum):
-        '''Tests for correct widget behaviour when invalid combinations
-        of 'minimum'/'maximum' are supplied.
+    @parametrize(
+        "minimum,maximum",
+        [
+            param(10.0, 0.0, id="min_gt_max"),
+            param(0.0, 0.0, id="min_eq_max"),],
+    )
+    def test_init_invalid_min_max(self, minimum, maximum):
+        '''Tests widget behaviour when invalid combinations of the required arguments are supplied.
         '''
         with self.assertRaises(ValueError):
             self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-    @parameterized.expand([("positive", 10, 10), ("negative", -10, 0), ("float", 2.5, 2),
-                           ("long", 9.99999, 9), ("value", "10", 10)])
-    def test_input_decimals(self, _, decimals, expected):
-        '''Tests the correct widget behaviour when different 'decimals'
-        arguments are supplied.
-        If an invalid argument is supplied, a ValueError is raised.
+    def test_init_default_attributes(self):
+        '''Tests the setting of the widget's default attributes.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-            try:
-                widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                       decimals=decimals)
-                self.assertEqual(widget.decimals, expected)
-            except (ValueError, TypeError) as error:
-                with self.assertRaises(error):
-                    widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                           decimals=decimals)
+            self.assertEqual(self.widget.decimals, 2)
+            self.assertEqual(self.widget.number_of_steps, 2000)
+            self.assertEqual(self.widget.number_of_ticks, 10)
 
-    @parameterized.expand([("positive", 1500, 1500, 0.006), ("negative", -50, 2000, 0.0005),
-                           ("float", 2.5, 2, 0.5), ("long", 9.99999, 9, 0.9877777777777779)])
-    def test_input_number_of_steps(self, _, number_of_steps, expected_steps, expected_size):
-        '''Tests the correct widget behaviour when different 'number_of_steps'
-        arguments are supplied.
-        If an invalid argument is supplied, a ValueError is raised.
+    @parametrize(
+        "median,test_widget",
+        [
+            param(5.0, "standard", id="standard"),
+            param(5.5, "positive", id="positive"),
+            param(-5.5, "negative", id="negative"),
+            param(0.0, "float", id="float"),
+            param(5.56, "long", id="long"),],
+    )
+    def test_init_median(self, median, test_widget):
+        '''Tests the calculation of the median attribute.
         '''
-        minimum = self.test_widgets.get(_).get("minimum")
-        maximum = self.test_widgets.get(_).get("maximum")
+        minimum = self.test_widgets.get(test_widget).get("minimum")
+        maximum = self.test_widgets.get(test_widget).get("maximum")
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-        try:
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                   number_of_steps=number_of_steps)
-            self.assertEqual(widget.number_of_steps, expected_steps)
-            self.assertEqual(widget.step_size, expected_size)
-        except (ValueError, TypeError) as error:
-            with self.assertRaises(error):
-                widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                       number_of_steps=number_of_steps)
+        self.assertEqual(self.widget.median, median)
 
-    @parameterized.expand([("positive", 5, 5, 400), ("negative", -10, 10, 0.1),
-                           ("float", 2.5, 2, 1000), ("long", 9.99999, 9, 222)])
-    def test_input_number_of_ticks(self, _, number_of_ticks, expected_ticks, expected_interval):
-        '''Tests the correct widget behaviour when different 'number_of_ticks'
-        arguments are supplied.
-        If an invalid argument is supplied, a ValueError is raised.
+    @parametrize(
+        "decimals,expected",
+        [
+            param(1, 1, id="gt_zero_1"),
+            param(10, 10, id="gt_zero_10"),],
+    )
+    def test_input_valid_decimals(self, decimals, expected):
+        '''Tests the widget behaviour when valid 'decimals' arguments are supplied.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        decimals=decimals)
+            self.assertEqual(self.widget.decimals, expected)
 
-            try:
-                widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                       number_of_ticks=number_of_ticks)
-                self.assertEqual(widget.number_of_ticks, expected_ticks)
-                self.assertEqual(widget.tick_interval, expected_interval)
-                self.assertEqual(widget.slider.tickInterval(), expected_interval)
-            except (ValueError, TypeError) as error:
-                with self.assertRaises(error):
-                    widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                           number_of_ticks=number_of_ticks)
+    @parametrize(
+        "decimals",
+        [
+            param(-1, id="negative_1"),
+            param(-10, id="negative_10"),
+            param(0, id="eq_0"),],
+    )
+    def test_input_invalid_value_decimals(self, decimals):
+        '''Tests the widget behaviour when invalid 'decimals' values are supplied.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            with self.assertRaises(ValueError):
+                self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                            decimals=decimals)
 
-    def test_init_default_slider(self):
+    @parametrize(
+        "decimals",
+        [
+            param(2.5, id="float"),
+            param("10", id="string"),
+            param(None, id="none"),],
+    )
+    def test_input_invalid_type_decimals(self, decimals):
+        '''Tests the widget behaviour when invalid 'decimals' types are supplied.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            with self.assertRaises(TypeError):
+                self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                            decimals=decimals)
+
+    @parametrize(
+        "number_of_steps,expected_steps",
+        [
+            param(1, 1, id="gt_zero_1"),
+            param(10, 10, id="gt_zero_10"),],
+    )
+    def test_input_valid_number_of_steps(self, number_of_steps, expected_steps):
+        '''Tests the input of valid 'number_of_steps' arguments.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        number_of_steps=number_of_steps)
+            self.assertEqual(self.widget.number_of_steps, expected_steps)
+
+    @parametrize(
+        "number_of_steps",
+        [
+            param(-1, id="negative_1"),
+            param(-10, id="negative_10"),
+            param(0, id="eq_0"),],
+    )
+    def test_input_invalid_value_steps(self, number_of_steps):
+        '''Tests the widget behaviour when invalid 'number_of_steps' values are supplied.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            with self.assertRaises(ValueError):
+                self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                            number_of_steps=number_of_steps)
+
+    @parametrize(
+        "number_of_steps,expected_size,test_widget",
+        [
+            param(10, 1.0, "standard", id="standard"),
+            param(10, 0.9, "positive", id="positive"),
+            param(10, 0.9, "negative", id="negative"),
+            param(10, 0.1, "float", id="float"),
+            param(10, 0.889, "long", id="long"),],
+    )
+    def test_calculate_step_size(self, number_of_steps, expected_size, test_widget):
+        '''Tests the calculation of the 'step_size' attribute.
+        '''
+        minimum = self.test_widgets.get(test_widget).get("minimum")
+        maximum = self.test_widgets.get(test_widget).get("maximum")
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                    number_of_steps=number_of_steps)
+        self.assertEqual(self.widget.step_size, expected_size)
+
+    @parametrize(
+        "number_of_steps",
+        [
+            param(2.5, id="float"),
+            param("10", id="string"),
+            param(None, id="none"),],
+    )
+    def test_input_invalid_type_steps(self, number_of_steps):
+        '''Tests the widget behaviour when invalid 'number_of_steps' types are supplied.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            with self.assertRaises(TypeError):
+                self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                            number_of_steps=number_of_steps)
+
+    @parametrize(
+        "number_of_ticks,expected_ticks,expected_interval",
+        [
+            param(1, 1, 2000, id="gt_zero_1"),
+            param(10, 10, 200, id="gt_zero_10"),],
+    )
+    def test_input_valid_ticks(self, number_of_ticks, expected_ticks, expected_interval):
+        '''Tests the widget behaviour when valid 'number_of_ticks' arguments are supplied.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        number_of_ticks=number_of_ticks)
+            self.assertEqual(self.widget.number_of_ticks, expected_ticks)
+            self.assertEqual(self.widget.tick_interval, expected_interval)
+            self.assertEqual(self.widget.slider.tickInterval(), expected_interval)
+
+    @parametrize(
+        "number_of_ticks",
+        [
+            param(-1, id="negative_1"),
+            param(-10, id="negative_10"),
+            param(0, id="eq_0"),],
+    )
+    def test_input_invalid_value_ticks(self, number_of_ticks):
+        '''Tests the widget behaviour when invalid 'number_of_ticks' values are supplied.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            with self.assertRaises(ValueError):
+                self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                            number_of_ticks=number_of_ticks)
+
+    @parametrize(
+        "number_of_ticks",
+        [
+            param(2.5, id="float"),
+            param("10", id="string"),
+            param(None, id="none"),],
+    )
+    def test_input_invalid_type_ticks(self, number_of_ticks):
+        '''Tests the widget behaviour when invalid 'number_of_ticks' types are supplied.
+        If an invalid argument is supplied, a TypeError is raised.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            with self.assertRaises(TypeError):
+                self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                            number_of_ticks=number_of_ticks)
+
+    def test_init_default_qslider(self):
         '''Tests the instantiation of the QSlider widget.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-            self.assertIsInstance(widget.slider, QSlider)
+            self.assertIsInstance(self.widget.slider, QSlider)
 
-    def test_init_default_validator(self):
+    def test_init_default_qvalidator(self):
         '''Tests the instantiation of the QValidator widget.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-            self.assertIsInstance(widget.validator, QtGui.QValidator)
+            self.assertIsInstance(self.widget.validator, QtGui.QValidator)
 
-    def test_init_default_lineedit(self):
+    def test_init_default_qlineedit(self):
         '''Tests the instantiation of the QLineEdit widget.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-            self.assertIsInstance(widget.line_edit, QLineEdit)
+            self.assertIsInstance(self.widget.line_edit, QLineEdit)
 
-    def test_init_default_labels(self):
+    def test_init_default_qlabels(self):
         '''Tests the instantiation of the QLabel widgets.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-            self.assertIsInstance(widget.min_label, QLabel)
-            self.assertIsInstance(widget.median_label, QLabel)
-            self.assertIsInstance(widget.max_label, QLabel)
+            self.assertIsInstance(self.widget.min_label, QLabel)
+            self.assertIsInstance(self.widget.median_label, QLabel)
+            self.assertIsInstance(self.widget.max_label, QLabel)
 
-    def test_init_default_gridlayout(self):
+    def test_init_default_qgridlayout(self):
         '''Tests the instantiation of the QGridLayout.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-            self.assertIsInstance(widget.widget_layout, QGridLayout)
+            self.assertIsInstance(self.widget.widget_layout, QGridLayout)
 
-    @parameterized.expand([("positive", 5.0, 5.0), ("negative", -5.0, -5.0), ("float", 0.25, 0.25),
-                           ("long", 5.55555, 5.55555)])
-    def test_get_and_set_value(self, _, widget_value, expected):
-        '''Tests the getting and setting of the widget's 'value' property.
+    @parametrize(
+        "widget_value,expected_value,test_widget",
+        [
+            param(5.0, 5.0, "positive", id="positive"),
+            param(-5.0, -5.0, "negative", id="negative"),
+            param(0.25, 0.25, "float", id="float"),
+            param(5.55555, 5.55555, "long", id="long"),],
+    )
+    def test_get_and_set_uislider_value(self, widget_value, expected_value, test_widget):
+        '''Tests the getting and setting of the UISlider value.
         '''
-        minimum = self.test_widgets.get(_).get("minimum")
-        maximum = self.test_widgets.get(_).get("maximum")
-        widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        minimum = self.test_widgets.get(test_widget).get("minimum")
+        maximum = self.test_widgets.get(test_widget).get("maximum")
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-        widget.setValue(widget_value)
-        self.assertEqual(widget.value(), expected)
+        self.widget.setValue(widget_value)
+        self.assertEqual(self.widget.value(), expected_value)
 
-    def test_get_slider_value(self):
-        '''Tests getting the QSlider value.
-        '''
-        for params in self.test_widgets.values():
-            minimum = params.get("minimum")
-            maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
-
-            widget.slider.setValue(50)
-            self.assertEqual(widget._getSliderValue(), 50)
-
-    @parameterized.expand([("positive", "5.0", "5.0"), ("negative", "-5.0", "-5.0"),
-                           ("float", "0.25", "0.25"), ("long", "5.55555", "5.55555")])
-    def test_get_lineedit_value(self, _, line_edit_value, expected):
-        '''Tests getting the QLineEdit value.
+    def test_get_and_set_qslider_value(self):
+        '''Tests the getting and setting of the QSlider value.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-            widget.line_edit.setText(line_edit_value)
-            self.assertEqual(widget._getLineEditValue(), expected)
+            self.widget.slider.setValue(50)
+            self.assertEqual(self.widget._getQSliderValue(), 50)
 
-    @parameterized.expand([("positive", "5.0", 888, 5.0), ("negative", "-5.0", 1111, -5.0),
-                           ("float", "0.25", 1500, 0.25), ("long", "5.55555", 1000, 5.55555)])
-    def test_acceptable_update_slider(self, _, line_edit_value, expected_slider_value,
-                                      expected_line_edit_value):
+    @parametrize(
+        "line_edit_value,expected",
+        [
+            param("5.0", "5.0", id="positive"),
+            param("-5.0", "-5.0", id="negative"),
+            param("0.25", "0.25", id="float"),
+            param("5.55555", "5.55555", id="long"),],
+    )
+    def test_get_and_set_qlineedit_value(self, line_edit_value, expected):
+        '''Tests the getting and setting of the QLineEdit value.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+
+            self.widget.line_edit.setText(line_edit_value)
+            self.assertEqual(self.widget._getQLineEditValue(), expected)
+
+    @parametrize(
+        "line_edit_value,expected_slider_value,expected_line_edit_value,test_widget",
+        [
+            param("5.0", 888, 5.0, "positive", id="positive"),
+            param("-5.0", 1111, -5.0, "negative", id="negative"),
+            param("0.25", 1500, 0.25, "float", id="float"),
+            param("5.55555", 1000, 5.55555, "long", id="long"),],
+    )
+    def test_acceptable_update_qslider(self, line_edit_value, expected_slider_value,
+                                       expected_line_edit_value, test_widget):
         '''Tests updating the QSlider with a valid QLineEdit value.
         '''
-        minimum = self.test_widgets.get(_).get("minimum")
-        maximum = self.test_widgets.get(_).get("maximum")
-        widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        minimum = self.test_widgets.get(test_widget).get("minimum")
+        maximum = self.test_widgets.get(test_widget).get("maximum")
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-        widget.line_edit.setText(line_edit_value)
-        widget._updateSlider()
-        self.assertEqual(widget._getSliderValue(), expected_slider_value)
-        self.assertEqual(widget.value(), expected_line_edit_value)
+        self.widget.line_edit.setText(line_edit_value)
+        self.widget._updateQSlider()
+        self.assertEqual(self.widget._getQSliderValue(), expected_slider_value)
+        self.assertEqual(self.widget.value(), expected_line_edit_value)
 
-    @parameterized.expand([("empty", "", 0), ("lt_min", "-11.0", 0), ("gt_max", "11.0", 2000)])
-    def test_invalid_update_slider(self, _, line_edit_value, expected_slider_value):
-        '''Tests updating the QSlider with a valid QLineEdit value.
+    def test_empty_update_qslider(self):
+        '''Tests updating the QSlider with an empty string QLineEdit value.
         '''
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-            widget.line_edit.setText(line_edit_value)
-            widget._updateSlider()
-            self.assertEqual(widget._getSliderValue(), expected_slider_value)
-            if _ == "gt_max":
-                self.assertEqual(widget.value(), widget.maximum)
-            elif _ == "empty" or "lt_min":
-                self.assertEqual(widget.value(), widget.minimum)
+            self.widget.line_edit.setText("")
+            self.widget._updateQSlider()
 
-    @parameterized.expand([("positive", 888, 5.0), ("negative", 1111, -5.0), ("float", 1500, 0.25),
-                           ("long", 1000, 5.56)])
-    def test_update_lineedit(self, _, slider_value, expected_line_edit_value):
+            self.assertEqual(self.widget._getQSliderValue(), self.widget.slider_minimum)
+            self.assertEqual(self.widget.value(), self.widget.minimum)
+
+    def test_lt_min_update_qslider(self):
+        '''Tests updating the QSlider with a QLineEdit value less than the minimum.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+
+            lt_min_value = str(minimum - 1)
+            self.widget.line_edit.setText(lt_min_value)
+
+            with self.assertRaises(ValueError):
+                self.widget._updateQSlider()
+
+            self.assertEqual(self.widget._getQSliderValue(), self.widget.slider_minimum)
+            self.assertEqual(self.widget.value(), self.widget.minimum)
+
+    def test_gt_max_update_qslider(self):
+        '''Tests updating the QSlider with a QLineEdit value greater than the maximum.
+        '''
+        for params in self.test_widgets.values():
+            minimum = params.get("minimum")
+            maximum = params.get("maximum")
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+
+            gt_min_value = str(maximum + 1)
+            self.widget.line_edit.setText(gt_min_value)
+
+            with self.assertRaises(ValueError):
+                self.widget._updateQSlider()
+
+            self.assertEqual(self.widget._getQSliderValue(), self.widget.slider_maximum)
+            self.assertEqual(self.widget.value(), self.widget.maximum)
+
+    @parametrize(
+        "slider_value,expected_line_edit_value,test_widget",
+        [
+            param(888, "5.0", "positive", id="positive"),
+            param(1111, "-5.0", "negative", id="negative"),
+            param(1500, "0.25", "float", id="float"),
+            param(1000, "5.56", "long", id="long"),],
+    )
+    def test_update_qlineedit(self, slider_value, expected_line_edit_value, test_widget):
         '''Tests updating the QLineEdit with a valid QSlider value.
         '''
-        minimum = self.test_widgets.get(_).get("minimum")
-        maximum = self.test_widgets.get(_).get("maximum")
-        widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        minimum = self.test_widgets.get(test_widget).get("minimum")
+        maximum = self.test_widgets.get(test_widget).get("maximum")
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-        widget.slider.setValue(slider_value)
-        widget._updateLineEdit()
-        self.assertEqual(widget._getLineEditValue(), expected_line_edit_value)
+        self.widget.slider.setValue(slider_value)
+        self.widget._updateQLineEdit()
+        self.assertEqual(self.widget._getQLineEditValue(), expected_line_edit_value)
 
-    @parameterized.expand([("positive", 5.0, 888), ("negative", -5.0, 1111), ("float", 2.5, 6000),
-                           ("long", 9.99999, 1999)])
-    def test_scale_lineedit_to_slider(self, _, line_edit_value, expected):
+    @parametrize(
+        "line_edit_value,expected,test_widget",
+        [
+            param(5.0, 888, "positive", id="positive"),
+            param(-5.0, 1111, "negative", id="negative"),
+            param(2.5, 6000, "float", id="float"),
+            param(9.99999, 1999, "long", id="long"),],
+    )
+    def test_scale_lineedit_to_slider(self, line_edit_value, expected, test_widget):
         '''Tests converting a valid QLineEdit value into a scaled QSlider value.
         '''
-        minimum = self.test_widgets.get(_).get("minimum")
-        maximum = self.test_widgets.get(_).get("maximum")
-        widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        minimum = self.test_widgets.get(test_widget).get("minimum")
+        maximum = self.test_widgets.get(test_widget).get("maximum")
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-        self.assertEqual(widget._scaleLineEditToSlider(line_edit_value), expected)
+        self.assertEqual(self.widget._scaleLineEditToSlider(line_edit_value), expected)
 
-    @parameterized.expand([("positive", 1000, 5.5), ("negative", 1000, -5.5), ("float", 1000, 0.0),
-                           ("long", 1000, 5.56)])
-    def test_scale_slider_to_lineedit(self, _, slider_value, expected):
+    @parametrize(
+        "slider_value,expected,test_widget",
+        [
+            param(1000, 5.5, "positive", id="positive"),
+            param(1000, -5.5, "negative", id="negative"),
+            param(1000, 0.0, "float", id="float"),
+            param(1000, 5.56, "long", id="long"),],
+    )
+    def test_scale_slider_to_lineedit(self, slider_value, expected, test_widget):
         '''Tests converting a valid QSlider value into a scaled QLineEdit value.
         '''
-        minimum = self.test_widgets.get(_).get("minimum")
-        maximum = self.test_widgets.get(_).get("maximum")
-        widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        minimum = self.test_widgets.get(test_widget).get("minimum")
+        maximum = self.test_widgets.get(test_widget).get("maximum")
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
 
-        self.assertEqual(widget._scaleSliderToLineEdit(slider_value), expected)
+        self.assertEqual(self.widget._scaleSliderToLineEdit(slider_value), expected)
 
     def tearDown(self):
         self.form = None

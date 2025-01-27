@@ -38,20 +38,15 @@ class UISliderWidget(QWidget):
         '''
         QWidget.__init__(self)
 
-        if minimum >= maximum:
-            raise ValueError("'minimum' argument must be less than 'maximum'")
-
         self._setDecimals(decimals)
+        self._setMinimumMaximum(minimum, maximum)
+        self.median = round((self.maximum - self.minimum) / 2 + self.minimum, self.decimals)
+
         self._setNumberOfSteps(number_of_steps)
         self._setNumberOfTicks(number_of_ticks)
 
-        self.minimum = round(minimum, self.decimals)
-        self.maximum = round(maximum, self.decimals)
-        self.median = round((self.maximum - self.minimum) / 2 + self.minimum, self.decimals)
-
         self.slider_minimum = 0
         self.slider_maximum = self.number_of_steps
-
         self.scale_factor = (self.slider_maximum - self.slider_minimum) / (self.maximum -
                                                                            self.minimum)
 
@@ -59,45 +54,12 @@ class UISliderWidget(QWidget):
         self.tick_interval = round(
             (self.slider_maximum - self.slider_minimum) / self.number_of_ticks)
 
-        self.slider = QSlider()
-        self.slider.setRange(self.slider_minimum, self.slider_maximum)
-        self.slider.setOrientation(QtCore.Qt.Horizontal)
-        self.slider.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-        self.slider.setTickInterval(self.tick_interval)
-
-        self.slider.valueChanged.connect(self._updateLineEdit)
-
-        self.validator = QtGui.QDoubleValidator()
-        self.validator.setBottom(self.minimum)
-        self.validator.setTop(self.maximum)
-        self.validator.setNotation(QtGui.QDoubleValidator.StandardNotation)
-        self.validator.setLocale(QtCore.QLocale("en_US"))
-
-        self.line_edit = QLineEdit()
-        self.line_edit.setValidator(self.validator)
-        self.line_edit.setText(str(self.minimum))
-        self.line_edit.setPlaceholderText(str(self.minimum))
-
-        self.line_edit.editingFinished.connect(self._updateSlider)
-        self.line_edit.returnPressed.connect(self._updateSlider)
-
-        self.app = QApplication.instance()
-        self.app.focusChanged.connect(self._updateSlider)
-
-        self.min_label = QLabel()
-        self.min_label.setText(str(self.minimum))
-        self.median_label = QLabel()
-        self.median_label.setText(str(self.median))
-        self.max_label = QLabel()
-        self.max_label.setText(str(self.maximum))
-
-        self.widget_layout = QGridLayout()
-        self.widget_layout.addWidget(self.slider, 0, 0, 1, -1)
-        self.widget_layout.addWidget(self.min_label, 1, 0, QtCore.Qt.AlignLeft)
-        self.widget_layout.addWidget(self.median_label, 1, 1, QtCore.Qt.AlignCenter)
-        self.widget_layout.addWidget(self.max_label, 1, 2, QtCore.Qt.AlignRight)
-        self.widget_layout.addWidget(self.line_edit, 2, 0, 1, -1)
+        self._setUpQSlider()
+        self._setUpQValidator()
+        self._setUpQLineEdit()
+        self._connectFocusChangedSignal()
+        self._setUpQLabels()
+        self._setUpQGridLayout()
 
         self.setLayout(self.widget_layout)
 
@@ -105,10 +67,11 @@ class UISliderWidget(QWidget):
         '''Defines the value of the UISliderWidget using the current float value of the QLineEdit.
         This method exists to remain consistent with other QWidgets.
         '''
-        return float(self._getLineEditValue())
+        return float(self._getQLineEditValue())
 
     def setValue(self, value):
         '''Sets the value of the UISliderWidget using the current float value of the QLineEdit.
+        Also scales the value to set the value of the QSlider.
         This method exists to remain consistent with other QWidgets.
 
         Parameters
@@ -116,6 +79,15 @@ class UISliderWidget(QWidget):
         value : float
         '''
         self.line_edit.setText(str(value))
+
+    def _setMinimumMaximum(self, minimum, maximum):
+        '''Sets the widget's minimum and maximum attributes. Checks that the minimum
+        '''
+        if minimum >= maximum:
+            raise ValueError("'minimum' argument must be less than 'maximum'")
+        else:
+            self.minimum = round(minimum, self.decimals)
+            self.maximum = round(maximum, self.decimals)
 
     def _setDecimals(self, decimals):
         '''Sets the number of decimal places that the QLabels, QLineEdit and
@@ -127,7 +99,7 @@ class UISliderWidget(QWidget):
         ----------
         decimals : int
         '''
-        if decimals < 0:
+        if decimals <= 0:
             raise ValueError("'decimals' value must be greater than 0")
         elif isinstance(decimals, int) is not True:
             raise TypeError("'decimals' value type must be int")
@@ -144,7 +116,7 @@ class UISliderWidget(QWidget):
         ----------
         number_of_steps : int
         '''
-        if number_of_steps < 0:
+        if number_of_steps <= 0:
             raise ValueError("'number_of_steps' value must be greater than 0")
         elif isinstance(number_of_steps, int) is not True:
             raise TypeError("'number_of_steps' value type must be int")
@@ -161,35 +133,110 @@ class UISliderWidget(QWidget):
         ----------
         number_of_ticks : int
         '''
-        if number_of_ticks < 0:
+        if number_of_ticks <= 0:
             raise ValueError("'number_of_ticks' value must be greater than 0")
         elif isinstance(number_of_ticks, int) is not True:
             raise TypeError("'number_of_ticks' value type must be int")
         else:
             self.number_of_ticks = number_of_ticks
 
-    def _getSliderValue(self):
+    def _setUpQSlider(self):
+        '''Creates and configures the UISlider's QSlider widget.
+        A signal from the QSlider is connected to the method that
+        updates the QLineEdit widget.
+        '''
+        self.slider = QSlider()
+        self.slider.setRange(self.slider_minimum, self.slider_maximum)
+        self.slider.setOrientation(QtCore.Qt.Horizontal)
+        self.slider.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.slider.setTickPosition(QSlider.TicksBelow)
+        self.slider.setTickInterval(self.tick_interval)
+
+        self.slider.valueChanged.connect(self._updateQLineEdit)
+
+    def _setUpQValidator(self):
+        '''Creates and configures the UISlider's QValidator widget.
+        The QValidator validates user input from the QLineEdit.
+        The locale is set to "en_US" to enforce the correct
+        decimal format (i.e. '3.14', instead of '3,14').
+        '''
+        self.validator = QtGui.QDoubleValidator()
+        self.validator.setBottom(self.minimum)
+        self.validator.setTop(self.maximum)
+        self.validator.setNotation(QtGui.QDoubleValidator.StandardNotation)
+        self.validator.setLocale(QtCore.QLocale("en_US"))
+
+    def _setUpQLineEdit(self):
+        '''Creates and configures the UISlider's QLineEdit widget.
+        Signals from the QLineEdit are connected to the method that
+        updates the QSlider widget.
+        '''
+        self.line_edit = QLineEdit()
+        self.line_edit.setValidator(self.validator)
+        self.line_edit.setText(str(self.minimum))
+        self.line_edit.setPlaceholderText(str(self.minimum))
+
+        self.line_edit.editingFinished.connect(self._updateQSlider)
+        self.line_edit.returnPressed.connect(self._updateQSlider)
+
+    def _connectFocusChangedSignal(self):
+        '''References the existing QApplication instance to connect
+        its focusChanged signal to the method that updates the
+        QSlider. If the focus changes, i.e. the QLineEdit loses focus,
+        the QSlider will be updated.
+        '''
+        self.app = QApplication.instance()
+        self.app.focusChanged.connect(self._updateQSlider)
+
+    def _setUpQLabels(self):
+        '''Creates and configures the UISlider's QLabel widgets.
+        The QLabels display the minimum, median and maximum values underneath
+        the QSlider.
+        '''
+        self.min_label = QLabel()
+        self.min_label.setText(str(self.minimum))
+        self.median_label = QLabel()
+        self.median_label.setText(str(self.median))
+        self.max_label = QLabel()
+        self.max_label.setText(str(self.maximum))
+
+    def _setUpQGridLayout(self):
+        '''Creates a QGridLayout. Also adds the UISlider's widgets to the QGridLayout.
+        The QSlider is added to the first row of the QGridLayout and spans the entire row.
+        The QLabels are added to the second row and are aligned to the left, right and center
+        of the QSlider.
+        The QLineEdit is added to the third row and also spans the entire row.
+        '''
+        self.widget_layout = QGridLayout()
+        self.widget_layout.addWidget(self.slider, 0, 0, 1, -1)
+        self.widget_layout.addWidget(self.min_label, 1, 0, QtCore.Qt.AlignLeft)
+        self.widget_layout.addWidget(self.median_label, 1, 1, QtCore.Qt.AlignCenter)
+        self.widget_layout.addWidget(self.max_label, 1, 2, QtCore.Qt.AlignRight)
+        self.widget_layout.addWidget(self.line_edit, 2, 0, 1, -1)
+
+    def _getQSliderValue(self):
         '''Gets the current value of the QSlider, returning either 0 or a positive integer.
         '''
         return self.slider.value()
 
-    def _getLineEditValue(self):
+    def _getQLineEditValue(self):
         '''Gets the current value of the QLineEdit. Returns a string value between the
         UISliderWidget's minimum and maximum values.
         '''
         return self.line_edit.text()
 
-    def _updateSlider(self):
+    def _updateQSlider(self):
         '''Updates the QSlider to reflect the current value of the QLineEdit.
         The method uses the state of the QValidator to check that the QLineEdit
         value is valid - if it is valid, it sets the value of the QSlider to the
         scaled value of the QLineEdit. Otherwise, it will update the QSlider with
-        either the scaled value of the QLineEdit's minimum or maximum.
+        either the scaled value of the QLineEdit's minimum or maximum. Values
+        outside the range will raise a ValueError.
         '''
-        if self._getLineEditValue() == '':
+        if self._getQLineEditValue() == '':
             self.line_edit.setText(str(self.minimum))
 
-        line_edit_value = float(self._getLineEditValue())
+        line_edit_value = float(self._getQLineEditValue())
         state = self.validator.validate(self.line_edit.text(), 0)
         if state[0] == QtGui.QDoubleValidator.Acceptable:
             scaled_value = self._scaleLineEditToSlider(line_edit_value)
@@ -199,16 +246,18 @@ class UISliderWidget(QWidget):
             self.line_edit.setText(str(self.maximum))
             self.slider.setValue(self.slider_maximum)
             self.setValue(self.maximum)
-        else:
+            raise ValueError("range exceeded: resetting to 'maximum'")
+        elif line_edit_value < self.minimum:
             self.line_edit.setText(str(self.minimum))
             self.slider.setValue(self.slider_minimum)
             self.setValue(self.minimum)
+            raise ValueError("range exceeded: resetting to 'minimum'")
 
-    def _updateLineEdit(self):
+    def _updateQLineEdit(self):
         '''Updates the QLineEdit to reflect the current value of the QSlider.
         The method sets the value of the QLineEdit to the scaled value of the QSlider.
         '''
-        slider_value = self._getSliderValue()
+        slider_value = self._getQSliderValue()
         self.line_edit.setText(str(self._scaleSliderToLineEdit(slider_value)))
 
     def _scaleLineEditToSlider(self, value):

@@ -7,11 +7,16 @@ from eqt.ui import FormDialog, UISliderWidget
 
 class MainUI(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
+        '''Creates a QMainWindow and adds a QPushButton. Pressing the button opens a FormDialog
+        containing a UISliderWidget example. The UISliderWidget is connected to a method
+        that prints the current value of it's QSlider, QLineEdit, and the value of the
+        UISliderWidget itself (i.e. the value returned when it's value() method is called).
+        '''
         QtWidgets.QMainWindow.__init__(self, parent)
 
         pb = QtWidgets.QPushButton(self)
         pb.setText("Open Dialog with form layout")
-        pb.clicked.connect(lambda: self.openFormDialog())
+        pb.clicked.connect(lambda: self._openFormDialog())
 
         layout = QtWidgets.QHBoxLayout()
         layout.addWidget(pb)
@@ -19,34 +24,37 @@ class MainUI(QtWidgets.QMainWindow):
         widg.setLayout(layout)
 
         self.setCentralWidget(widg)
-
         self.show()
 
-    def openFormDialog(self):
-        dialog = FormDialog(parent=self, title='Example')
-        dialog.Ok.clicked.connect(lambda: self.accepted())
-
-        # Create UISliderWidget
+    def _openFormDialog(self):
+        '''Creates a FormDialog and adds a UISliderWidget. Connects signals from the widget's
+        QSlider and QLineEdit to a method than prints the UISliderWidget's values. The values
+        will be printed when either; the QSlider is released, or the QLineEdit is edited.
+        Displays the FormDialog.
+        '''
+        dialog = FormDialog(parent=self, title='UISliderWidget Example')
         uislider = UISliderWidget.UISliderWidget(minimum=-0.5, maximum=0.5, decimals=10,
                                                  number_of_steps=10, number_of_ticks=10)
-
-        # add to the form widget
         dialog.addWidget(uislider, 'UISlider:', 'input_slider')
 
-        # store a reference
+        dialog.widgets['input_slider_field'].slider.sliderReleased.connect(
+            lambda: self._printValues())
+        dialog.widgets['input_slider_field'].line_edit.editingFinished.connect(
+            lambda: self._printValues())
+
         self.dialog = dialog
-        self.dialog.onCancel = self.rejected
         dialog.exec()
 
-    def accepted(self):
-        print("accepted")
-        print(f"UISlider QSlider: {self.dialog.widgets['input_slider_field']._getSliderValue()}")
-        print(f"UISlider QLineEdit: {self.dialog.widgets['input_slider_field'].value()}")
-
-        self.dialog.close()
-
-    def rejected(self):
-        print("rejected")
+    def _printValues(self):
+        '''Prints the values of the QSlider, QLineEdit and the UISliderWidget itself.
+        Also prints the type of each value.
+        '''
+        slider_value = self.dialog.widgets['input_slider_field']._getQSliderValue()
+        line_edit_value = self.dialog.widgets['input_slider_field']._getQLineEditValue()
+        uislider_value = self.dialog.widgets['input_slider_field'].value()
+        print(f"QSlider Value: {slider_value} {type(slider_value)}\n" +
+              f"QLineEdit Value: {line_edit_value} {type(line_edit_value)}\n" +
+              f"UISliderWidget Value: {uislider_value} {type(uislider_value)}\n")
 
 
 if __name__ == "__main__":
