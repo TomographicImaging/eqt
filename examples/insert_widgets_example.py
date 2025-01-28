@@ -15,7 +15,7 @@ class MainUI(QtWidgets.QMainWindow):
         Clicking the QPushButton will add additional widgets:
         a QLineEdit, a spanning QPushButton, and a UISlider.
 
-        Opening the FormDialog adds an additional QPushButton, which will insert a
+        Opening the FormDialog shows an additional QPushButton, which will insert a
         widget in the FormDialog's vertical layout.
         '''
         QtWidgets.QMainWindow.__init__(self, parent)
@@ -54,8 +54,14 @@ class MainUI(QtWidgets.QMainWindow):
         self.dialog.open()
 
     def addWidgetsToExampleForm(self, form):
+        '''Creates the 'initial' widgets, i.e. a QLineEdit, a spanning QLabel and
+        a QComboBox. Adds them to the FormDialog.
+        Also adds a QPushButton that, when clicked, inserts additional widgets into
+        the FormDialog.
+        '''
         form.addWidget(QtWidgets.QLineEdit(), "Initial QLineEdit Row 0:",
                        'initial qlineedit row 0')
+
         form.addSpanningWidget(QtWidgets.QLabel("Initial Spanning QLabel Row 1"),
                                'initial spanning qlabel row 1')
 
@@ -70,6 +76,10 @@ class MainUI(QtWidgets.QMainWindow):
         buttoninsert.clicked.connect(lambda: self.insert_form(form, buttoninsert))
 
     def insert_vertical(self):
+        '''Inserts a QPushButton into the vertical layout. The widget is not added to
+        the dictionary of FormDialog widgets. Also sets the 'enabled' value of the button
+        that calls this method to 'False'.
+        '''
         self.dialog.insertWidgetToVerticalLayout(
             1, QtWidgets.QPushButton("Inserted widget in vertical layout"))
         print(
@@ -77,6 +87,10 @@ class MainUI(QtWidgets.QMainWindow):
         self.dialog.getWidget('qbutton insert vertical').setEnabled(False)
 
     def insert_form(self, form, button):
+        '''Inserts additional widgets into the specified rows of the FormDialog: a QLineEdit,
+        a spanning QPushButton, and a UISlider. Prints the dictionary containing all widgets
+        in the FormDialog layout.
+        '''
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("Inserted Widget Row 0:")
         qwidget = QtWidgets.QLineEdit(form)
@@ -99,6 +113,12 @@ class MainUI(QtWidgets.QMainWindow):
         button.setEnabled(False)
 
     def onCancel(self):
+        '''Defines the behaviour of the 'cancel' button.
+        If the button is pressed and the FormDialog widget states have not been saved, it checks
+        whether the 'insert widget' buttons have been pressed. If they have, the method removes
+        the inserted widgets from the FormDialog and the dictionary of FormDialog widgets.
+        Otherwise, it only removes the widgets from the FormDialog.
+        '''
         if bool(self.dialog.formWidget.widget_states) is False:
             if self.dialog.getWidget('qbutton insert vertical').isEnabled() is False:
                 self.dialog.removeWidgetFromVerticalLayout(
