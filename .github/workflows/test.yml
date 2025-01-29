@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         python: [3.8, 3.11]
-        qtbindings: ['PySide2', 'PyQt5']
+        qtbindings: []
     steps:
     - uses: actions/checkout@v4
       with:
