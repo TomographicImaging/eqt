@@ -34,7 +34,8 @@ class MainUI(QtWidgets.QMainWindow):
         '''
         dialog = FormDialog(parent=self, title='UISliderWidget Example')
         uislider = UISliderWidget.UISliderWidget(minimum=-0.5, maximum=0.5, decimals=10,
-                                                 number_of_steps=10, number_of_ticks=10)
+                                                 number_of_steps=10, number_of_ticks=10,
+                                                 is_application=True)
         dialog.addWidget(uislider, 'UISlider:', 'input_slider')
 
         dialog.widgets['input_slider_field'].slider.sliderReleased.connect(

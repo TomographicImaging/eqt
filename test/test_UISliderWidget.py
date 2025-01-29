@@ -1,5 +1,3 @@
-from unittest import mock
-
 from qtpy import QtGui
 from qtpy.QtWidgets import QGridLayout, QLabel, QLineEdit, QSlider
 from unittest_parametrize import ParametrizedTestCase, param, parametrize
@@ -8,8 +6,7 @@ from eqt.ui import UISliderWidget
 
 
 class TestUISliderWidget(ParametrizedTestCase):
-    @mock.patch("qtpy.QtWidgets.QApplication")
-    def setUp(self, qapplication):
+    def setUp(self):
         self.test_widgets = {
             "standard": {"minimum": 0.0,
                          "maximum": 10.0}, "positive": {"minimum": 1.0, "maximum": 10.0},
@@ -31,7 +28,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         '''
         minimum = self.test_widgets.get(test_widget).get("minimum")
         maximum = self.test_widgets.get(test_widget).get("maximum")
-        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                    is_application=False)
 
         self.assertIsInstance(self.widget, UISliderWidget.UISliderWidget)
         self.assertEqual(self.widget.minimum, expected_minimum)
@@ -47,7 +45,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         '''Tests widget behaviour when invalid combinations of the required arguments are supplied.
         '''
         with self.assertRaises(ValueError):
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
     def test_init_default_attributes(self):
         '''Tests the setting of the widget's default attributes.
@@ -55,7 +54,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.assertEqual(self.widget.decimals, 2)
             self.assertEqual(self.widget.number_of_steps, 2000)
@@ -75,7 +75,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         '''
         minimum = self.test_widgets.get(test_widget).get("minimum")
         maximum = self.test_widgets.get(test_widget).get("maximum")
-        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                    is_application=False)
 
         self.assertEqual(self.widget.median, median)
 
@@ -92,7 +93,7 @@ class TestUISliderWidget(ParametrizedTestCase):
             minimum = params.get("minimum")
             maximum = params.get("maximum")
             self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                        decimals=decimals)
+                                                        decimals=decimals, is_application=False)
             self.assertEqual(self.widget.decimals, expected)
 
     @parametrize(
@@ -110,7 +111,8 @@ class TestUISliderWidget(ParametrizedTestCase):
             maximum = params.get("maximum")
             with self.assertRaises(ValueError):
                 self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                            decimals=decimals)
+                                                            decimals=decimals,
+                                                            is_application=False)
 
     @parametrize(
         "decimals",
@@ -127,7 +129,8 @@ class TestUISliderWidget(ParametrizedTestCase):
             maximum = params.get("maximum")
             with self.assertRaises(TypeError):
                 self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                            decimals=decimals)
+                                                            decimals=decimals,
+                                                            is_application=False)
 
     @parametrize(
         "number_of_steps,expected_steps",
@@ -142,7 +145,8 @@ class TestUISliderWidget(ParametrizedTestCase):
             minimum = params.get("minimum")
             maximum = params.get("maximum")
             self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                        number_of_steps=number_of_steps)
+                                                        number_of_steps=number_of_steps,
+                                                        is_application=False)
             self.assertEqual(self.widget.number_of_steps, expected_steps)
 
     @parametrize(
@@ -160,7 +164,8 @@ class TestUISliderWidget(ParametrizedTestCase):
             maximum = params.get("maximum")
             with self.assertRaises(ValueError):
                 self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                            number_of_steps=number_of_steps)
+                                                            number_of_steps=number_of_steps,
+                                                            is_application=False)
 
     @parametrize(
         "number_of_steps,expected_size,test_widget",
@@ -177,7 +182,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         minimum = self.test_widgets.get(test_widget).get("minimum")
         maximum = self.test_widgets.get(test_widget).get("maximum")
         self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                    number_of_steps=number_of_steps)
+                                                    number_of_steps=number_of_steps,
+                                                    is_application=False)
         self.assertEqual(self.widget.step_size, expected_size)
 
     @parametrize(
@@ -195,7 +201,8 @@ class TestUISliderWidget(ParametrizedTestCase):
             maximum = params.get("maximum")
             with self.assertRaises(TypeError):
                 self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                            number_of_steps=number_of_steps)
+                                                            number_of_steps=number_of_steps,
+                                                            is_application=False)
 
     @parametrize(
         "number_of_ticks,expected_ticks,expected_interval",
@@ -210,7 +217,8 @@ class TestUISliderWidget(ParametrizedTestCase):
             minimum = params.get("minimum")
             maximum = params.get("maximum")
             self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                        number_of_ticks=number_of_ticks)
+                                                        number_of_ticks=number_of_ticks,
+                                                        is_application=False)
             self.assertEqual(self.widget.number_of_ticks, expected_ticks)
             self.assertEqual(self.widget.tick_interval, expected_interval)
             self.assertEqual(self.widget.slider.tickInterval(), expected_interval)
@@ -230,7 +238,8 @@ class TestUISliderWidget(ParametrizedTestCase):
             maximum = params.get("maximum")
             with self.assertRaises(ValueError):
                 self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                            number_of_ticks=number_of_ticks)
+                                                            number_of_ticks=number_of_ticks,
+                                                            is_application=False)
 
     @parametrize(
         "number_of_ticks",
@@ -248,7 +257,8 @@ class TestUISliderWidget(ParametrizedTestCase):
             maximum = params.get("maximum")
             with self.assertRaises(TypeError):
                 self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
-                                                            number_of_ticks=number_of_ticks)
+                                                            number_of_ticks=number_of_ticks,
+                                                            is_application=False)
 
     def test_init_default_qslider(self):
         '''Tests the instantiation of the QSlider widget.
@@ -256,7 +266,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.assertIsInstance(self.widget.slider, QSlider)
 
@@ -266,7 +277,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.assertIsInstance(self.widget.validator, QtGui.QValidator)
 
@@ -276,7 +288,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.assertIsInstance(self.widget.line_edit, QLineEdit)
 
@@ -286,7 +299,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.assertIsInstance(self.widget.min_label, QLabel)
             self.assertIsInstance(self.widget.median_label, QLabel)
@@ -298,7 +312,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.assertIsInstance(self.widget.widget_layout, QGridLayout)
 
@@ -315,7 +330,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         '''
         minimum = self.test_widgets.get(test_widget).get("minimum")
         maximum = self.test_widgets.get(test_widget).get("maximum")
-        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                    is_application=False)
 
         self.widget.setValue(widget_value)
         self.assertEqual(self.widget.value(), expected_value)
@@ -326,7 +342,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.widget.slider.setValue(50)
             self.assertEqual(self.widget._getQSliderValue(), 50)
@@ -345,7 +362,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.widget.line_edit.setText(line_edit_value)
             self.assertEqual(self.widget._getQLineEditValue(), expected)
@@ -364,7 +382,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         '''
         minimum = self.test_widgets.get(test_widget).get("minimum")
         maximum = self.test_widgets.get(test_widget).get("maximum")
-        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                    is_application=False)
 
         self.widget.line_edit.setText(line_edit_value)
         self.widget._updateQSlider()
@@ -377,7 +396,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             self.widget.line_edit.setText("")
             self.widget._updateQSlider()
@@ -391,7 +411,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             lt_min_value = str(minimum - 1)
             self.widget.line_edit.setText(lt_min_value)
@@ -408,7 +429,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         for params in self.test_widgets.values():
             minimum = params.get("minimum")
             maximum = params.get("maximum")
-            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+            self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                        is_application=False)
 
             gt_min_value = str(maximum + 1)
             self.widget.line_edit.setText(gt_min_value)
@@ -432,7 +454,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         '''
         minimum = self.test_widgets.get(test_widget).get("minimum")
         maximum = self.test_widgets.get(test_widget).get("maximum")
-        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                    is_application=False)
 
         self.widget.slider.setValue(slider_value)
         self.widget._updateQLineEdit()
@@ -451,7 +474,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         '''
         minimum = self.test_widgets.get(test_widget).get("minimum")
         maximum = self.test_widgets.get(test_widget).get("maximum")
-        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                    is_application=False)
 
         self.assertEqual(self.widget._scaleLineEditToSlider(line_edit_value), expected)
 
@@ -468,7 +492,8 @@ class TestUISliderWidget(ParametrizedTestCase):
         '''
         minimum = self.test_widgets.get(test_widget).get("minimum")
         maximum = self.test_widgets.get(test_widget).get("maximum")
-        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum)
+        self.widget = UISliderWidget.UISliderWidget(minimum=minimum, maximum=maximum,
+                                                    is_application=False)
 
         self.assertEqual(self.widget._scaleSliderToLineEdit(slider_value), expected)
 

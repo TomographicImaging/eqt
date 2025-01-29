@@ -13,7 +13,8 @@ class UISliderWidget(QWidget):
     get and set the value of the widget. Some private methods exist (e.g. _setDecimals())
     that are responsible for validating and setting arguments.
     '''
-    def __init__(self, minimum, maximum, decimals=2, number_of_steps=2000, number_of_ticks=10):
+    def __init__(self, minimum, maximum, decimals=2, number_of_steps=2000, number_of_ticks=10,
+                 is_application=True):
         '''Creates the QGridLayout and the widgets that populate it (QSlider, QLineEdit,
         QLabels). Also sets some attributes.
 
@@ -30,11 +31,13 @@ class UISliderWidget(QWidget):
         maximum : float
             - Maximum value of the QLineEdit, must be greater than the minimum.
         decimals : int
-            - Number of decimal places that the QLabels, QLineEdit and QSlider steps can display
+            - Number of decimal places that the QLabels, QLineEdit and QSlider steps can display.
         number_of_steps : int
-            - Number of steps in the QSlider
+            - Number of steps in the QSlider.
         number_of_ticks : int
-            - Number of ticks visualised under the QSlider, determines tick interval
+            - Number of ticks visualised under the QSlider, determines tick interval.
+        is_application : bool
+            - Whether the UISlider has a QApplication that it can reference.
         '''
         QWidget.__init__(self)
 
@@ -57,7 +60,7 @@ class UISliderWidget(QWidget):
         self._setUpQSlider()
         self._setUpQValidator()
         self._setUpQLineEdit()
-        self._connectFocusChangedSignal()
+        self._connectFocusChangedSignal(is_application)
         self._setUpQLabels()
         self._setUpQGridLayout()
 
@@ -182,14 +185,18 @@ class UISliderWidget(QWidget):
         self.line_edit.editingFinished.connect(self._updateQSlider)
         self.line_edit.returnPressed.connect(self._updateQSlider)
 
-    def _connectFocusChangedSignal(self):
-        '''References the existing QApplication instance to connect
-        its focusChanged signal to the method that updates the
-        QSlider. If the focus changes, i.e. the QLineEdit loses focus,
-        the QSlider will be updated.
+    def _connectFocusChangedSignal(self, is_application):
+        '''If the 'is_application' attribute is True, connects the existing
+        QApplication instance's focusChanged signal to the method that updates
+        the QSlider. If the focus changes, i.e. the QLineEdit loses focus,
+        the inputted value is validated and the QSlider will be updated.
+
+        If 'is_application' is False, the signal is not connected. The UISlider
+        will not automatically update when focus is changed while invalid
+        values have been entered.
         '''
-        self.app = QApplication.instance()
-        self.app.focusChanged.connect(self._updateQSlider)
+        if is_application:
+            QApplication.instance().focusChanged.connect(self._updateQSlider)
 
     def _setUpQLabels(self):
         '''Creates and configures the UISlider's QLabel widgets.

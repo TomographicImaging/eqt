@@ -48,9 +48,13 @@ mamba activate eqt_env
 
 5. Install the dependencies:
 ```sh
-# Install test dependencies
 pip install .[dev]
 ```
+The following developer-specific dependencies will be installed:
+  - pytest
+  - pytest-cov
+  - pytest-timeout
+  - unittest_parametrize
 
 ### Merge the `main` Branch
 Conflicts may exist if your branch is behind the `main` branch. To resolve conflicts between branches, merge the `main` branch into your current working branch:
