@@ -8,7 +8,7 @@ from eqt.ui import UISliderWidget
 
 
 class TestUISliderWidget(ParametrizedTestCase):
-    @mock.patch("qtpy.QtWidgets.QApplication.instance")
+    @mock.patch("qtpy.QtWidgets.QApplication")
     def setUp(self, qapplication):
         self.test_widgets = {
             "standard": {"minimum": 0.0,
