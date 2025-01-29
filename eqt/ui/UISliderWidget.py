@@ -174,6 +174,7 @@ class UISliderWidget(QWidget):
         self.line_edit = QLineEdit()
         self.line_edit.setValidator(self.validator)
         self.line_edit.setText(str(self.minimum))
+        self.line_edit.setClearButtonEnabled(True)
         self.line_edit.setPlaceholderText(str(self.minimum))
 
         self.line_edit.editingFinished.connect(self._updateQSlider)

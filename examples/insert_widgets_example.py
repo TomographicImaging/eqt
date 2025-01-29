@@ -10,13 +10,20 @@ class MainUI(QtWidgets.QMainWindow):
         '''Creates a QMainWindow and adds a FormDockWidget, a FormDialog, and a QPushButton.
         Opening the FormDockWidget will show the form in a separate window, and clicking
         on the QPushButton will also display a form separately.
-        The form will initially show three widget labels and fields:
-        a QLineEdit, a spanning QLabel, a QComboBox, and a QPushButton.
-        Clicking the QPushButton will add additional widgets:
-        a QLineEdit, a spanning QPushButton, and a UISlider.
 
-        Opening the FormDialog shows an additional QPushButton, which will insert a
-        widget in the FormDialog's vertical layout.
+        The form will initially show three widget labels and fields:
+            - a QLineEdit field
+            - a spanning QLabel
+            - a QComboBox field
+            - a QPushButton field
+
+        Clicking the QPushButton will add additional widgets:
+            - a QLineEdit
+            - a spanning QPushButton
+            - a UISlider
+
+        Opening the FormDialog displays the form with an additional QPushButton, which
+        will insert a widget in the FormDialog's vertical layout.
         '''
         QtWidgets.QMainWindow.__init__(self, parent)
 
@@ -28,7 +35,7 @@ class MainUI(QtWidgets.QMainWindow):
         form_dialog_button.setText("Open FormDialog")
         form_dialog_button.clicked.connect(self.openFormDialog)
 
-        self.dialog = FormDialog(parent=self, title='Form Dialog Insert Widget Example')
+        self.dialog = FormDialog(parent=self, title='FormDialog Insert Widget Example')
         self.addWidgetsToExampleForm(self.dialog)
 
         insert_vertical_button = QtWidgets.QPushButton()
@@ -39,9 +46,9 @@ class MainUI(QtWidgets.QMainWindow):
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(dock)
         layout.addWidget(form_dialog_button)
-        widg = QtWidgets.QWidget()
-        widg.setLayout(layout)
-        self.setCentralWidget(widg)
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
 
         print('\nDictionary of widgets before insertion in the form layout:')
         for widget in dock.getWidgets():
@@ -70,18 +77,19 @@ class MainUI(QtWidgets.QMainWindow):
         qwidget.addItem("1")
         form.addWidget(qwidget, "Initial QComboBox Row 2:", 'initial qcombobox row 2')
 
-        buttoninsert = QtWidgets.QPushButton()
-        buttoninsert.setText("Insert widgets")
-        form.addSpanningWidget(buttoninsert, 'qbutton insert widgets')
-        buttoninsert.clicked.connect(lambda: self.insert_form(form, buttoninsert))
+        insert_button = QtWidgets.QPushButton()
+        insert_button.setText("Insert widgets")
+        form.addSpanningWidget(insert_button, 'qbutton insert widgets')
+        insert_button.clicked.connect(lambda: self.insert_form(form, insert_button))
 
     def insert_vertical(self):
         '''Inserts a QPushButton into the vertical layout. The widget is not added to
         the dictionary of FormDialog widgets. Also sets the 'enabled' value of the button
         that calls this method to 'False'.
         '''
-        self.dialog.insertWidgetToVerticalLayout(
-            1, QtWidgets.QPushButton("Inserted widget in vertical layout"))
+        vertical_button = QtWidgets.QPushButton()
+        vertical_button.setText("Inserted widget in vertical layout")
+        self.dialog.insertWidgetToVerticalLayout(1, vertical_button)
         print(
             "\nThe dictionary of widgets does not change after insertion in the vertical layout.")
         self.dialog.getWidget('qbutton insert vertical').setEnabled(False)
@@ -93,12 +101,12 @@ class MainUI(QtWidgets.QMainWindow):
         '''
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("Inserted Widget Row 0:")
-        qwidget = QtWidgets.QLineEdit(form)
-        form.insertWidget(0, 'inserted qlineedit row 0', qwidget, qlabel)
+        qlineedit = QtWidgets.QLineEdit(form)
+        form.insertWidget(0, 'inserted qlineedit row 0', qlineedit, qlabel)
 
-        buttonspanning = QtWidgets.QPushButton(self)
-        buttonspanning.setText("Inserted Spanning Widget Row 2")
-        form.insertWidget(2, 'inserted spanning qpushbutton row 2', buttonspanning)
+        spanning_button = QtWidgets.QPushButton(self)
+        spanning_button.setText("Inserted Spanning Widget Row 2")
+        form.insertWidget(2, 'inserted spanning qpushbutton row 2', spanning_button)
 
         qlabel = QtWidgets.QLabel(form)
         qlabel.setText("Inserted Widget Row 4:")
