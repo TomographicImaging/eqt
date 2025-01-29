@@ -1,5 +1,5 @@
 from qtpy import QtGui
-from qtpy.QtWidgets import QGridLayout, QLabel, QLineEdit, QSlider
+from qtpy.QtWidgets import QApplication, QGridLayout, QLabel, QLineEdit, QSlider
 from unittest_parametrize import ParametrizedTestCase, param, parametrize
 
 from eqt.ui import UISliderWidget
@@ -471,3 +471,4 @@ class TestUISliderWidget(ParametrizedTestCase):
 
     def tearDown(self):
         self.form = None
+        QApplication.instance().quit()
