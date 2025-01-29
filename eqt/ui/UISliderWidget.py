@@ -71,13 +71,15 @@ class UISliderWidget(QWidget):
 
     def setValue(self, value):
         '''Sets the value of the UISliderWidget using the current float value of the QLineEdit.
-        Also scales the value to set the value of the QSlider.
+        To avoid the updated QSlider overwriting the QLineEdit value, QSlider is
+        updated first with the scaled value.
         This method exists to remain consistent with other QWidgets.
 
         Parameters
         ----------
         value : float
         '''
+        self.slider.setValue(self._scaleLineEditToSlider(value))
         self.line_edit.setText(str(value))
 
     def _setMinimumMaximum(self, minimum, maximum):
