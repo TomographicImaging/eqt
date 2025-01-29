@@ -4,10 +4,7 @@ from unittest_parametrize import ParametrizedTestCase, param, parametrize
 
 from eqt.ui import UISliderWidget
 
-from . import skip_ci
 
-
-@skip_ci
 class TestUISliderWidget(ParametrizedTestCase):
     def setUp(self):
         self.test_widgets = {
