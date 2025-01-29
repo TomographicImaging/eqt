@@ -19,8 +19,8 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
         qt-bindings: ${{ matrix.qtbindings }}
-    - run: pip install ${{ matrix.qtbindings }}
     - run: pip install -U .[dev]
+    - run: pip install ${{ matrix.qtbindings }}
     - run: pytest
   deploy:
     needs: [test]
