@@ -1,7 +1,5 @@
-import sys
-
 from qtpy import QtGui
-from qtpy.QtWidgets import QApplication, QGridLayout, QLabel, QLineEdit, QSlider
+from qtpy.QtWidgets import QGridLayout, QLabel, QLineEdit, QSlider
 from unittest_parametrize import ParametrizedTestCase, param, parametrize
 
 from eqt.ui import UISliderWidget
@@ -9,7 +7,6 @@ from eqt.ui import UISliderWidget
 
 class TestUISliderWidget(ParametrizedTestCase):
     def setUp(self):
-        self.app = QApplication(sys.argv)
         self.test_widgets = {
             "standard": {"minimum": 0.0,
                          "maximum": 10.0}, "positive": {"minimum": 1.0, "maximum": 10.0},
@@ -502,4 +499,3 @@ class TestUISliderWidget(ParametrizedTestCase):
 
     def tearDown(self):
         self.form = None
-        sys.exit(self.app.exec_())
