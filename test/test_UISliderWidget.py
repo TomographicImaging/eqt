@@ -4,10 +4,7 @@ from unittest_parametrize import ParametrizedTestCase, param, parametrize
 
 from eqt.ui import UISliderWidget
 
-from . import skip_ci
 
-
-@skip_ci
 class TestUISliderWidget(ParametrizedTestCase):
     def setUp(self):
         self.test_widgets = {
@@ -16,6 +13,12 @@ class TestUISliderWidget(ParametrizedTestCase):
             "negative": {"minimum": -10.0,
                          "maximum": -1.0}, "float": {"minimum": -0.5, "maximum": 0.5},
             "long": {"minimum": 1.11111, "maximum": 9.99999}}
+
+    def test_aaa_github_action(self):
+        self.widget_1 = UISliderWidget.UISliderWidget(minimum=0.0, maximum=10.0,
+                                                      is_application=False)
+        self.widget_2 = UISliderWidget.UISliderWidget(minimum=0.0, maximum=10.0,
+                                                      is_application=True)
 
     @parametrize(
         "expected_minimum,expected_maximum,test_widget",
