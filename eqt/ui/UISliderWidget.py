@@ -87,6 +87,8 @@ class UISliderWidget(QWidget):
 
     def _setMinimumMaximum(self, minimum, maximum):
         '''Sets the widget's minimum and maximum attributes. Checks that the minimum
+        is less than the maximum. If the minimum is greater than or equal to the maximum,
+        a ValueError is raised.
         '''
         if minimum >= maximum:
             raise ValueError("'minimum' argument must be less than 'maximum'")

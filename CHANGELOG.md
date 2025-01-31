@@ -2,10 +2,8 @@
 - Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
 - Add `pyqt_env.yml`  and `pyside_env.yml` environment files (#146)
 - Update `CONTRIBUTING.md`, `README.md` and add documentation file (#146)
-- Refactor `UISliderWidget` class to support `QLineEdit` and layouts (#168)
+- Refactor `UISliderWidget` class to support `QLineEdit` and layouts, update tests and examples (#168)
   + Breaks backwards compatability as `UISliderWidget` no longer accepts a `QLabel`
-- Update existing `FormDialog` tests and add new tests for `UISliderWidget`(#168)
-- Update existing examples to demonstrate the `UISliderWidget` (#168)
 
 # Version 1.0.2
 - Upgrade python to 3.8 in `test.yml` (#171)
