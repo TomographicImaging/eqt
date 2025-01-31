@@ -4,9 +4,9 @@ from qtpy import QtWidgets
 from qtpy.QtWidgets import QApplication
 
 from eqt import __version__
+from eqt.ui import UISliderWidget
 from eqt.ui.MainWindowWithSessionManagement import MainWindowWithSessionManagement
 from eqt.ui.UIFormWidget import FormWidget
-from eqt.ui.UISliderWidget import UISliderWidget
 
 
 class ExampleMainWindowWithSessionManagement(MainWindowWithSessionManagement):
@@ -74,7 +74,8 @@ def add_every_widget_to_form(form):
     form.addWidget(QtWidgets.QDoubleSpinBox(), 'DoubleSpinBox: ', 'doubleSpinBox')
     form.addWidget(QtWidgets.QSpinBox(), 'SpinBox: ', 'spinBox')
     form.addWidget(QtWidgets.QSlider(), 'Slider: ', 'slider')
-    form.addWidget(UISliderWidget(QtWidgets.QLabel()), 'UISliderWidget: ', 'uiSliderWidget')
+    form.addWidget(UISliderWidget.UISliderWidget(minimum=-0.5, maximum=0.5), 'UISliderWidget: ',
+                   'uiSliderWidget')
     form.addWidget(QtWidgets.QRadioButton('test'), 'RadioButton: ', 'radioButton')
     form.addWidget(QtWidgets.QTextEdit('test'), 'TextEdit: ', 'textEdit')
     form.addWidget(QtWidgets.QPlainTextEdit('test'), 'PlainTextEdit: ', 'plainTextEdit')

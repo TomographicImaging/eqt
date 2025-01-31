@@ -40,7 +40,7 @@ classifiers = [
 dependencies = ["qtpy", "qdarkstyle"]
 
 [project.optional-dependencies]
-dev = ["pytest>=6", "pytest-cov", "pytest-timeout"]
+dev = ["pytest>=6", "pytest-cov", "pytest-timeout", "unittest_parametrize"]
 
 [tool.flake8]
 max_line_length = 99
