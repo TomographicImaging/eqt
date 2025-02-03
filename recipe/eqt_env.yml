@@ -6,3 +6,4 @@ dependencies:
   - pip
   - qtpy
   - qdarkstyle
+  - unittest_parametrize

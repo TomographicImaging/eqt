@@ -48,9 +48,13 @@ mamba activate eqt_env
 
 5. Install the dependencies:
 ```sh
-# Install test dependencies
 pip install .[dev]
 ```
+The following developer-specific dependencies will be installed:
+  - pytest
+  - pytest-cov
+  - pytest-timeout
+  - unittest_parametrize
 
 ### Merge the `main` Branch
 Conflicts may exist if your branch is behind the `main` branch. To resolve conflicts between branches, merge the `main` branch into your current working branch:
@@ -63,6 +67,8 @@ Before merging a pull request, all tests must pass. These can be run locally fro
 ```sh
 pytest
 ```
+> [!NOTE]
+> For files that test the GUI elements, the `@skip_ci` decorator has been included to skip these tests when the GitHub Actions are executed after pushing/merging. Without the decorator, these GUI test files will cause the `pytest` GitHub Action to fail.
 
 ### Install and Run `pre-commit`
 Adhere to our styling guide by installing [`pre-commit`](https://pre-commit.com) in your local eqt environment:
@@ -85,6 +91,8 @@ The [`.pre-commit-config.yaml`](./.pre-commit-config.yaml) config file indicates
 
 ## Continuous Integration
 GitHub Actions automatically runs a subset of the unit tests on every commit via [`test.yml`](.github/workflows/test.yml).
+> [!NOTE]
+> GitHub Actions does not currently support unit tests that test GUI elements. These tests should include the `@skip_ci` decorator so that they are skipped when the GitHub Actions are executed.
 
 ### Testing
 
@@ -102,7 +110,8 @@ Runs automatically -- when an annotated tag is pushed -- after builds (above) su
 
 Publishes to [PyPI](https://pypi.org/project/eqt).
 
-:warning: The annotated tag's `title` must be `Version <number without v-prefix>` (separated by a blank line) and the `body` must contain release notes, e.g.:
+> [!WARNING]
+> The annotated tag's `title` must be `Version <number without v-prefix>` (separated by a blank line) and the `body` must contain release notes, e.g.:
 
 ```sh
 git tag v1.33.7 -a
