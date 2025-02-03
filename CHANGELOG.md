@@ -1,3 +1,6 @@
+# Version x.x.x
+- Remove `unittest_parametrize` from `eqt_env` recipe dependencies (#180)
+
 # Version 2.0.0
 - Use `qtpy` as virtual Qt binding package. GHA unit tests are run with PySide2 and PyQt5 (#146)
 - Add `pyqt_env.yml`  and `pyside_env.yml` environment files (#146)
