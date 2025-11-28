@@ -1,4 +1,4 @@
-# Version x.x.x
+# Version 2.0.1
 - Remove `unittest_parametrize` from `eqt_env` recipe dependencies (#180)
 
 # Version 2.0.0
