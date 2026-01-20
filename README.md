@@ -20,8 +20,11 @@ Via `pip`/`conda`/`mamba`, i.e. any of the following:
 - `mamba install -c conda-forge eqt`
 
 
-#### Note:
-`eqt` uses the [`qtpy`](https://github.com/spyder-ide/qtpy) abstraction layer for Qt bindings, meaning that it works with either PySide or PyQt bindings. Thus, the package does not depend on either. If the environment does not already have a Qt binding then the user *must* install either `pyside2` or `pyqt5`.
+> [!IMPORTANT]
+> `eqt` uses the [`qtpy`](https://github.com/spyder-ide/qtpy) abstraction layer for Qt bindings, meaning that it works with either PySide or PyQt bindings. Thus, the package does not depend on either. If the environment does not already have a Qt binding then the user *must* install either `pyside2` or `pyqt5`.
+
+### Minimum requirements
+`eqt` depends on Python>=3.9
 
 ## Examples
 
