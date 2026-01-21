@@ -1,6 +1,8 @@
 from qtpy import QtCore, QtGui
 from qtpy.QtWidgets import QApplication, QGridLayout, QLabel, QLineEdit, QSlider, QWidget
+import logging
 
+logger = logging.getLogger(__name__)
 
 class UISliderWidget(QWidget):
     '''Creates a QSlider widget with an attached QLineEdit, displaying minimum, maximum
@@ -258,12 +260,12 @@ class UISliderWidget(QWidget):
             self.line_edit.setText(str(self.maximum))
             self.slider.setValue(self.slider_maximum)
             self.setValue(self.maximum)
-            raise ValueError("range exceeded: resetting to 'maximum'")
+            logger.warning("range exceeded: resetting to 'maximum'")
         elif line_edit_value < self.minimum:
             self.line_edit.setText(str(self.minimum))
             self.slider.setValue(self.slider_minimum)
             self.setValue(self.minimum)
-            raise ValueError("range exceeded: resetting to 'minimum'")
+            logger.warning("range exceeded: resetting to 'minimum'")
 
     def _updateQLineEdit(self):
         '''Updates the QLineEdit to reflect the current value of the QSlider.
