@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         python: [3.8, 3.11]
-        qtbindings: ['PySide2', 'PyQt5']
+        qtbindings: ['PySide2', 'PySide6']
     steps:
     - uses: actions/checkout@v4
       with:
@@ -21,7 +21,17 @@ jobs:
         qt-bindings: ${{ matrix.qtbindings }}
     - run: pip install -U .[dev]
     - run: pip install ${{ matrix.qtbindings }}
+    # system libraries required by Qt to render offscreen
+    - run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          libegl1 libgl1 libxkbcommon0 libxkbcommon-x11-0 libdbus-1-3 libfontconfig1 \
+          libglib2.0-0 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+          libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xinerama0
     - run: pytest
+      env:
+        # run the GUI tests too, rendering offscreen (no display required)
+        QT_QPA_PLATFORM: offscreen
   deploy:
     needs: [test]
     name: PyPI Deploy
