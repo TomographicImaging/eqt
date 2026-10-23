@@ -1,7 +1,5 @@
 import sys
 
-import qdarkstyle
-from qdarkstyle.dark.palette import DarkPalette
 from qtpy import QtWidgets
 
 from eqt.ui.ReOrderableListWidget import ReOrderableListWidget
@@ -25,9 +23,6 @@ class MainUI(QtWidgets.QMainWindow):
         widg.setLayout(layout)
 
         self.setCentralWidget(widg)
-
-        style = qdarkstyle.load_stylesheet(palette=DarkPalette)
-        self.setStyleSheet(style)
 
         self.show()
 

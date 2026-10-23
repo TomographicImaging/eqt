@@ -1,3 +1,12 @@
+# Unreleased
+- Run the GUI unit tests in CI, rendering offscreen (`QT_QPA_PLATFORM=offscreen`). `@skip_ci` no longer skips when Qt renders offscreen
+- Remove the `qdarkstyle` dependency. The application now follows the system theme.
+  + Breaking: `NoBorderScrollArea.apply_qdarkstyle_to_buttons` is removed
+  + Breaking: `MainWindowWithProgressDialogs.setAppStyle` is removed, as is the "Dark Mode" option
+    of the `AppSettingsDialog`. The "Settings > App Settings" menu entry and `AppSettingsDialog`
+    are kept as an empty extension point: override `setAppSettingsDialogWidgets` and
+    `onAppSettingsDialogAccepted` to add settings
+
 # Version 2.0.1
 - Remove `unittest_parametrize` from `eqt_env` recipe dependencies (#180)
 

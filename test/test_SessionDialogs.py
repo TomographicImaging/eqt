@@ -132,6 +132,7 @@ class TestLoadSessionDialog(unittest.TestCase):
             f"Currently loading sessions from: {location_of_session_files}")
 
 
+
 @skip_ci
 class TestAppSettingsDialog(unittest.TestCase):
     def test_init(self):

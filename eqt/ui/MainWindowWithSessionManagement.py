@@ -35,7 +35,7 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
     -------------------
     self.settings
         This is a QSettings object that is used to save and load the session
-        settings such as the light/dark theme, the session directory, etc.
+        settings such as the session directory, etc.
     self.progress_windows
         This is a dictionary of ProgressTimerDialog objects, where the key is
         the name of the progress window.
@@ -89,8 +89,8 @@ class MainWindowWithSessionManagement(MainWindowWithProgressDialogs):
 
         Settings
             App Settings
-                This will open a dialog to change the application settings, such as
-                the light/dark theme
+                This will open a dialog to change the application settings. The dialog
+                is empty by default and is meant to be extended by derived classes
             Session Directory
                 This will open a dialog to select the path where the session folders
                 are saved

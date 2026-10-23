@@ -68,7 +68,7 @@ Before merging a pull request, all tests must pass. These can be run locally fro
 pytest
 ```
 > [!NOTE]
-> For files that test the GUI elements, the `@skip_ci` decorator has been included to skip these tests when the GitHub Actions are executed after pushing/merging. Without the decorator, these GUI test files will cause the `pytest` GitHub Action to fail.
+> For files that test the GUI elements, the `@skip_ci` decorator skips these tests when the `CI` (or `CONDA_BUILD`) environment variable is set, unless `QT_QPA_PLATFORM=offscreen` is also set. GitHub Actions sets `QT_QPA_PLATFORM=offscreen`, so the GUI tests are run there too. To run them locally in the same way: `CI=true QT_QPA_PLATFORM=offscreen pytest`.
 
 ### Install and Run `pre-commit`
 Adhere to our styling guide by installing [`pre-commit`](https://pre-commit.com) in your local eqt environment:
@@ -90,9 +90,9 @@ pre-commit run --files [path]
 The [`.pre-commit-config.yaml`](./.pre-commit-config.yaml) config file indicates the repositories and the hooks which will be applied automatically.
 
 ## Continuous Integration
-GitHub Actions automatically runs a subset of the unit tests on every commit via [`test.yml`](.github/workflows/test.yml).
+GitHub Actions automatically runs the unit tests on every commit via [`test.yml`](.github/workflows/test.yml).
 > [!NOTE]
-> GitHub Actions does not currently support unit tests that test GUI elements. These tests should include the `@skip_ci` decorator so that they are skipped when the GitHub Actions are executed.
+> The GUI tests are run in GitHub Actions with Qt rendering offscreen (`QT_QPA_PLATFORM=offscreen`). Tests that cannot run without a real display should include the `@skip_ci` decorator, which skips them whenever `CI` is set and `QT_QPA_PLATFORM` is not `offscreen`.
 
 ### Testing
 
