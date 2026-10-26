@@ -1,4 +1,5 @@
 # Unreleased
+- Sets Worker auto-delete to False, preventing race condition. Workers are deleted by Python every time another is created. Payload of a worker is deleted on completion. 
 - Run the GUI unit tests in CI, rendering offscreen (`QT_QPA_PLATFORM=offscreen`). `@skip_ci` no longer skips when Qt renders offscreen
 - Remove the `qdarkstyle` dependency. The application now follows the system theme.
   + Breaking: `NoBorderScrollArea.apply_qdarkstyle_to_buttons` is removed
