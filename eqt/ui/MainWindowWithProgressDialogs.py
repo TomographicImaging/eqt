@@ -1,6 +1,3 @@
-import qdarkstyle
-from qdarkstyle.dark.palette import DarkPalette
-from qdarkstyle.light.palette import LightPalette
 from qtpy.QtCore import QSettings, QThreadPool
 from qtpy.QtGui import QKeySequence
 from qtpy.QtWidgets import QAction, QMainWindow
@@ -20,7 +17,7 @@ class MainWindowWithProgressDialogs(QMainWindow):
     -------------------
     self.settings
         This is a QSettings object that is used for
-        settings such as the light/dark theme.
+        application settings.
     self.progress_windows
         This is a dictionary of ProgressTimerDialog objects, where the key is
         the name of the progress window.
@@ -39,8 +36,6 @@ class MainWindowWithProgressDialogs(QMainWindow):
             organisation_name = app_name
 
         self.settings = QSettings(organisation_name, settings_name)
-
-        self.setAppStyle()
 
         self.createMenu()
 
@@ -61,8 +56,8 @@ class MainWindowWithProgressDialogs(QMainWindow):
 
         Settings
             App Settings
-                This will open a dialog to change the application settings, such as
-                the light/dark theme
+                This will open a dialog to change the application settings. The dialog
+                is empty by default and is meant to be extended by derived classes
 
         Sets
         ----
@@ -96,18 +91,12 @@ class MainWindowWithProgressDialogs(QMainWindow):
 
     # Settings -----------------------------------------------------------------
 
-    def setAppStyle(self):
-        '''Sets app stylesheet, based on user's settings '''
-        if self.settings.value("dark_mode") is None:
-            self.settings.setValue("dark_mode", "true")
-        if self.settings.value("dark_mode") == "true":
-            style = qdarkstyle.load_stylesheet(palette=DarkPalette)
-        else:
-            style = qdarkstyle.load_stylesheet(palette=LightPalette)
-        self.setStyleSheet(style)
-
     def createAppSettingsDialog(self):
-        '''Create a dialog to change the application settings, such as the light/dark theme'''
+        '''Create a dialog to change the application settings.
+
+        The dialog is empty by default. Derived classes can add widgets to it by
+        overriding `setAppSettingsDialogWidgets`, and handle the "Save" button by
+        overriding `onAppSettingsDialogAccepted`.'''
         dialog = AppSettingsDialog(self)
         self.setAppSettingsDialogWidgets(dialog)
         dialog.Ok.clicked.connect(lambda: self.onAppSettingsDialogAccepted(dialog))
@@ -116,20 +105,14 @@ class MainWindowWithProgressDialogs(QMainWindow):
 
     def setAppSettingsDialogWidgets(self, dialog):
         '''Set the widgets on the app settings dialog, based on the
-        current settings of the app'''
-        if self.settings.value("dark_mode") == "true":
-            dialog.widgets['dark_checkbox_field'].setChecked(True)
-        else:
-            dialog.widgets['dark_checkbox_field'].setChecked(False)
+        current settings of the app. Does nothing by default: override to
+        add widgets to the dialog.'''
+        pass
 
     def onAppSettingsDialogAccepted(self, dialog):
         '''This method is called when the user clicks
-            "Ok" on the app settings dialog'''
-        if dialog.widgets['dark_checkbox_field'].isChecked():
-            self.settings.setValue("dark_mode", "true")
-        else:
-            self.settings.setValue("dark_mode", "false")
-        self.setAppStyle()
+            "Save" on the app settings dialog. Override to save the settings
+            from the widgets added in `setAppSettingsDialogWidgets`.'''
         dialog.close()
 
     # Progress Bar -------------------------------------------------------------

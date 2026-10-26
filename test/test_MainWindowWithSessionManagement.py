@@ -53,11 +53,6 @@ class TestMainWindowWithSessionManagementInit(unittest.TestCase):
         self.assertEqual(smw.settings.organizationName(), self.app_name)
         self.assertEqual(smw.settings.applicationName(), settings_name)
 
-    @patch('eqt.ui.MainWindowWithSessionManagement.MainWindowWithSessionManagement.setAppStyle')
-    def test_init_calls_setAppStyle(self, mock_setAppStyle):
-        smw = MainWindowWithSessionManagement(self.title, self.app_name)
-        smw.setAppStyle.assert_called_once()
-
     @patch('eqt.ui.MainWindowWithSessionManagement.MainWindowWithSessionManagement.createMenu',
            return_value=(1, {}))
     def test_init_calls_createMenu(self, mock_menu_bar):
