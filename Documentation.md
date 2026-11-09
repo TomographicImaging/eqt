@@ -76,3 +76,10 @@ status = QtCore.Signal(tuple)
 ```
 
 Read more on [Qt signals and slots](https://doc.qt.io/qt-5/signalsandslots.html) and on how to use them in [PySide2](https://wiki.qt.io/Qt_for_Python_Signals_and_Slots).
+
+### Destruction of Worker and associated payload
+
+A finished `Worker` is released only when the next `Worker` is created, or never if no more are created.
+
+To prevent race condition in deleting asynchronous objects, Qt never deletes a `Worker`. Python keeps it in `_active_workers` after `run()` sets `_done = True`. It is dropped from the main thread inside `Worker.__init__`, the next time any `Worker` is created. Memory is released by calling `_release_payload` once the `Worker` has finished (in `finally`, e.g. however it ends).
+At interpreter exit the leftover workers are cleaned up in the main thread, which is safe.

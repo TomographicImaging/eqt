@@ -180,10 +180,15 @@ class ErrorDialog(QMessageBox):
 
 
 class AppSettingsDialog(FormDialog):
+    '''
+    A dialog for the application settings.
+
+    It is an empty extension point: derived applications can add their own
+    widgets to it, for example by overriding
+    `MainWindowWithProgressDialogs.setAppSettingsDialogWidgets`.
+    '''
     def __init__(self, parent=None):
         super(AppSettingsDialog, self).__init__(parent)
         self.setWindowTitle("App Settings")
         self.formWidget.addTitle(QLabel("App Settings"), "app_settings_title")
-        dark_checkbox = QCheckBox("Dark Mode")
-        self.addSpanningWidget(dark_checkbox, 'dark_checkbox')
         self.Ok.setText("Save")

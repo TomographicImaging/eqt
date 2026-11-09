@@ -8,9 +8,6 @@ from eqt.ui.NoBorderScrollArea import NoBorderScrollArea
 
 class MainUI(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
-        """Any button added after the `NoBorderScrollArea` is instanced will not be styled as
-        expected, due to the bug in `qdarkstyle`. The method `apply_qdarkstyle_to_buttons` needs
-        to be invoked."""
         QtWidgets.QMainWindow.__init__(self, parent)
 
         layout = QtWidgets.QVBoxLayout()
@@ -23,7 +20,6 @@ class MainUI(QtWidgets.QMainWindow):
         self.scroll_area_widget = NoBorderScrollArea(widg)
 
         layout.addWidget(QPushButton("Test3"))
-        self.scroll_area_widget.apply_qdarkstyle_to_buttons(widg)
         layout.addWidget(QPushButton("Test4"))
 
         self.setCentralWidget(self.scroll_area_widget)
